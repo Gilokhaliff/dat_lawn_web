@@ -277,6 +277,11 @@ nav a:focus-visible {
   border-radius: 20px;
 }
 
+.hero-img {
+  object-fit: cover;
+  object-position: 50% 35%;
+}
+
 .hero-content {
   position: relative;
   z-index: 1;
@@ -875,8 +880,12 @@ footer a {
 
   .hero-landing .hero-photo {
     position: relative;
-    height: 260px;
+    height: 340px;
     margin-top: 1rem;
+  }
+
+  .hero-img {
+    object-position: 50% 45%;
   }
 
   .headline {

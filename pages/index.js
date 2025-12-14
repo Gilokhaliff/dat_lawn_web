@@ -36,7 +36,7 @@ export default function Home() {
               src={headerImg}
               alt="Smiling primary school children in Cameroon classroom"
               fill
-              style={{ objectFit: "cover" }}
+              className="hero-img"
               priority
             />
           </div>
