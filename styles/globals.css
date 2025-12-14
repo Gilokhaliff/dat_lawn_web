@@ -811,6 +811,18 @@ footer a {
 }
 
 @media (max-width: 768px) {
+  body {
+    font-size: 0.98rem;
+  }
+
+  .container {
+    width: min(100%, 92vw);
+  }
+
+  .nav-bar {
+    padding: 0.75rem 0;
+  }
+
   nav ul {
     display: none;
     flex-direction: column;
@@ -822,6 +834,7 @@ footer a {
     padding: 0.75rem 1rem;
     border-radius: 12px;
     box-shadow: var(--shadow);
+    min-width: min(320px, 88vw);
   }
 
   nav ul.open {
@@ -837,9 +850,63 @@ footer a {
     font-weight: 700;
     color: #e7e9ff;
     cursor: pointer;
+    z-index: 2;
   }
 
   .section-head {
     flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero {
+    padding: 1.75rem 0 1.25rem;
+  }
+
+  .hero-landing {
+    min-height: auto;
+    padding: 1.5rem;
+    display: grid;
+    gap: 1rem;
+  }
+
+  .hero-landing .hero-content {
+    padding-right: 0;
+  }
+
+  .hero-landing .hero-photo {
+    position: relative;
+    height: 260px;
+    margin-top: 1rem;
+  }
+
+  .headline {
+    font-size: clamp(1.6rem, 6vw, 2.2rem);
+  }
+
+  .grid-2,
+  .grid-3,
+  .split,
+  .hero-landing,
+  .hero-banner {
+    grid-template-columns: 1fr;
+  }
+
+  .card,
+  .hero-banner,
+  .hero-landing {
+    padding: 1.1rem;
+  }
+
+  .link-row {
+    gap: 0.5rem;
+  }
+
+  .table-scroll table {
+    min-width: 540px;
+  }
+
+  footer .grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 }
