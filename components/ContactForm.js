@@ -1,13 +1,16 @@
 import { useState } from "react";
+import { useRouter } from "next/router";
 
 export default function ContactForm() {
+  const { locale } = useRouter();
+  const isFr = locale === "fr";
   const [status, setStatus] = useState("");
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "", trap: "" });
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (form.trap) return;
-    setStatus("Thanks for reaching out! We will reply shortly.");
+    setStatus(isFr ? "Merci pour votre message ! Nous répondrons rapidement." : "Thanks for reaching out! We will reply shortly.");
     setForm({ name: "", email: "", subject: "", message: "", trap: "" });
   };
 
@@ -24,7 +27,7 @@ export default function ContactForm() {
         onChange={(e) => setForm((f) => ({ ...f, trap: e.target.value }))}
       />
       <div>
-        <label htmlFor="contactName">Name</label>
+        <label htmlFor="contactName">{isFr ? "Nom" : "Name"}</label>
         <input
           id="contactName"
           required
@@ -33,7 +36,7 @@ export default function ContactForm() {
         />
       </div>
       <div>
-        <label htmlFor="contactEmail">Email or phone</label>
+        <label htmlFor="contactEmail">{isFr ? "Email ou téléphone" : "Email or phone"}</label>
         <input
           id="contactEmail"
           required
@@ -42,16 +45,16 @@ export default function ContactForm() {
         />
       </div>
       <div>
-        <label htmlFor="contactSubject">Subject</label>
+        <label htmlFor="contactSubject">{isFr ? "Sujet" : "Subject"}</label>
         <input
           id="contactSubject"
-          placeholder="Registration, visit request..."
+          placeholder={isFr ? "Inscription, demande de visite..." : "Registration, visit request..."}
           value={form.subject}
           onChange={(e) => setForm((f) => ({ ...f, subject: e.target.value }))}
         />
       </div>
       <div>
-        <label htmlFor="contactMessage">Message</label>
+        <label htmlFor="contactMessage">{isFr ? "Message" : "Message"}</label>
         <textarea
           id="contactMessage"
           required
@@ -61,7 +64,7 @@ export default function ContactForm() {
       </div>
       {status && <div className="alert">{status}</div>}
       <button className="btn btn-primary" type="submit">
-        Send message
+        {isFr ? "Envoyer" : "Send message"}
       </button>
     </form>
   );

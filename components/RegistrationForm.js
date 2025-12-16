@@ -23,6 +23,7 @@ function sanitize(str = "") {
 
 export default function RegistrationForm({ showTable = false }) {
   const router = useRouter();
+  const isFr = router.locale === "fr";
   const [selectedStream, setSelectedStream] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
   const [form, setForm] = useState(emptyForm);
@@ -45,12 +46,12 @@ export default function RegistrationForm({ showTable = false }) {
     if (form.trap) return;
     const phoneValid = /^\+?[0-9\s-]{6,}$/.test(form.phone);
     if (!selectedStream || !selectedClass) {
-      setStatus("Please choose a stream and class.");
+      setStatus(isFr ? "Merci de choisir un parcours et une classe." : "Please choose a stream and class.");
       setStatusType("error");
       return;
     }
     if (!phoneValid) {
-      setStatus("Please enter a valid phone number.");
+      setStatus(isFr ? "Merci d'entrer un numéro de téléphone valide." : "Please enter a valid phone number.");
       setStatusType("error");
       return;
     }
@@ -78,7 +79,7 @@ export default function RegistrationForm({ showTable = false }) {
       });
 
       if (!response.ok) {
-        let message = "Unable to submit right now. Please try again or call us.";
+        let message = isFr ? "Impossible d'envoyer maintenant. Réessayez ou appelez-nous." : "Unable to submit right now. Please try again or call us.";
         try {
           const data = await response.json();
           if (data?.error) message = data.error;
@@ -89,13 +90,13 @@ export default function RegistrationForm({ showTable = false }) {
       }
 
       setSubmissions((prev) => [...prev, submission]);
-      setStatus("Registration received! We will contact you within 1 business day.");
+      setStatus(isFr ? "Inscription reçue ! Nous vous contacterons sous 1 jour ouvrable." : "Registration received! We will contact you within 1 business day.");
       setStatusType("success");
       setForm(emptyForm);
       setSelectedStream("");
       setSelectedClass("");
     } catch (err) {
-      setStatus(err?.message || "Unable to submit right now. Please try again or call us.");
+      setStatus(err?.message || (isFr ? "Impossible d'envoyer maintenant. Réessayez ou appelez-nous." : "Unable to submit right now. Please try again or call us."));
       setStatusType("error");
     } finally {
       setIsSubmitting(false);
@@ -145,7 +146,7 @@ export default function RegistrationForm({ showTable = false }) {
           onChange={(e) => setForm((f) => ({ ...f, trap: e.target.value }))}
         />
         <div>
-          <label>Choose stream *</label>
+          <label>{isFr ? "Choisissez le parcours *" : "Choose stream *"}</label>
           <div className="chip-row" id="streamChoices">
             {streamOptions.map((option) => (
               <button
@@ -161,7 +162,7 @@ export default function RegistrationForm({ showTable = false }) {
           </div>
         </div>
         <div>
-          <label>Choose class *</label>
+          <label>{isFr ? "Choisissez la classe *" : "Choose class *"}</label>
           <div className="chip-row" id="classChoices">
             {levelLabels.map((label) => (
               <button
@@ -178,7 +179,7 @@ export default function RegistrationForm({ showTable = false }) {
         </div>
         <div className="grid grid-2">
           <div>
-            <label htmlFor="childName">Child’s full name *</label>
+          <label htmlFor="childName">Child’s full name *</label>
             <input
               id="childName"
               name="childName"
@@ -188,7 +189,7 @@ export default function RegistrationForm({ showTable = false }) {
             />
           </div>
           <div>
-            <label htmlFor="dob">Date of birth *</label>
+            <label htmlFor="dob">{isFr ? "Date de naissance *" : "Date of birth *"}</label>
             <input
               id="dob"
               name="dob"
@@ -201,7 +202,7 @@ export default function RegistrationForm({ showTable = false }) {
         </div>
         <div className="grid grid-2">
           <div>
-            <label htmlFor="parentName">Parent / guardian name *</label>
+          <label htmlFor="parentName">{isFr ? "Nom du parent / tuteur *" : "Parent / guardian name *"}</label>
             <input
               id="parentName"
               name="parentName"
@@ -211,7 +212,7 @@ export default function RegistrationForm({ showTable = false }) {
             />
           </div>
           <div>
-            <label htmlFor="phone">Phone number *</label>
+            <label htmlFor="phone">{isFr ? "Numéro de téléphone *" : "Phone number *"}</label>
             <input
               id="phone"
               name="phone"
@@ -225,7 +226,7 @@ export default function RegistrationForm({ showTable = false }) {
         </div>
         <div className="grid grid-2">
           <div>
-            <label htmlFor="email">Email (optional)</label>
+            <label htmlFor="email">{isFr ? "Email (optionnel)" : "Email (optional)"}</label>
             <input
               id="email"
               name="email"
@@ -236,21 +237,21 @@ export default function RegistrationForm({ showTable = false }) {
             />
           </div>
           <div>
-            <label htmlFor="contactMethod">Preferred contact method</label>
+            <label htmlFor="contactMethod">{isFr ? "Méthode de contact préférée" : "Preferred contact method"}</label>
             <select
               id="contactMethod"
               name="contactMethod"
               value={form.contactMethod}
               onChange={(e) => setForm((f) => ({ ...f, contactMethod: e.target.value }))}
             >
-              <option>Phone</option>
+              <option>{isFr ? "Téléphone" : "Phone"}</option>
               <option>WhatsApp</option>
               <option>Email</option>
             </select>
           </div>
         </div>
         <div>
-          <label htmlFor="previousSchool">Previous school (optional)</label>
+          <label htmlFor="previousSchool">{isFr ? "École précédente (optionnel)" : "Previous school (optional)"}</label>
           <input
             id="previousSchool"
             name="previousSchool"
@@ -259,19 +260,19 @@ export default function RegistrationForm({ showTable = false }) {
           />
         </div>
         <div>
-          <label htmlFor="onsite">Will complete registration on-site?</label>
+          <label htmlFor="onsite">{isFr ? "Finalisera l'inscription sur place ?" : "Will complete registration on-site?"}</label>
           <select
             id="onsite"
             name="onsite"
             value={form.onsite}
             onChange={(e) => setForm((f) => ({ ...f, onsite: e.target.value }))}
           >
-            <option value="No">No</option>
-            <option value="Yes">Yes</option>
+            <option value="No">{isFr ? "Non" : "No"}</option>
+            <option value="Yes">{isFr ? "Oui" : "Yes"}</option>
           </select>
         </div>
         <div>
-          <label htmlFor="notes">Additional notes / questions</label>
+          <label htmlFor="notes">{isFr ? "Notes / questions supplémentaires" : "Additional notes / questions"}</label>
           <textarea
             id="notes"
             name="notes"
@@ -286,7 +287,7 @@ export default function RegistrationForm({ showTable = false }) {
           </div>
         )}
         <button className="btn btn-primary" type="submit" disabled={isSubmitting} aria-busy={isSubmitting}>
-          {isSubmitting ? "Submitting..." : "Submit registration"}
+          {isSubmitting ? (isFr ? "Envoi..." : "Submitting...") : isFr ? "Envoyer l'inscription" : "Submit registration"}
         </button>
       </form>
 

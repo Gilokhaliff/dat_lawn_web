@@ -1,41 +1,49 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import Image from "next/image";
+import logoImg from "../public/logo.png";
 
-const navItems = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/programs", label: "Programs" },
-  { href: "/admissions", label: "Admissions" },
-  { href: "/calendar", label: "Calendar" },
-  { href: "/fees", label: "Fees" },
-  { href: "/gallery", label: "Gallery" },
-  { href: "/contact", label: "Contact" },
+const navItems = (isFr) => [
+  { href: "/", label: isFr ? "Accueil" : "Home" },
+  { href: "/about", label: isFr ? "Aperçu" : "About" },
+  { href: "/programs", label: isFr ? "Programmes" : "Programs" },
+  { href: "/admissions", label: isFr ? "Admissions" : "Admissions" },
+  { href: "/calendar", label: isFr ? "Calendrier" : "Calendar" },
+  { href: "/fees", label: isFr ? "Frais" : "Fees" },
+  { href: "/gallery", label: isFr ? "Galerie" : "Gallery" },
+  { href: "/contact", label: isFr ? "Contact" : "Contact" },
 ];
 
 export default function Layout({ children }) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
+  const isFr = router.locale === "fr";
+
+  const handleLocaleToggle = () => {
+    const nextLocale = isFr ? "en" : "fr";
+    router.push(router.pathname, router.asPath, { locale: nextLocale });
+    setOpen(false);
+  };
 
   return (
     <>
       <header>
         <div className="container nav-bar">
           <div className="brand">
-            <div className="mark">LG</div>
-            <div>
-              <div>La Gracieuse</div>
-              <small style={{ color: "var(--muted)", fontWeight: 600 }}>
-                Bilingual Nursery &amp; Primary
-              </small>
+            <div className="mark" aria-hidden="true">
+              <Image src={logoImg} alt="La Gracieuse logo" width={120} height={120} priority className="logo-img" />
+            </div>
+            <div className="brand-text">
+              {isFr ? "Groupe Scolaire Bilingue La Gracieuse" : "La Gracieuse Nursery and Primary Bilingual School"}
             </div>
           </div>
           <button className="nav-toggle" aria-label="Toggle navigation" onClick={() => setOpen((o) => !o)}>
-            Menu
+            {isFr ? "Menu" : "Menu"}
           </button>
           <nav>
             <ul id="navLinks" className={open ? "open" : ""}>
-              {navItems.map((item) => (
+              {navItems(isFr).map((item) => (
                 <li key={item.href} onClick={() => setOpen(false)}>
                   <Link
                     href={item.href}
@@ -45,13 +53,15 @@ export default function Layout({ children }) {
                   </Link>
                 </li>
               ))}
-              <li onClick={() => setOpen(false)}>
-                <Link className="btn btn-primary cta" href="/admissions">
-                  Choose your path
-                </Link>
-              </li>
             </ul>
           </nav>
+          <button
+            className={`lang-toggle ${isFr ? "lang-fr" : "lang-en"}`}
+            onClick={handleLocaleToggle}
+            aria-label="Toggle language"
+          >
+            <span className={!isFr ? "active-lang" : ""}>EN</span> / <span className={isFr ? "active-lang" : ""}>FR</span>
+          </button>
         </div>
       </header>
       <main>{children}</main>
@@ -59,24 +69,28 @@ export default function Layout({ children }) {
         <div className="container">
           <div className="grid grid-3">
             <div>
-              <div className="brand">
-                <div className="mark">LG</div>
-                <div>La Gracieuse</div>
+              <div className="brand footer-brand">
+                <div className="mark" aria-hidden="true">
+                  <Image src={logoImg} alt="La Gracieuse logo" width={64} height={64} className="logo-img" />
+                </div>
+                <div className="brand-text footer-brand-text">
+                  {isFr ? "Groupe Scolaire Bilingue La Gracieuse" : "La Gracieuse Nursery and Primary Bilingual School"}
+                </div>
               </div>
-              <p>Safe, bilingual, and joyful learning for Nursery and Primary pupils.</p>
+              <p>{isFr ? "Apprentissages sûrs, bilingues et joyeux pour la Maternelle et le Primaire." : "Safe, bilingual, and joyful learning for Nursery and Primary pupils."}</p>
             </div>
             <div>
-              <strong>Visit</strong>
+              <strong>{isFr ? "Visiter" : "Visit"}</strong>
               <p>
                 BP 123, Main Avenue, City Center
                 <br />
-                Office hours: Mon–Fri 8:00–16:00
+                {isFr ? "Heures de bureau : Lun–Ven 8h00–16h00" : "Office hours: Mon–Fri 8:00–16:00"}
               </p>
             </div>
             <div>
               <strong>Contact</strong>
               <p>
-                Phone / WhatsApp: +237 650 000 111
+                {isFr ? "Téléphone / WhatsApp : +237 650 000 111" : "Phone / WhatsApp: +237 650 000 111"}
                 <br />
                 Email: contact@lagracieuse.edu
               </p>
