@@ -107,8 +107,8 @@ header {
 
 .brand .mark {
   position: relative;
-  width: 120px;
-  height: 120px;
+  width: 128px;
+  height: 128px;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: var(--shadow);
@@ -138,8 +138,8 @@ header {
 }
 
 .footer-brand .mark {
-  width: 64px;
-  height: 64px;
+  width: 72px;
+  height: 72px;
 }
 
 .footer-brand-text {
@@ -668,6 +668,8 @@ label {
 input,
 select,
 textarea {
+  width: 100%;
+  display: block;
   padding: 0.7rem 0.8rem;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.08);

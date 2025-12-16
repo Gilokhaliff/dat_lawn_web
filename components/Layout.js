@@ -32,7 +32,7 @@ export default function Layout({ children }) {
         <div className="container nav-bar">
           <div className="brand">
             <div className="mark" aria-hidden="true">
-              <Image src={logoImg} alt="La Gracieuse logo" width={120} height={120} priority className="logo-img" />
+              <Image src={logoImg} alt="La Gracieuse logo" width={128} height={128} quality={100} priority className="logo-img" />
             </div>
             <div className="brand-text">
               {isFr ? "Groupe Scolaire Bilingue La Gracieuse" : "La Gracieuse Nursery and Primary Bilingual School"}
@@ -71,7 +71,7 @@ export default function Layout({ children }) {
             <div>
               <div className="brand footer-brand">
                 <div className="mark" aria-hidden="true">
-                  <Image src={logoImg} alt="La Gracieuse logo" width={64} height={64} className="logo-img" />
+                  <Image src={logoImg} alt="La Gracieuse logo" width={72} height={72} quality={100} className="logo-img" />
                 </div>
                 <div className="brand-text footer-brand-text">
                   {isFr ? "Groupe Scolaire Bilingue La Gracieuse" : "La Gracieuse Nursery and Primary Bilingual School"}

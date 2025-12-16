@@ -1,22 +1,39 @@
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { calendarData } from "../lib/data";
 
 export default function CalendarPage() {
+  const { locale } = useRouter();
+  const isFr = locale === "fr";
+
+  const pick = (value) => (typeof value === "string" ? value : value[isFr ? "fr" : "en"]);
+
   return (
     <>
       <Head>
-        <title>La Gracieuse | Calendar</title>
-        <meta name="description" content="Academic calendar for Groupe scolaire bilingue La Gracieuse. Key dates and events." />
+        <title>La Gracieuse | {isFr ? "Calendrier" : "Calendar"}</title>
+        <meta
+          name="description"
+          content={
+            isFr
+              ? "Calendrier académique du Groupe scolaire bilingue La Gracieuse. Dates clés et événements."
+              : "Academic calendar for Groupe scolaire bilingue La Gracieuse. Key dates and events."
+          }
+        />
       </Head>
 
       <section className="page-hero">
         <div className="container">
           <div className="breadcrumb">
-            <Link href="/">Home</Link> / Calendar
+            <Link href="/">{isFr ? "Accueil" : "Home"}</Link> / {isFr ? "Calendrier" : "Calendar"}
           </div>
-          <h1>Academic calendar</h1>
-          <p>Key dates for the 2024–2025 school year: reopening, holidays, report cards, and closing ceremonies.</p>
+          <h1>{isFr ? "Calendrier académique" : "Academic calendar"}</h1>
+          <p>
+            {isFr
+              ? "Dates clés de l'année scolaire 2024–2025 : rentrée, vacances, bulletins et cérémonies de fin d'année."
+              : "Key dates for the 2024–2025 school year: reopening, holidays, report cards, and closing ceremonies."}
+          </p>
         </div>
       </section>
 
@@ -24,45 +41,55 @@ export default function CalendarPage() {
         <div className="container">
           <div className="section-head">
             <div>
-              <div className="pill">Timeline</div>
-              <h2>Important dates</h2>
+              <div className="pill">{isFr ? "Chronologie" : "Timeline"}</div>
+              <h2>{isFr ? "Dates importantes" : "Important dates"}</h2>
             </div>
             <a className="btn btn-ghost" href="#" aria-disabled="true">
-              Download PDF (coming soon)
+              {isFr ? "Télécharger le PDF (bientôt disponible)" : "Download PDF (coming soon)"}
             </a>
           </div>
           <div className="grid grid-2">
             <div className="card glass">
-              <h3>Timeline view</h3>
+              <h3>{isFr ? "Vue chronologique" : "Timeline view"}</h3>
               <div className="timeline" id="timeline">
-                {calendarData.map((item) => (
-                  <div className="timeline-item" key={item.title}>
-                    <strong>{item.title}</strong>
-                    <div className="muted">{item.date}</div>
-                    <div>{item.note}</div>
-                  </div>
-                ))}
+                {calendarData.map((item, idx) => {
+                  const title = pick(item.title);
+                  const date = pick(item.date);
+                  const note = pick(item.note);
+                  return (
+                    <div className="timeline-item" key={`${title}-${idx}`}>
+                      <strong>{title}</strong>
+                      <div className="muted">{date}</div>
+                      <div>{note}</div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
             <div className="card">
-              <h3>Table view</h3>
+              <h3>{isFr ? "Vue tableau" : "Table view"}</h3>
               <div className="table-scroll">
                 <table id="calendarTable">
                   <thead>
                     <tr>
-                      <th>Date</th>
-                      <th>Event</th>
-                      <th>Notes</th>
+                      <th>{isFr ? "Date" : "Date"}</th>
+                      <th>{isFr ? "Événement" : "Event"}</th>
+                      <th>{isFr ? "Notes" : "Notes"}</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {calendarData.map((item) => (
-                      <tr key={item.title}>
-                        <td>{item.date}</td>
-                        <td>{item.title}</td>
-                        <td>{item.note}</td>
-                      </tr>
-                    ))}
+                    {calendarData.map((item, idx) => {
+                      const title = pick(item.title);
+                      const date = pick(item.date);
+                      const note = pick(item.note);
+                      return (
+                        <tr key={`${title}-${idx}`}>
+                          <td>{date}</td>
+                          <td>{title}</td>
+                          <td>{note}</td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>

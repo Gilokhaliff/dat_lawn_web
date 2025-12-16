@@ -180,13 +180,18 @@ export default function Home() {
             <div className="card glass">
               <h3>{isFr ? "À venir" : "Upcoming highlights"}</h3>
               <div className="timeline" id="timeline">
-                {calendarData.slice(0, 4).map((item) => (
-                  <div className="timeline-item" key={item.title}>
-                    <strong>{item.title}</strong>
-                    <div className="muted">{item.date}</div>
-                    <div>{item.note}</div>
-                  </div>
-                ))}
+                {calendarData.slice(0, 4).map((item) => {
+                  const title = typeof item.title === "string" ? item.title : item.title[isFr ? "fr" : "en"];
+                  const date = typeof item.date === "string" ? item.date : item.date[isFr ? "fr" : "en"];
+                  const note = typeof item.note === "string" ? item.note : item.note[isFr ? "fr" : "en"];
+                  return (
+                    <div className="timeline-item" key={title}>
+                      <strong>{title}</strong>
+                      <div className="muted">{date}</div>
+                      <div>{note}</div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
             <div className="card">
