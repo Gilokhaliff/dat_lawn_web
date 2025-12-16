@@ -26,7 +26,7 @@ export default function Admissions() {
           <div className="breadcrumb">
             <Link href="/">{isFr ? "Accueil" : "Home"}</Link> / {isFr ? "Admissions" : "Admissions"}
           </div>
-          <h1>{isFr ? "Admissions &amp; Inscription" : "Admissions &amp; Registration"}</h1>
+          <h1>{isFr ? "Admissions et inscription" : "Admissions & Registration"}</h1>
           <p>
             {isFr
               ? "Suivez les trois étapes ci-dessous. Inscrivez-vous en ligne ou passez à notre bureau, comme vous préférez."

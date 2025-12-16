@@ -60,7 +60,7 @@ export default function Fees() {
                   <td>Primary 1–3</td>
                   <td>120,000 FCFA</td>
                   <td>60,000 FCFA x 2 terms</td>
-                  <td>Sports &amp; library included</td>
+                  <td>Sports & library included</td>
                 </tr>
                 <tr>
                   <td>Primary 4–6</td>

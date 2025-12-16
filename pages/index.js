@@ -67,14 +67,14 @@ export default function Home() {
           <div className="grid stats">
             <div className="stat">
               <strong>{isFr ? "Parcours bilingues" : "Bilingual streams"}</strong>
-              <span>{isFr ? "Enseignants francophones et anglophones" : "Francophone &amp; Anglophone teachers"}</span>
+              <span>{isFr ? "Enseignants francophones et anglophones" : "Francophone & Anglophone teachers"}</span>
             </div>
             <div className="stat">
-              <strong>{isFr ? "Maternelle 1–2 et Primaire 1–6" : "Nursery 1–2 &amp; Class 1 – Class 6"}</strong>
+              <strong>{isFr ? "Maternelle 1–2 et Primaire 1–6" : "Nursery 1–2 & Class 1 – Class 6"}</strong>
               <span>{isFr ? "Petits groupes, apprentissage actif" : "Small groups, active learning"}</span>
             </div>
             <div className="stat">
-              <strong>{isFr ? "Sur place &amp; en ligne" : "On-site &amp; online"}</strong>
+              <strong>{isFr ? "Sur place et en ligne" : "On-site & online"}</strong>
               <span>{isFr ? "Inscrivez votre enfant comme vous préférez" : "Register your child the way you prefer"}</span>
             </div>
           </div>

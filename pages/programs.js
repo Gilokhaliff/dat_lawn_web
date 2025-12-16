@@ -26,7 +26,7 @@ export default function Programs() {
           <div className="breadcrumb">
             <Link href="/">{isFr ? "Accueil" : "Home"}</Link> / {isFr ? "Programmes" : "Programs"}
           </div>
-          <h1>{isFr ? "Programmes et parcours bilingues" : "Bilingual programs &amp; streams"}</h1>
+          <h1>{isFr ? "Programmes et parcours bilingues" : "Bilingual programs & streams"}</h1>
           <p>
             {isFr
               ? "Choisissez le parcours francophone ou anglophone de la Maternelle 1–2 au Primaire 1–6."
