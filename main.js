@@ -938,7 +938,6 @@ function setLanguage(lang) {
   document.documentElement.dataset.lang = currentLang;
   applyStaticTranslations(currentLang);
   renderProducts();
-  renderTestimonials();
   renderFaq();
   renderReviews();
   const dict = translations[currentLang] || translations.en;
