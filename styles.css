@@ -777,4 +777,34 @@ h3 { font-family: var(--font); font-weight: 700; }
   .brand { order: 1; }
 }
 
-je sais maem pas ce aue jafais je masis khased jee khsdf 
+@media (max-width: 640px) {
+  .nav { padding: 0.75rem 0; }
+  .brand .mark { width: 48px; height: 48px; }
+  .container { width: 94vw; }
+  .hero { padding: 2rem 0 2.5rem; }
+  .hero-card { margin-top: 1rem; }
+  .hero-card-body { padding: 1rem; }
+  .stats-bar { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); }
+  .promo-band { margin: 0.5rem 0 1rem; }
+  .promo-content { flex-direction: column; align-items: flex-start; }
+  .promo-title { font-size: 1.1rem; }
+  .product-card { padding: 0.85rem; scroll-snap-align: start; }
+  .product-photo { aspect-ratio: 4 / 3; }
+  .catalog-group .grid-3 {
+    grid-auto-flow: column;
+    grid-auto-columns: 80%;
+    overflow-x: auto;
+    padding-bottom: 0.3rem;
+    scroll-snap-type: x mandatory;
+  }
+  .catalog-group .grid-3::-webkit-scrollbar { display: none; }
+  .catalog-group .grid-3 { -ms-overflow-style: none; scrollbar-width: none; }
+  .why-grid { grid-template-columns: 1fr; }
+  .why-visual, .why-copy { padding: 0.9rem; }
+  .logo-pill { padding: 0.55rem 0.65rem; }
+  .logo-pill strong { font-size: 1rem; }
+  .mini-card { padding: 0.5rem 0.6rem; }
+  .mini-value { font-size: 1.2rem; }
+  .check-list li { padding-left: 1.2rem; }
+  footer { padding: 1.5rem 0; }
+}
