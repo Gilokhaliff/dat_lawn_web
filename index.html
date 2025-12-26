@@ -22,10 +22,6 @@
           <small>professional Green keeper</small>
         </div>
       </div>
-      <div class="nav-actions">
-        <button class="nav-toggle" aria-label="Toggle navigation">Menu</button>
-        <button id="langToggle" class="lang-toggle" type="button">DE</button>
-      </div>
       <nav>
         <ul id="navLinks">
           <li><a data-i18n="nav_home" href="#hero">Home</a></li>
@@ -36,6 +32,13 @@
           <li class="cta-link"><a class="btn btn-primary" data-i18n="nav_cta" href="#contact">Get a recommendation</a></li>
         </ul>
       </nav>
+      <div class="nav-actions">
+        <div class="lang-switch" id="langSwitch" aria-label="Language toggle" role="group">
+          <button class="lang-btn active" data-lang="de" type="button">DE</button>
+          <button class="lang-btn" data-lang="en" type="button">EN</button>
+        </div>
+        <button class="nav-toggle" aria-label="Toggle navigation">Menu</button>
+      </div>
     </div>
   </header>
 

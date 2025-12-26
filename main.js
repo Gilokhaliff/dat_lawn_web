@@ -954,21 +954,20 @@ function setLanguage(lang) {
   if (reviewStatus && !reviewStatus.classList.contains("hidden")) {
     reviewStatus.textContent = dict.reviews_status || reviewStatus.textContent;
   }
-  const langToggle = $("#langToggle");
-  if (langToggle) {
-    langToggle.textContent = currentLang.toUpperCase();
-    langToggle.classList.add("active");
-  }
+  $$(".lang-btn").forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.lang === currentLang);
+  });
   forceProductLinksNewTab();
 }
 
 function initLanguageToggle() {
-  const langToggle = $("#langToggle");
-  if (!langToggle) return;
-  langToggle.addEventListener("click", () => {
-    const next = currentLang === "en" ? "de" : "en";
+  const switcher = $("#langSwitch");
+  if (!switcher) return;
+  switcher.addEventListener("click", (e) => {
+    const btn = e.target.closest(".lang-btn");
+    if (!btn) return;
+    const next = btn.dataset.lang === "de" ? "de" : "en";
     setLanguage(next);
-    langToggle.classList.add("active");
   });
 }
 

@@ -46,6 +46,60 @@ header {
   padding: 1rem 0;
 }
 
+.nav-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.lang-switch {
+  display: inline-flex;
+  border-radius: 12px;
+  border: 1px solid rgba(23, 92, 51, 0.2);
+  background: rgba(23, 92, 51, 0.08);
+  overflow: hidden;
+}
+
+.lang-btn {
+  border: none;
+  background: transparent;
+  padding: 0.45rem 0.65rem;
+  font-weight: 800;
+  color: var(--primary-strong);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.lang-btn.active {
+  background: linear-gradient(135deg, var(--accent), #d9b461);
+  color: #2f250f;
+  box-shadow: 0 10px 24px rgba(201, 162, 77, 0.25);
+}
+
+.lang-switch {
+  display: inline-flex;
+  border-radius: 12px;
+  border: 1px solid rgba(23, 92, 51, 0.2);
+  background: rgba(23, 92, 51, 0.08);
+  overflow: hidden;
+}
+
+.lang-btn {
+  border: none;
+  background: transparent;
+  padding: 0.45rem 0.65rem;
+  font-weight: 800;
+  color: var(--primary-strong);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.lang-btn.active {
+  background: linear-gradient(135deg, var(--accent), #d9b461);
+  color: #2f250f;
+  box-shadow: 0 10px 24px rgba(201, 162, 77, 0.25);
+}
+
 .brand {
   display: flex;
   align-items: center;
@@ -85,6 +139,8 @@ nav ul {
   padding: 0;
 }
 
+nav { margin-left: auto; }
+
 nav a {
   padding: 0.55rem 0.75rem;
   border-radius: 12px;
@@ -102,23 +158,7 @@ nav a:focus-visible {
 .nav-actions {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-}
-
-.lang-toggle {
-  border: 1px solid rgba(31, 122, 67, 0.2);
-  background: rgba(31, 122, 67, 0.08);
-  color: var(--primary-strong);
-  padding: 0.45rem 0.65rem;
-  border-radius: 10px;
-  font-weight: 700;
-  cursor: pointer;
-}
-.lang-toggle.active {
-  background: linear-gradient(135deg, var(--accent), #d9b461);
-  color: #2f250f;
-  border-color: rgba(201, 162, 77, 0.65);
-  box-shadow: 0 10px 24px rgba(201, 162, 77, 0.3);
+  gap: 0.6rem;
 }
 
 .cta-link .btn { padding: 0.5rem 0.9rem; }
