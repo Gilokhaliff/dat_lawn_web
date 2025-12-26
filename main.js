@@ -788,6 +788,12 @@ function toggleNav() {
   if (!toggle || !links) return;
   toggle.addEventListener("click", () => links.classList.toggle("open"));
   $$("nav a").forEach((a) => a.addEventListener("click", () => links.classList.remove("open")));
+  document.addEventListener("click", (e) => {
+    if (!links.classList.contains("open")) return;
+    const clickInsideNav = links.contains(e.target);
+    const clickToggle = toggle.contains(e.target);
+    if (!clickInsideNav && !clickToggle) links.classList.remove("open");
+  });
 }
 
 function renderProducts() {
@@ -949,7 +955,10 @@ function setLanguage(lang) {
     reviewStatus.textContent = dict.reviews_status || reviewStatus.textContent;
   }
   const langToggle = $("#langToggle");
-  if (langToggle) langToggle.textContent = currentLang === "en" ? "DE" : "EN";
+  if (langToggle) {
+    langToggle.textContent = currentLang.toUpperCase();
+    langToggle.classList.add("active");
+  }
   forceProductLinksNewTab();
 }
 
@@ -959,6 +968,7 @@ function initLanguageToggle() {
   langToggle.addEventListener("click", () => {
     const next = currentLang === "en" ? "de" : "en";
     setLanguage(next);
+    langToggle.classList.add("active");
   });
 }
 
@@ -1000,5 +1010,5 @@ document.addEventListener("DOMContentLoaded", () => {
   initForms();
   loadReviews();
   initReviewForm();
-  setLanguage("en");
+  setLanguage("de");
 });
