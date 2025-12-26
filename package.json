@@ -1,19 +1,14 @@
 {
-  "name": "la_gracieuse",
+  "name": "dat-lawn-site",
   "version": "1.0.0",
-  "private": true,
-  "description": "Groupe scolaire bilingue La Gracieuse website (Next.js)",
+  "description": "DAT Lawn sales page (static) with a simple dev server",
+  "type": "module",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
+    "dev": "node server.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "next": "^16.0.10",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0"
-  }
+    "dotenv": "^16.3.1",
+    "stripe": "^14.0.0"
+  },
+  "private": true
 }
