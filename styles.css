@@ -933,9 +933,9 @@ h3 { font-family: var(--font); font-weight: 700; }
   .why-visual, .why-copy { padding: 0.9rem; }
   .logo-pill { padding: 0.55rem 0.65rem; }
   .logo-pill strong { font-size: 1rem; }
-  .why-stats { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
-  .mini-card { padding: 0.5rem 0.55rem; }
-  .mini-value { font-size: clamp(0.95rem, 4vw, 1rem); font-weight: 800; }
+  .why-stats { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+  .mini-card { padding: 0.45rem 0.5rem; }
+  .mini-value { font-size: clamp(0.85rem, 3.6vw, 0.95rem); font-weight: 800; letter-spacing: -0.01em; }
   .check-list li { padding-left: 1.2rem; }
   footer { padding: 1.5rem 0; }
 }
