@@ -389,6 +389,12 @@ main {
   border: 1px solid rgba(201, 162, 77, 0.35);
   color: #f3e8d1;
 }
+.promo-pill {
+  background: linear-gradient(135deg, #ffefb0, #ffd566);
+  color: #2f250f;
+  border: 1px solid #f3c23c;
+  box-shadow: 0 12px 28px rgba(201, 162, 77, 0.35);
+}
 
 .grid { display: grid; gap: 1rem; }
 .grid-2 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
@@ -579,11 +585,12 @@ main {
 }
 
 .mini-card {
-  padding: 0.6rem 0.7rem;
+  padding: 0.55rem 0.65rem;
   border-radius: 12px;
   background: rgba(253, 251, 246, 0.08);
   border: 1px solid rgba(201, 162, 77, 0.42);
   box-shadow: 0 14px 32px rgba(0, 0, 0, 0.2);
+  text-align: center;
 }
 
 .mini-label {
@@ -596,10 +603,11 @@ main {
 .mini-value {
   display: block;
   margin-top: 0.2rem;
-  font-size: 1.35rem;
+  font-size: clamp(1rem, 4vw, 1.1rem);
   font-weight: 900;
   letter-spacing: 0.01em;
   color: #fefaf1;
+  white-space: nowrap;
 }
 
 .why-tags {
@@ -767,6 +775,18 @@ footer {
 
 .footer-links { display: grid; gap: 0.35rem; }
 .footer a { color: #cfe3d5; }
+.footer-bottom {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: space-between;
+  align-items: center;
+  color: #cfe3d5;
+  font-weight: 700;
+}
 
 h1, h2, h3, h4 { margin: 0; letter-spacing: -0.005em; }
 h1, h2, .serif {
@@ -841,4 +861,8 @@ h3 { font-family: var(--font); font-weight: 700; }
   .mini-value { font-size: 1.2rem; }
   .check-list li { padding-left: 1.2rem; }
   footer { padding: 1.5rem 0; }
+}
+
+@media (max-width: 640px) {
+  .why-stats { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); }
 }
