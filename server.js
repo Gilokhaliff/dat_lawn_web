@@ -15,6 +15,8 @@ const stripeSecret = process.env.STRIPE_SECRET_KEY;
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 const stripe = stripeSecret ? new Stripe(stripeSecret) : null;
 const reviewsFile = path.join(root, "reviews.json");
+const kvUrl = process.env.KV_REST_API_URL;
+const kvToken = process.env.KV_REST_API_TOKEN;
 
 const mimeTypes = {
   ".html": "text/html",
@@ -34,6 +36,24 @@ function sendJson(res, status, payload) {
 }
 
 async function readReviews() {
+  // Prefer Upstash KV if configured
+  if (kvUrl && kvToken) {
+    try {
+      const res = await fetch(`${kvUrl}/get/reviews`, {
+        headers: { Authorization: `Bearer ${kvToken}` },
+      });
+      if (!res.ok) throw new Error(`KV get failed: ${res.status}`);
+      const data = await res.json();
+      if (data && typeof data.result === "string") {
+        const parsed = JSON.parse(data.result);
+        if (Array.isArray(parsed)) return parsed;
+      }
+      return [];
+    } catch (err) {
+      console.warn("KV read failed, falling back to file:", err.message);
+    }
+  }
+  // Fallback to file
   try {
     const data = await readFile(reviewsFile, "utf-8");
     const parsed = JSON.parse(data);
@@ -47,6 +67,22 @@ async function readReviews() {
 
 async function writeReviews(list) {
   const safe = Array.isArray(list) ? list.slice(-200) : [];
+  if (kvUrl && kvToken) {
+    try {
+      const res = await fetch(`${kvUrl}/set/reviews`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${kvToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ value: JSON.stringify(safe) }),
+      });
+      if (!res.ok) throw new Error(`KV set failed: ${res.status}`);
+      return;
+    } catch (err) {
+      console.warn("KV write failed, falling back to file:", err.message);
+    }
+  }
   await writeFile(reviewsFile, JSON.stringify(safe, null, 2), "utf-8");
 }
 
