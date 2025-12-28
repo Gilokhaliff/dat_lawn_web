@@ -1,5 +1,5 @@
 import http from "http";
-import { readFile, stat } from "fs/promises";
+import { readFile, stat, writeFile } from "fs/promises";
 import path from "path";
 import url from "url";
 import dotenv from "dotenv";
@@ -14,6 +14,7 @@ const cancelUrl = process.env.STRIPE_CANCEL_URL || "http://localhost:3000/cancel
 const stripeSecret = process.env.STRIPE_SECRET_KEY;
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 const stripe = stripeSecret ? new Stripe(stripeSecret) : null;
+const reviewsFile = path.join(root, "reviews.json");
 
 const mimeTypes = {
   ".html": "text/html",
@@ -30,6 +31,23 @@ const mimeTypes = {
 function sendJson(res, status, payload) {
   res.writeHead(status, { "Content-Type": "application/json" });
   res.end(JSON.stringify(payload));
+}
+
+async function readReviews() {
+  try {
+    const data = await readFile(reviewsFile, "utf-8");
+    const parsed = JSON.parse(data);
+    if (Array.isArray(parsed)) return parsed;
+    return [];
+  } catch (err) {
+    if (err.code === "ENOENT") return [];
+    throw err;
+  }
+}
+
+async function writeReviews(list) {
+  const safe = Array.isArray(list) ? list.slice(-200) : [];
+  await writeFile(reviewsFile, JSON.stringify(safe, null, 2), "utf-8");
 }
 
 async function serveFile(res, filePath) {
@@ -68,6 +86,43 @@ async function handleCheckout(req, res) {
     console.error("Checkout error:", err.message);
     return sendJson(res, 500, { error: "Unable to create checkout session" });
   }
+}
+
+async function handleReviews(req, res) {
+  if (req.method === "GET") {
+    try {
+      const reviews = await readReviews();
+      return sendJson(res, 200, { reviews });
+    } catch (err) {
+      console.error("Read reviews failed:", err.message);
+      return sendJson(res, 500, { reviews: [] });
+    }
+  }
+
+  if (req.method === "POST") {
+    try {
+      const body = await readBody(req);
+      const cleanName = (body.name || "").toString().trim().slice(0, 80) || "Guest";
+      const cleanText = (body.comment || body.text || "").toString().trim().slice(0, 800);
+      const cleanRating = Math.max(0, Math.min(5, Math.round(Number(body.rating) || 0)));
+      if (!cleanText) return sendJson(res, 400, { error: "Comment required" });
+      const existing = await readReviews();
+      const review = {
+        name: cleanName,
+        text: cleanText,
+        createdAt: Date.now(),
+        rating: cleanRating,
+      };
+      const updated = [review, ...existing].slice(0, 200);
+      await writeReviews(updated);
+      return sendJson(res, 200, { review });
+    } catch (err) {
+      console.error("Write review failed:", err.message);
+      return sendJson(res, 500, { error: "Unable to save review" });
+    }
+  }
+
+  return sendJson(res, 405, { error: "Method not allowed" });
 }
 
 function readBody(req) {
@@ -126,6 +181,9 @@ const server = http.createServer(async (req, res) => {
   }
   if (req.method === "POST" && pathname === "/api/stripe-webhook") {
     return handleWebhook(req, res);
+  }
+  if ((req.method === "GET" || req.method === "POST") && pathname === "/api/reviews") {
+    return handleReviews(req, res);
   }
 
   if (pathname === "/") pathname = "/index.html";

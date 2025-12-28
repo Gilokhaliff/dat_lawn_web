@@ -760,41 +760,12 @@ const faqs = [
   },
 ];
 
-const reviewSeeds = [
-  {
-    name: "Mara D.",
-    text: {
-      en: "Starter Stripe kit took my yard from blotchy to striping in two mows.",
-      de: "Starter Stripe Kit hat meinen Rasen in zwei Mähgängen von fleckig zu gestreift gebracht.",
-    },
-    createdAt: Date.now() - 1000 * 60 * 60 * 24 * 3,
-    rating: 5,
-  },
-  {
-    name: "Tariq H.",
-    text: {
-      en: "Followed the Rescue month plan - front lawn bounced back before a party.",
-      de: "Den Rescue-Monatsplan befolgt - der Vorgarten war vor der Party wieder fit.",
-    },
-    createdAt: Date.now() - 1000 * 60 * 60 * 24 * 7,
-    rating: 4,
-  },
-  {
-    name: "Elise W.",
-    text: {
-      en: "Appreciate the pet-safe callouts. Sprays felt straightforward with the notes.",
-      de: "Schätze die Haustier-Hinweise. Sprays waren mit den Notizen echt unkompliziert.",
-    },
-    createdAt: Date.now() - 1000 * 60 * 60 * 24 * 12,
-    rating: 5,
-  },
-];
+const reviewSeeds = [];
 
 const $ = (s, scope = document) => scope.querySelector(s);
 const $$ = (s, scope = document) => Array.from(scope.querySelectorAll(s));
 
 let currentLang = "en";
-const REVIEW_STORAGE_KEY = "datlawn_reviews";
 let reviews = [];
 
 function applyStaticTranslations(lang) {
@@ -826,35 +797,26 @@ function formatDate(timestamp) {
   return date.toLocaleDateString(locale, { month: "short", day: "numeric", year: "numeric" });
 }
 
-function loadReviews() {
+async function loadReviews() {
   try {
-    const stored = localStorage.getItem(REVIEW_STORAGE_KEY);
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      if (Array.isArray(parsed)) {
-        reviews = parsed
-          .filter((r) => r && r.name && r.text)
-          .map((r) => ({
-            name: String(r.name).slice(0, 80),
-            text: typeof r.text === "string" ? r.text.slice(0, 800) : r.text,
-            createdAt: r.createdAt || Date.now(),
-            rating: Number(r.rating) || 0,
-          }));
-        if (reviews.length) return;
-      }
+    const res = await fetch("/api/reviews");
+    if (!res.ok) throw new Error("Failed to load reviews");
+    const data = await res.json();
+    if (Array.isArray(data.reviews)) {
+      reviews = data.reviews.map((r) => ({
+        name: String(r.name || "Guest").slice(0, 80),
+        text: typeof r.text === "string" ? r.text.slice(0, 800) : "",
+        createdAt: r.createdAt || Date.now(),
+        rating: Number(r.rating) || 0,
+      }));
+    } else {
+      reviews = [];
     }
   } catch (err) {
-    console.warn("Review storage read failed", err);
+    console.warn("Review load failed", err);
+    reviews = [];
   }
-  reviews = reviewSeeds.slice();
-}
-
-function saveReviews() {
-  try {
-    localStorage.setItem(REVIEW_STORAGE_KEY, JSON.stringify(reviews));
-  } catch (err) {
-    console.warn("Review storage save failed", err);
-  }
+  renderReviews();
 }
 
 function getReviewText(entry) {
@@ -905,20 +867,40 @@ function renderReviews() {
   if (empty) empty.classList.add("hidden");
 }
 
-function addReview(name, comment, rating) {
+async function addReview(name, comment, rating) {
   const cleanComment = (comment || "").trim();
   const cleanName = (name || "").trim() || "Guest";
   if (!cleanComment) return false;
-  reviews.unshift({
+  const payload = {
     name: cleanName.slice(0, 80),
-    text: cleanComment.slice(0, 800),
-    createdAt: Date.now(),
+    comment: cleanComment.slice(0, 800),
     rating: Math.max(0, Math.min(5, Math.round(Number(rating) || 0))),
-  });
-  reviews = reviews.slice(0, 30);
-  saveReviews();
-  renderReviews();
-  return true;
+  };
+  try {
+    const res = await fetch("/api/reviews", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) throw new Error("Review save failed");
+    const data = await res.json();
+    if (data && data.review) {
+      reviews.unshift({
+        name: data.review.name || payload.name,
+        text: data.review.text || payload.comment,
+        createdAt: data.review.createdAt || Date.now(),
+        rating: data.review.rating || payload.rating,
+      });
+      reviews = reviews.slice(0, 30);
+      renderReviews();
+    } else {
+      await loadReviews();
+    }
+    return true;
+  } catch (err) {
+    console.warn("Review submit failed", err);
+    return false;
+  }
 }
 
 function initReviewForm() {
