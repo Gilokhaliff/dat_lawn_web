@@ -594,6 +594,29 @@ main {
   margin: 0;
 }
 
+@media (max-width: 640px) {
+  .ebook-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .ebook-intro .ebook-actions {
+    justify-content: center;
+  }
+  .ebook-cover { max-width: 320px; }
+  .ebook-offer-card {
+    grid-template-columns: 1fr;
+    text-align: center;
+    justify-items: center;
+  }
+  .offer-right {
+    justify-items: center;
+    text-align: center;
+  }
+  .offer-price {
+    justify-content: center;
+  }
+}
+
 .product-card strong { font-size: 1.05rem; }
 .product-meta { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 .pill-small {
