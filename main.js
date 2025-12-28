@@ -901,6 +901,11 @@ async function addReview(name, comment, rating) {
     return true;
   } catch (err) {
     console.warn("Review submit failed", err);
+    const status = $("#reviewStatus");
+    if (status) {
+      status.textContent = err.message || "Could not post your review. Please try again.";
+      status.classList.remove("hidden");
+    }
     return false;
   }
 }

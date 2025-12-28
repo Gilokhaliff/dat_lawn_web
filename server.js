@@ -161,7 +161,7 @@ async function handleReviews(req, res) {
       return sendJson(res, 200, { review });
     } catch (err) {
       console.error("Write review failed:", err.message);
-      return sendJson(res, 500, { error: "Unable to save review" });
+      return sendJson(res, 500, { error: "Unable to save review", detail: err.message });
     }
   }
 
