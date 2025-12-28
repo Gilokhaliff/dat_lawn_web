@@ -1003,16 +1003,16 @@ function renderProducts() {
         const hasBuy = Boolean(item.priceId);
         const action = hasViewLink || hasBuy
           ? `<div class="product-actions">
-              ${hasViewLink ? `<a class="btn btn-ghost" href="${item.viewLink}">${view}</a>` : ""}
+              ${hasViewLink ? `<a class="btn btn-ghost view-link" href="${item.viewLink}">${view}</a>` : ""}
               ${
                 hasBuy
                   ? `<button class="btn btn-primary checkout-btn" data-price="${item.priceId}">${buy}</button>`
                   : item.link
-                  ? `<a class="btn btn-ghost" href="${item.link}">${view}</a>`
+                  ? `<a class="btn btn-ghost view-link" href="${item.link}">${view}</a>`
                   : ""
               }
             </div>`
-          : `<a class="btn btn-ghost" href="${item.link}">${view}</a>`;
+          : `<a class="btn btn-ghost view-link" href="${item.link}">${view}</a>`;
         return `
         <div class="product-card">
           ${imageBlock}
@@ -1063,6 +1063,7 @@ function attachImageFallbacks() {
 function forceProductLinksNewTab() {
   $$(".product-card a").forEach((a) => {
     if (!a) return;
+    if (a.classList.contains("view-link")) return;
     if (!a.target || a.target === "_self") a.target = "_blank";
     const existingRel = a.getAttribute("rel") || "";
     const relParts = new Set(existingRel.split(/\s+/).filter(Boolean));
