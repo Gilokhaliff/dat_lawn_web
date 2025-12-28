@@ -164,6 +164,34 @@ const translations = {
     tag_pdf: "PDF",
     product_view: "View",
     product_buy: "Buy now",
+    ebook_pill: "Ebook",
+    ebook_title: "Spring lawn care without the BS",
+    ebook_lead: "A 6-week, no-nonsense plan for dense, green turf between March and May.",
+    ebook_highlight1: "Step-by-step for 6 weeks: prep, seed, feed, water, mow.",
+    ebook_highlight2: "Simple gear + rates; avoid common mistakes.",
+    ebook_highlight3: "Direct download after purchase.",
+    ebook_contents_title: "What you’ll get",
+    ebook_ch1_title: "Intro",
+    ebook_ch1_body: "Why spring lawns fail and how a simple 6-week reset fixes it without jargon.",
+    ebook_ch2_title: "Weeks 1–2: Prep",
+    ebook_ch2_body: "Check pH, clear winter debris, first cut, and loosen compaction so everything later works.",
+    ebook_ch3_title: "Weeks 3–4: Seed & feed",
+    ebook_ch3_body: "Aerate, overseed with the right mix, add starter fertilizer, and keep even moisture.",
+    ebook_ch4_title: "Weeks 5–6: Routine",
+    ebook_ch4_body: "Dial in mowing height, deep watering, and a second feed to lock in density.",
+    ebook_ch5_title: "Quick fixes",
+    ebook_ch5_body: "Fast answers for short cuts, watering mistakes, and fertilizer mishaps.",
+    ebook_highlights_title: "Why it’s useful",
+    ebook_contact_title: "Need help?",
+    ebook_contact_desc: "Questions about fit, timing, or tools? Message me before you buy.",
+    ebook_back: "Back to catalog",
+    ebook_buy_button: "Buy now",
+    ebook_contact: "Questions? Message me",
+    ebook_offer_pill: "Ready for thick green?",
+    ebook_offer_heading: "Get the 6-week plan",
+    ebook_offer_sub: "PDF, checklists, links, and bonus videos—instant download.",
+    ebook_offer_price: "€29.99",
+    ebook_offer_safety: "Secure checkout · VAT incl. · Instant download",
   },
   de: {
     brand_subtitle: "Profi-Rasen-Equipment, jede Woche getestet",
@@ -332,6 +360,34 @@ const translations = {
     tag_pdf: "PDF",
     product_view: "Ansehen",
     product_buy: "Jetzt kaufen",
+    ebook_pill: "Ebook",
+    ebook_title: "Frühling Rasenpflege ohne Bullshit",
+    ebook_lead: "Ein 6-Wochen-Plan für dichten, grünen Rasen – klar, praxisnah, ohne Fachchinesisch.",
+    ebook_highlight1: "Schritt-für-Schritt für 6 Wochen: Vorbereitung, Saat, Düngung, Bewässerung, Mähen.",
+    ebook_highlight2: "Einfache Tools + Mengen; typische Fehler vermeiden.",
+    ebook_highlight3: "Direkter Download nach dem Kauf.",
+    ebook_contents_title: "Was drin ist",
+    ebook_ch1_title: "Intro",
+    ebook_ch1_body: "Warum Frühjahrsrasen scheitern und wie ein klarer 6-Wochen-Reset das ohne Fachchinesisch löst.",
+    ebook_ch2_title: "Woche 1–2: Vorbereitung",
+    ebook_ch2_body: "pH prüfen, Winterreste runter, erster Schnitt, Verdichtung lösen – Basis schaffen, damit alles greift.",
+    ebook_ch3_title: "Woche 3–4: Saat & Startdünger",
+    ebook_ch3_body: "Lüften/aerifizieren, richtig nachsäen, Starterdünger geben und Feuchte gleichmäßig halten.",
+    ebook_ch4_title: "Woche 5–6: Routine",
+    ebook_ch4_body: "Schnitthöhe einstellen, tief wässern, zweite Düngung setzen – so wird der Rasen dicht.",
+    ebook_ch5_title: "Soforthilfe",
+    ebook_ch5_body: "Kurz und knapp bei Fehlern: zu kurz gemäht, falsches Gießen, Dünger-Pannen schnell beheben.",
+    ebook_highlights_title: "Warum hilfreich",
+    ebook_contact_title: "Brauchst du Hilfe?",
+    ebook_contact_desc: "Fragen zu Timing, Werkzeug oder ob es passt? Schreib mir vor dem Kauf.",
+    ebook_back: "Zurück zum Katalog",
+    ebook_buy_button: "Jetzt kaufen",
+    ebook_contact: "Fragen? Schreib mir",
+    ebook_offer_pill: "Bereit für sattes Grün?",
+    ebook_offer_heading: "Hol dir den 6-Wochen-Plan",
+    ebook_offer_sub: "E-Book (PDF), Checklisten, Links & Bonusvideos – sofort verfügbar.",
+    ebook_offer_price: "29,99 €",
+    ebook_offer_safety: "Sicherer Checkout · inkl. MwSt. · Sofortdownload",
   },
 };
 
@@ -485,20 +541,8 @@ const products = {
       tagKey: "tag_pdf",
       priceId: "price_1Sj0Fq0YmDmRUccy6lMbBIpE",
       price: "€29.99",
-    },
-    {
-      name: { en: "Striping Blueprint", de: "Striping Blueprint" },
-      note: { en: "Mow heights, patterns, and fert schedule", de: "Schnitthöhen, Muster und Düngeplan" },
-      tagKey: "tag_pdf",
-      link: "#",
-      price: "$24",
-    },
-    {
-      name: { en: "Season Planner", de: "Season Planner" },
-      note: { en: "Month-by-month tasks + rates", de: "Monatsplan mit Aufgaben und Mengen" },
-      tagKey: "tag_pdf",
-      link: "#",
-      price: "$15",
+      image: "images/ebooks/fruehling.png",
+      viewLink: "ebook.html",
     },
   ],
   seasonal: [
@@ -833,8 +877,19 @@ function renderProducts() {
         const imageBlock = item.image
           ? `<div class="product-photo${photoClass}" data-initial="${safeInitial}"><img src="${item.image}" alt="${name}" loading="lazy"></div>`
           : `<div class="product-photo placeholder${photoClass}"><span>${safeInitial}</span></div>`;
-        const action = item.priceId
-          ? `<button class="btn btn-primary checkout-btn" data-price="${item.priceId}">${buy}</button>`
+        const hasViewLink = Boolean(item.viewLink);
+        const hasBuy = Boolean(item.priceId);
+        const action = hasViewLink || hasBuy
+          ? `<div class="product-actions">
+              ${hasViewLink ? `<a class="btn btn-ghost" href="${item.viewLink}">${view}</a>` : ""}
+              ${
+                hasBuy
+                  ? `<button class="btn btn-primary checkout-btn" data-price="${item.priceId}">${buy}</button>`
+                  : item.link
+                  ? `<a class="btn btn-ghost" href="${item.link}">${view}</a>`
+                  : ""
+              }
+            </div>`
           : `<a class="btn btn-ghost" href="${item.link}">${view}</a>`;
         return `
         <div class="product-card">

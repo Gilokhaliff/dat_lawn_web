@@ -402,6 +402,10 @@ main {
 .grid { display: grid; gap: 1rem; }
 .grid-2 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
 .grid-3 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+#ebooksGrid {
+  grid-template-columns: repeat(auto-fill, minmax(260px, 280px));
+  justify-content: start;
+}
 
 .card {
   background: rgba(253, 251, 246, 0.72);
@@ -483,6 +487,111 @@ main {
   background: #fff;
   color: var(--muted);
   font-weight: 800;
+}
+
+.product-actions {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.ebook-hero {
+  padding: clamp(2.5rem, 4vw, 3.5rem) 0;
+}
+
+.ebook-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.ebook-cover {
+  max-width: 380px;
+  margin: 0 auto;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 24px 58px rgba(11, 26, 18, 0.18);
+  border: 1px solid rgba(201, 162, 77, 0.35);
+}
+
+.ebook-cover img { display: block; width: 100%; height: auto; }
+
+.ebook-intro h1 { margin: 0.35rem 0 0.5rem; font-size: clamp(1.9rem, 3vw, 2.6rem); }
+.ebook-intro .lead { color: #304539; }
+
+.ebook-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.75rem;
+}
+
+.ebook-content { padding: clamp(2rem, 4vw, 3rem) 0 3.5rem; }
+
+.ebook-card {
+  margin-top: 1rem;
+}
+
+.ebook-cta {
+  margin-top: 1.25rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  align-items: center;
+}
+
+.ebook-offer {
+  padding: 2rem 0 3rem;
+  background: radial-gradient(circle at 20% 20%, rgba(201, 162, 77, 0.08), transparent 30%), #f7f2e6;
+}
+
+.ebook-offer-card {
+  background: #fff;
+  border-radius: 18px;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  box-shadow: 0 24px 64px rgba(11, 26, 18, 0.12);
+  border: 1px solid rgba(201, 162, 77, 0.2);
+  display: grid;
+  grid-template-columns: minmax(280px, 1.2fr) minmax(240px, 0.8fr);
+  gap: 1rem;
+  align-items: center;
+}
+
+.offer-left h2 {
+  margin: 0.4rem 0 0.35rem;
+  font-size: clamp(1.6rem, 3vw, 2rem);
+}
+
+.offer-right {
+  display: grid;
+  gap: 0.4rem;
+  justify-items: end;
+  text-align: right;
+}
+
+.offer-price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.offer-price .price {
+  font-size: 2.05rem;
+  font-weight: 800;
+  color: #d69b2c;
+  font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+}
+
+.ebook-offer .btn-primary {
+  background: linear-gradient(135deg, #3fa544, #2c8a3a);
+  color: #fdfbf6;
+  box-shadow: 0 14px 36px rgba(47, 138, 71, 0.32);
+  min-width: 180px;
+}
+
+.ebook-offer .safety {
+  margin: 0;
 }
 
 .product-card strong { font-size: 1.05rem; }
