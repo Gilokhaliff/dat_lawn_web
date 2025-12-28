@@ -800,8 +800,8 @@ function formatDate(timestamp) {
 async function loadReviews() {
   try {
     const res = await fetch("/api/reviews");
-    if (!res.ok) throw new Error("Failed to load reviews");
-    const data = await res.json();
+    if (!res.ok) throw new Error(`Failed to load reviews: ${res.status}`);
+    const data = await res.json().catch(() => ({}));
     if (Array.isArray(data.reviews)) {
       reviews = data.reviews.map((r) => ({
         name: String(r.name || "Guest").slice(0, 80),
@@ -882,8 +882,10 @@ async function addReview(name, comment, rating) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
-    if (!res.ok) throw new Error("Review save failed");
-    const data = await res.json();
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      throw new Error(data.error || `Review save failed (${res.status})`);
+    }
     if (data && data.review) {
       reviews.unshift({
         name: data.review.name || payload.name,
@@ -910,6 +912,9 @@ function initReviewForm() {
   const hiddenRating = $("#reviewRating");
   if (!form) return;
   if (starsWrap && hiddenRating) {
+    if (!hiddenRating.value || Number(hiddenRating.value) <= 0) {
+      hiddenRating.value = 5;
+    }
     starsWrap.addEventListener("click", (e) => {
       const btn = e.target.closest(".star");
       if (!btn) return;
@@ -933,7 +938,13 @@ function initReviewForm() {
     const comment = commentInput ? commentInput.value : "";
     const rating = ratingInput ? ratingInput.value : 5;
     const added = await addReview(name, comment, rating);
-    if (!added) return;
+    if (!added) {
+      if (status) {
+        status.textContent = "Could not post your review. Please try again.";
+        status.classList.remove("hidden");
+      }
+      return;
+    }
     renderReviews();
     if (status) {
       const msg = (translations[currentLang] || translations.en).reviews_status;
