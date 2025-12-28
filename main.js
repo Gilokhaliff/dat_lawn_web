@@ -924,7 +924,7 @@ function initReviewForm() {
       star.classList.toggle("active", Number(star.dataset.value) <= defaultValue);
     });
   }
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const nameInput = $("#reviewName");
     const commentInput = $("#reviewComment");
@@ -932,8 +932,9 @@ function initReviewForm() {
     const name = nameInput ? nameInput.value : "";
     const comment = commentInput ? commentInput.value : "";
     const rating = ratingInput ? ratingInput.value : 5;
-    const added = addReview(name, comment, rating);
+    const added = await addReview(name, comment, rating);
     if (!added) return;
+    renderReviews();
     if (status) {
       const msg = (translations[currentLang] || translations.en).reviews_status;
       status.textContent = msg || "";
