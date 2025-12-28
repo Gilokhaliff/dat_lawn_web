@@ -186,6 +186,7 @@ const translations = {
     ebook_contact_desc: "Questions about fit, timing, or tools? Message me before you buy.",
     ebook_back: "Back to catalog",
     ebook_buy_button: "Buy now",
+    ebook_buy_button_price: "Buy now (€29.99)",
     ebook_contact: "Questions? Message me",
     ebook_offer_pill: "Ready for thick green?",
     ebook_offer_heading: "Get the 6-week plan",
@@ -382,6 +383,7 @@ const translations = {
     ebook_contact_desc: "Fragen zu Timing, Werkzeug oder ob es passt? Schreib mir vor dem Kauf.",
     ebook_back: "Zurück zum Katalog",
     ebook_buy_button: "Jetzt kaufen",
+    ebook_buy_button_price: "Jetzt kaufen (29,99 €)",
     ebook_contact: "Fragen? Schreib mir",
     ebook_offer_pill: "Bereit für sattes Grün?",
     ebook_offer_heading: "Hol dir den 6-Wochen-Plan",
@@ -1076,4 +1078,5 @@ document.addEventListener("DOMContentLoaded", () => {
   loadReviews();
   initReviewForm();
   setLanguage("de");
+  initCheckoutButtons();
 });
