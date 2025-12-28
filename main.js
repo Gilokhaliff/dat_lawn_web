@@ -397,7 +397,10 @@ const products = {
   tools: [
     {
       name: { en: 'Reel mower (20")', de: 'Spindelmäher (20")' },
-      note: { en: "Crisp cuts for cool-season turf", de: "Saubere Schnitte für kühle Saisonrasen" },
+      note: {
+        en: "Crisp, scissor-like cut for cool-season turf with a low noise footprint. Great when you want pro-looking stripes and even height without scalping.",
+        de: "Sauberer Scherenschnitt für kühle Saisonrasen bei wenig Lärm. Ideal für Profi-Streifen und gleichmäßige Schnitthöhe ohne Schälstellen.",
+      },
       tagKey: "tag_affiliate",
       link: "https://amzn.to/45SlreB",
       image: "images/tools/al-ko.webp",
@@ -405,7 +408,10 @@ const products = {
     },
     {
       name: { en: "Rotary mower w/ striping kit", de: "Rotationsmäher mit Streifen-Kit" },
-      note: { en: "Easy stripes without scalping", de: "Einfache Streifen ohne Schälen" },
+      note: {
+        en: "Rotary deck with a striping kit for fast, forgiving mowing. Gives you visible stripes without risking scalps on bumpy lawns.",
+        de: "Rotationsmäher mit Streifen-Kit für schnelles, fehlertolerantes Mähen. Sichtbare Streifen ohne Schälgefahr auf unruhigen Flächen.",
+      },
       tagKey: "tag_affiliate",
       link: "#",
       image: "images/tools/rotary-striping.jpg",
@@ -413,7 +419,10 @@ const products = {
     },
     {
       name: { en: "Battery string trimmer", de: "Akku-Fadentrimmer" },
-      note: { en: "Quiet edges, fast swaps", de: "Leise Kanten, schneller Wechsel" },
+      note: {
+        en: "Quiet edging with quick-load spool for fast string changes. Light enough for long sessions but strong enough to clean up curbs and beds.",
+        de: "Leises Kanten mit Schnellspule für fixen Fadenwechsel. Leicht für längere Einsätze, kräftig genug für Bordsteine und Beete.",
+      },
       tagKey: "tag_affiliate",
       link: "https://amzn.to/496Ye8P",
       image: "images/tools/fadentrimmer.jpg",
@@ -421,7 +430,10 @@ const products = {
     },
     {
       name: { en: "Lawn aerator", de: "Aerifizierer" },
-      note: { en: "Pulls clean cores so air, water, and fert get down fast", de: "Zieht saubere Kerne, damit Luft, Wasser und Dünger schnell einziehen" },
+      note: {
+        en: "Pulls clean cores so air, water, and fertilizer reach the roots fast. Comes with a catcher, so you stay tidy while relieving compaction.",
+        de: "Zieht saubere Kerne, damit Luft, Wasser und Dünger schnell zu den Wurzeln gelangen. Mit Auffangbehälter, damit du beim Entlasten der Verdichtung sauber bleibst.",
+      },
       tagKey: "tag_must",
       link: "https://www.rasenwelt.de/products/arena-aerifizierer-mit-auffangbehalter",
       image: "images/tools/aerifizierer.jpg",
@@ -430,7 +442,10 @@ const products = {
     },
     {
       name: { en: "Hand spreader", de: "Handstreuer" },
-      note: { en: "Quick spot seeding and light granular passes", de: "Schnelles Nachsaaten und leichte Granulat-Gaben" },
+      note: {
+        en: "Quick for spot seeding and light granular passes without hauling a big spreader. Great for tight beds, patches, and slopes.",
+        de: "Schnell für Nachsaat und leichte Granulat-Gaben ohne großen Streuwagen. Perfekt für enge Beete, Kahlstellen und Hänge.",
+      },
       tagKey: "tag_affiliate",
       link: "https://amzn.to/4nElb9h",
       image: "images/tools/handstreuer.jpg",
@@ -438,7 +453,10 @@ const products = {
     },
     {
       name: { en: "GARDENA garden hose", de: "GARDENA Gartenschlauch" },
-      note: { en: "Tangle-free hose with solid fittings", de: "Verdrillfreier Schlauch mit soliden Anschlüssen" },
+      note: {
+        en: "Tangle-free hose with solid fittings that don’t leak. Stays flexible in cool temps and works well on reels.",
+        de: "Verdrillfreier Schlauch mit dichten, soliden Anschlüssen. Bleibt auch bei kühleren Temperaturen flexibel und läuft gut auf Schlauchtrommeln.",
+      },
       tagKey: "tag_affiliate",
       link: "https://amzn.to/45SwSTD",
       image: "images/tools/gardena-schlauch.jpg",
@@ -447,7 +465,10 @@ const products = {
     },
     {
       name: { en: "Leaf blower", de: "Laubbläser" },
-      note: { en: "Clears clippings fast without hauling cords", de: "Bläst Schnittgut schnell weg - ganz ohne Kabel" },
+      note: {
+        en: "Cordless blower that clears clippings fast without dragging cords. Variable speed lets you handle beds gently or blast hard surfaces.",
+        de: "Kabelloser Bläser, der Schnittgut schnell entfernt, ohne Kabelsalat. Variable Geschwindigkeit für schonende Beetarbeit oder kraftvolles Reinigen von Flächen.",
+      },
       tagKey: "tag_affiliate",
       link: "https://amzn.to/3V64G9I",
       image: "images/tools/laubblaeser.jpg",
@@ -455,7 +476,10 @@ const products = {
     },
     {
       name: { en: "Battery chain saw", de: "Akku-Kettensäge" },
-      note: { en: "Fast limb cleanup without mixing fuel", de: "Schnelles Ast-Handling ohne Benzinmischung" },
+      note: {
+        en: "Battery saw for fast limb cleanup without mixing fuel. Tool-free chain tensioning makes on-the-go adjustments easy.",
+        de: "Akkusäge für schnelles Ast-Handling ohne Benzinmischung. Werkzeuglose Kettenspannung für schnelle Anpassungen unterwegs.",
+      },
       tagKey: "tag_affiliate",
       link: "https://amzn.to/3Id37Ur",
       image: "images/tools/saege.jpg",
@@ -465,72 +489,160 @@ const products = {
   ],
   consumables: [
     {
-      name: { en: "Starter fertilizer 18-24-12", de: "Starterdünger 18-24-12" },
-      note: { en: "Pet-safe after dry, great post-seed", de: "Haustierfreundlich nach Trocknung, top nach Saat" },
+      name: { en: "Starter fertilizer 10-15-10", de: "Starterdünger 10-15-10" },
+      note: {
+        en: "Starter NPK 10-15-10 that pushes roots fast after seed. Pet-safe once dry; pairs with light, even watering.",
+        de: "Starter-NPK 10-15-10 für schnellen Wurzelaufbau nach der Saat. Haustierfreundlich nach Trocknung; funktioniert am besten mit gleichmäßiger Bewässerung.",
+      },
       tagKey: "tag_pet",
-      link: "#",
+      link: "https://www.rasenwelt.de/products/starterdunger-arena-starter-10-15-10-25kg",
+      image: "images/consumables/starterduenger_arena.png",
       price: "$",
     },
     {
-      name: { en: "Slow-release 25-0-5", de: "Langzeitdünger 25-0-5" },
-      note: { en: "Monthly feed for steady color", de: "Monatliche Gabe für stabile Farbe" },
+      name: { en: "Summer fertilizer 24-6-12 (+3+1)", de: "Sommerdünger 24-6-12 (+3+1)" },
+      note: {
+        en: "Balanced 24-6-12 with extra minors for summer strength—keeps color without pushing top growth. Ideal mid-season feed when temps climb.",
+        de: "Ausgewogener 24-6-12 mit Mikros für sommerliche Stärke – hält die Farbe, ohne zu viel Blattmasse zu schieben. Perfekt als Mid-Season-Gabe bei wärmeren Temperaturen.",
+      },
+      tagKey: "tag_now",
+      link: "https://www.rasenwelt.de/products/sommerdunger-arena-pacemaker-ii-24-6-12-3-1-8kg",
+      image: "images/consumables/sommerduenger_arena.png",
+      price: "$$",
+    },
+    {
+      name: { en: "Fall fertilizer 10-0-21 (+6 MgO)", de: "Herbstdünger 10-0-21 (+6 MgO)" },
+      note: {
+        en: "High-K 10-0-21 with magnesium to harden turf before winter. Builds stress resistance and keeps color deeper into fall.",
+        de: "Kaliumstarker 10-0-21 mit Magnesium, um den Rasen vor dem Winter abzuhärten. Steigert die Stressresistenz und hält die Farbe länger im Herbst.",
+      },
+      tagKey: "tag_fall",
+      link: "https://www.rasenwelt.de/products/herbstdunger-arena-striker-mini-25-kg",
+      image: "images/consumables/herbstduenger_arena.png",
+      price: "$$",
+    },
+    {
+      name: { en: "Slow-release 6-2-5", de: "Langzeitdünger 6-2-5" },
+      note: {
+        en: "Slow-release 6-2-5 for steady color without growth spikes. Ideal as a monthly base feed in spring and summer.",
+        de: "Langzeit-6-2-5 für stabile Farbe ohne Wachstumsschübe. Ideal als monatliche Grundgabe im Frühling und Sommer.",
+      },
       tagKey: "tag_cool",
-      link: "#",
+      link: "https://www.rasenwelt.de/products/compo-expert-terraplus-citygreen-6-2-5",
+      image: "images/consumables/langzeitduenger.png",
       price: "$",
     },
     {
-      name: { en: "Pre-emergent", de: "Vorsaat-Hemmer" },
-      note: { en: "Keep crabgrass out early", de: "Hält frühzeitig Hirse & Co. fern" },
-      tagKey: "tag_time",
-      link: "#",
-      price: "$",
+      name: { en: "Lawn seed (Poa supina)", de: "Rasensamen (Poa supina)" },
+      note: {
+        en: "Shade-tolerant Poa supina for tough spots and overseed. Great for north-facing or tree-heavy lawns needing durable coverage.",
+        de: "Schattenverträgliche Poa supina für schwierige Flächen und Nachsaat. Ideal für Nordlagen oder baumreiche Gärten mit hohem Anspruch an Strapazierfähigkeit.",
+      },
+      tagKey: "tag_cool",
+      link: "https://www.rasenwelt.de/products/arena-poa-supina-superior",
+      image: "images/consumables/poa-supina.png",
+      price: "$$",
     },
     {
-      name: { en: "Selective herbicide", de: "Selektives Herbizid" },
-      note: { en: "Targets weeds, spares turf", de: "Trifft Unkraut, schont Rasen" },
+      name: { en: "Selective herbicide", de: "Unkrautvernichter" },
+      note: {
+        en: "Selective weed control that targets broadleaf weeds while sparing turf. Best on a dry lawn with no rain forecast for a few hours.",
+        de: "Selektives Mittel gegen breitblättrige Unkräuter, schont den Rasen. Am besten auf trockenem Rasen ausbringen, ohne Regen in den nächsten Stunden.",
+      },
       tagKey: "tag_spot",
-      link: "#",
+      link: "https://amzn.to/4pWQuNZ",
+      image: "images/consumables/compo_unkrautvernichter.jpg",
       price: "$",
     },
     {
-      name: { en: "Wetting agent", de: "Netzmittel" },
-      note: { en: "Helps sprays stick and spread", de: "Hilft Sprays haften und verteilen" },
-      tagKey: "tag_eff",
-      link: "#",
-      price: "$",
-    },
-    {
-      name: { en: "Organic compost topdress", de: "Organische Kompost-Auflage" },
-      note: { en: "Adds biology and structure", de: "Bringt Biologie und Struktur" },
+      name: { en: "Soil improver", de: "Bodenverbesserer" },
+      note: {
+        en: "Loosens compacted soil, boosts biology, and helps nutrients move. Ideal ahead of seed or as a spring tune-up for tired soil.",
+        de: "Lockert verdichteten Boden, stärkt die Biologie und verbessert den Nährstofffluss. Ideal vor der Saat oder als Frühjahrskur für müde Böden.",
+      },
       tagKey: "tag_org",
-      link: "#",
+      link: "https://amzn.to/4jjMC7l",
+      image: "images/consumables/bodenaktivator.jpg",
+      price: "$$",
+    },
+    {
+      name: { en: "Lawn soil mix", de: "Rasenerde" },
+      note: {
+        en: "Fine lawn soil for topdressing thin spots and leveling. Improves seed-to-soil contact and moisture retention after overseeding.",
+        de: "Feine Rasenerde zum Topdressen von Lücken und zum Ausgleichen. Verbessert Bodenkontakt und Feuchtehaltung nach der Nachsaat.",
+      },
+      tagKey: "tag_org",
+      link: "https://amzn.to/4jhmEkM",
+      image: "images/consumables/compo_rasenerde.jpg",
       price: "$$",
     },
   ],
   videoGear: [
     {
-      name: { en: "4K mirrorless camera", de: "4K Systemkamera" },
-      note: { en: "Clean 4K/60 for kit demos", de: "Sauberes 4K/60 für Kit-Demos" },
+      name: { en: "Sony ZV-E10 II (4K mirrorless)", de: "Sony ZV-E10 II (4K Systemkamera)" },
+      note: {
+        en: "Clean 4K/60 from Sony’s ZV-E10 II for kit demos and close-ups. Fast autofocus and solid low-light make morning/dusk shoots easy.",
+        de: "Sauberes 4K/60 mit der Sony ZV-E10 II für Kit-Demos und Nahaufnahmen. Schneller Autofokus und gute Low-Light-Performance für Morgen- oder Abenddrehs.",
+      },
       tagKey: "tag_affiliate",
-      link: "#",
-      image: "images/video/camera.jpg",
+      link: "https://amzn.to/3YeVDoo",
+      image: "images/gear/sony_zve10.jpg",
       price: "$$$",
     },
     {
-      name: { en: "Shotgun mic", de: "Richtmikrofon" },
-      note: { en: "Cuts mower noise, keeps voice crisp", de: "Schneidet Mäherlärm, Stimme bleibt klar" },
+      name: { en: "Sigma 16mm f/1.4", de: "Sigma 16mm f/1.4" },
+      note: {
+        en: "Wide 16mm prime that’s bright and sharp—great for handheld vlogs or showing full lawn scenes without distortion drama.",
+        de: "Weites 16mm-Prime, lichtstark und scharf – ideal für Handheld-Vlogs oder breite Rasenszenen ohne starke Verzerrung.",
+      },
       tagKey: "tag_affiliate",
-      link: "#",
-      image: "images/video/shotgun.jpg",
+      link: "https://amzn.to/4pUCqUZ",
+      image: "images/gear/sigma_16mm.jpg",
       price: "$$",
     },
     {
-      name: { en: "LED panel kit", de: "LED-Panel-Set" },
-      note: { en: "Soft light for product close-ups", de: "Weiches Licht für Produkt-Nahaufnahmen" },
+      name: { en: "TTArtisan 35mm f/1.8", de: "TTArtisan 35mm f/1.8" },
+      note: {
+        en: "Compact 35mm prime with creamy bokeh for gear close-ups and talking heads. Manual focus keeps cost low and look cinematic.",
+        de: "Kompaktes 35mm-Prime mit weichem Bokeh für Gear-Nahaufnahmen und Talking Heads. Manueller Fokus für Kinolook bei kleinem Budget.",
+      },
       tagKey: "tag_affiliate",
-      link: "#",
-      image: "images/video/led.jpg",
+      link: "https://amzn.to/4pcMzv2",
+      image: "images/gear/Ttartisan_35mm.jpg",
       price: "$$",
+    },
+    {
+      name: { en: "TTArtisan 56mm f/1.8", de: "TTArtisan 56mm f/1.8" },
+      note: {
+        en: "Portrait-length prime for tight shots with plenty of blur—perfect when you want products or faces to pop off the background.",
+        de: "Portrait-Brennweite für enge Shots mit viel Unschärfe – perfekt, wenn Produkte oder Gesichter klar vom Hintergrund abheben sollen.",
+      },
+      tagKey: "tag_affiliate",
+      link: "https://amzn.to/3YbFT5B",
+      image: "images/gear/Ttartisan_56mm.jpg",
+      price: "$$",
+    },
+    {
+      name: { en: "Wireless mic (DJI Mic 1)", de: "Wireless-Mikro (DJI Mic 1)" },
+      note: {
+        en: "DJI Mic 1 wireless kit for clean voice capture on the move. Reliable range, compact receiver for Sony rigs, and quick clipping on shirts.",
+        de: "DJI Mic 1 Wireless-Set für sauberen Ton unterwegs. Zuverlässige Reichweite, kompakter Empfänger für Sony-Setups und schnelles Anclippen an Shirts.",
+      },
+      tagKey: "tag_affiliate",
+      link: "https://amzn.to/3LbWKCb",
+      image: "images/gear/dji_mic_1.jpg",
+      price: "$$",
+    },
+    {
+      name: { en: "MacBook Air M4", de: "MacBook Air M4" },
+      note: {
+        en: "Light, quiet, and fast for editing clips, scripting, and uploads. Great battery life keeps you mobile on shoot days.",
+        de: "Leicht, leise und schnell fürs Clipschneiden, Skripten und Uploads. Starke Akkulaufzeit hält dich an Drehtagen mobil.",
+      },
+      tagKey: "tag_affiliate",
+      link: "https://amzn.to/4pgkKlN",
+      image: "images/gear/macbook_air_m4.jpg",
+      price: "$$$",
     },
   ],
   ebooks: [
@@ -550,21 +662,30 @@ const products = {
   seasonal: [
     {
       name: { en: "Summer heat kit", de: "Sommer-Hitze-Kit" },
-      note: { en: "Stress blend + light N + surfactant", de: "Stress-Mix + leicht N + Netzmittel" },
+      note: {
+        en: "Stress blend with light N and support nutrients for hot spells. Helps turf hold color and recover when temps spike.",
+        de: "Stress-Mix mit leichtem N und Zusatznährstoffen für Hitzeperioden. Hilft, Farbe zu halten und sich bei Temperaturspitzen zu erholen.",
+      },
       tagKey: "tag_now",
       link: "#",
       price: "$",
     },
     {
       name: { en: "Fungus watch pack", de: "Pilz-Check-Paket" },
-      note: { en: "Preventative + curative options", de: "Präventive + kurative Optionen" },
+      note: {
+        en: "Mix of preventative and curative options so you can respond fast. Use at first signs of pressure or before long wet stretches.",
+        de: "Mix aus präventiven und kurativen Optionen für schnelle Reaktionen. Einsetzen bei ersten Anzeichen oder vor langen feuchten Phasen.",
+      },
       tagKey: "tag_now",
       link: "#",
       price: "$$",
     },
     {
       name: { en: "Overseed combo", de: "Nachsaat-Kombi" },
-      note: { en: "Seed + starter fert + watering plan", de: "Saat + Starterdünger + Bewässerungsplan" },
+      note: {
+        en: "Seed plus starter fertilizer and a simple watering plan to close gaps. Great for fall renovation or spring thickening.",
+        de: "Saat mit Starterdünger und einfachem Bewässerungsplan, um Lücken zu schließen. Ideal für Herbst-Renovation oder Frühjahrsverdichtung.",
+      },
       tagKey: "tag_fall",
       link: "#",
       price: "$$",
@@ -860,7 +981,6 @@ function renderProducts() {
     ["consumablesGrid", products.consumables],
     ["videoGrid", products.videoGear],
     ["ebooksGrid", products.ebooks],
-    ["seasonalGrid", products.seasonal],
   ];
   const dict = translations[currentLang] || translations.en;
   mapping.forEach(([id, items]) => {
