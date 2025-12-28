@@ -237,7 +237,7 @@ const translations = {
     bundles_cta: "Brauche ein individuelles Kit",
     bundle1_title: "Starter Stripe Kit",
     bundle1_desc: "Saubere Schnitte und leichte Streifen für kühle Saisonrasen.",
-    bundle1_li1: "Spindel- oder Rotationsmäher-Empfehlung",
+    bundle1_li1: "Spindel- oder Sichelmäher-Empfehlung",
     bundle1_li2: "Basics für Kanten & Trimmen",
     bundle1_li3: "Startdünger (haustierfreundlich)",
     bundle1_li4: "Schlauch-Sprüher & Netzmittel",
@@ -396,7 +396,7 @@ const translations = {
 const products = {
   tools: [
     {
-      name: { en: 'Reel mower (20")', de: 'Spindelmäher (20")' },
+      name: { en: "Reel mower", de: "Spindelmäher" },
       note: {
         en: "Crisp, scissor-like cut for cool-season turf with a low noise footprint. Great when you want pro-looking stripes and even height without scalping.",
         de: "Sauberer Scherenschnitt für kühle Saisonrasen bei wenig Lärm. Ideal für Profi-Streifen und gleichmäßige Schnitthöhe ohne Schälstellen.",
@@ -407,10 +407,10 @@ const products = {
       price: "$",
     },
     {
-      name: { en: "Rotary mower w/ striping kit", de: "Rotationsmäher mit Streifen-Kit" },
+      name: { en: "Rotary mower w/ striping kit", de: "Sichelmäher mit Streifen-Kit" },
       note: {
         en: "Rotary deck with a striping kit for fast, forgiving mowing. Gives you visible stripes without risking scalps on bumpy lawns.",
-        de: "Rotationsmäher mit Streifen-Kit für schnelles, fehlertolerantes Mähen. Sichtbare Streifen ohne Schälgefahr auf unruhigen Flächen.",
+        de: "Sichelmäher mit Streifen-Kit für schnelles, fehlertolerantes Mähen. Sichtbare Streifen ohne Schälgefahr auf unruhigen Flächen.",
       },
       tagKey: "tag_affiliate",
       link: "#",
@@ -1191,6 +1191,42 @@ function initCheckoutButtons() {
   });
 }
 
+function initScrollReveal() {
+  const targets = [
+    ".hero",
+    ".strip",
+    ".catalog-group",
+    ".product-card",
+    ".why-grid .card",
+    ".promo-band",
+    ".reviews-list",
+    ".faq-item",
+    ".ebook-hero",
+    ".ebook-card",
+    ".ebook-offer-card",
+    ".cta-card",
+  ];
+  const nodes = $$(targets.join(","));
+  if (!nodes.length) return;
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+        } else {
+          entry.target.classList.remove("visible");
+        }
+      });
+    },
+    { threshold: 0.15, rootMargin: "0px 0px -10% 0px" }
+  );
+  nodes.forEach((node, idx) => {
+    node.classList.add("reveal");
+    node.style.animationDelay = `${Math.min(idx * 0.05, 0.4)}s`;
+    observer.observe(node);
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   toggleNav();
   initLanguageToggle();
@@ -1199,4 +1235,5 @@ document.addEventListener("DOMContentLoaded", () => {
   initReviewForm();
   setLanguage("de");
   initCheckoutButtons();
+  initScrollReveal();
 });

@@ -25,6 +25,30 @@ body {
 a { color: inherit; text-decoration: none; }
 img { max-width: 100%; display: block; }
 
+@keyframes fadeUp {
+  0% { opacity: 0; transform: translateY(22px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes floatSoft {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+  100% { transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.reveal.visible {
+  animation: fadeUp 0.85s ease forwards;
+}
+
 .container {
   width: min(1120px, 92vw);
   margin: 0 auto;
@@ -220,6 +244,7 @@ nav a:focus-visible {
   padding: clamp(2.75rem, 6vw, 4.5rem) 0 3rem;
   background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.04), transparent 35%), #0b1a12;
   color: #f2edde;
+  animation: fadeUp 0.9s ease both;
 }
 
 .hero-grid {
@@ -306,6 +331,7 @@ nav a:focus-visible {
   gap: 1rem;
   padding: 1rem 0;
   font-weight: 700;
+  animation: fadeUp 0.9s ease 0.1s both;
 }
 
 .strip-grid strong { color: var(--accent); font-family: var(--serif); letter-spacing: 0.01em; }
@@ -452,6 +478,7 @@ main {
 .catalog-group { display: grid; gap: 0.75rem; }
 .group-head h3 { margin: 0; }
 .group-head p { margin: 0.25rem 0 0; color: var(--muted); }
+.catalog-group { animation: fadeUp 0.9s ease 0.15s both; }
 
 .product-card {
   border-radius: 14px;
@@ -462,6 +489,8 @@ main {
   gap: 0.5rem;
   box-shadow: 0 18px 44px rgba(11, 26, 18, 0.12);
   backdrop-filter: blur(12px);
+  animation: fadeUp 0.8s ease both;
+  animation-delay: 0.1s;
 }
 
 .product-photo {
@@ -512,12 +541,14 @@ main {
   overflow: hidden;
   box-shadow: 0 24px 58px rgba(11, 26, 18, 0.18);
   border: 1px solid rgba(201, 162, 77, 0.35);
+  animation: fadeUp 0.9s ease 0.05s both;
 }
 
 .ebook-cover img { display: block; width: 100%; height: auto; }
 
 .ebook-intro h1 { margin: 0.35rem 0 0.5rem; font-size: clamp(1.9rem, 3vw, 2.6rem); }
 .ebook-intro .lead { color: #304539; }
+.ebook-intro { animation: fadeUp 0.9s ease 0.1s both; }
 
 .ebook-intro .list {
   list-style: none;
@@ -581,6 +612,7 @@ main {
   grid-template-columns: minmax(280px, 1.2fr) minmax(240px, 0.8fr);
   gap: 1rem;
   align-items: center;
+  animation: fadeUp 0.9s ease 0.15s both;
 }
 
 .offer-left h2 {
@@ -665,12 +697,14 @@ main {
   border: 1px solid rgba(255, 255, 255, 0.3);
   box-shadow: 0 18px 44px rgba(11, 26, 18, 0.1);
   backdrop-filter: blur(12px);
+  animation: fadeUp 0.9s ease 0.1s both;
 }
 
 .reviews-layout { align-items: start; }
 .reviews-list {
   display: grid;
   gap: 1rem;
+  animation: fadeUp 0.9s ease 0.1s both;
 }
 
 #reviews {
@@ -977,6 +1011,7 @@ textarea:focus {
   background: rgba(253, 251, 246, 0.65);
   box-shadow: 0 18px 44px rgba(11, 26, 18, 0.1);
   backdrop-filter: blur(12px);
+  animation: fadeUp 0.9s ease both;
 }
 
 .faq-item h4 { margin: 0 0 0.4rem; }
