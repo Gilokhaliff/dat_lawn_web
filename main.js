@@ -987,6 +987,8 @@ async function startCheckout(priceId, btn) {
   const originalText = btn.textContent;
   btn.disabled = true;
   btn.textContent = "...";
+  // Attempt a new tab first; fall back to same-tab if blocked (common on mobile).
+  const checkoutWindow = window.open("about:blank", "_blank", "noopener");
   try {
     const res = await fetch("/api/checkout", {
       method: "POST",
@@ -995,12 +997,18 @@ async function startCheckout(priceId, btn) {
     });
     const data = await res.json();
     if (data.url) {
-      window.location.href = data.url;
+      if (checkoutWindow) {
+        checkoutWindow.location.href = data.url;
+      } else {
+        window.location.href = data.url;
+      }
     } else {
+      if (checkoutWindow) checkoutWindow.close();
       alert(data.error || "Unable to start checkout.");
     }
   } catch (err) {
     console.error(err);
+    if (checkoutWindow) checkoutWindow.close();
     alert("Checkout failed. Please try again.");
   } finally {
     btn.disabled = false;
