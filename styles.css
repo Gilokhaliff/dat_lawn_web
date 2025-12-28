@@ -519,6 +519,32 @@ main {
 .ebook-intro h1 { margin: 0.35rem 0 0.5rem; font-size: clamp(1.9rem, 3vw, 2.6rem); }
 .ebook-intro .lead { color: #304539; }
 
+.ebook-intro .list {
+  list-style: none;
+  padding: 0;
+  margin: 0.75rem 0 0;
+  display: grid;
+  gap: 0.45rem;
+  text-align: left;
+}
+
+.ebook-intro .list li {
+  position: relative;
+  padding-left: 1.2rem;
+  color: #2e3f32;
+  font-weight: 600;
+}
+
+.ebook-intro .list li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  top: 0.05rem;
+  color: #2f8c4c;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
 .ebook-actions {
   display: flex;
   flex-wrap: wrap;
@@ -601,6 +627,10 @@ main {
   }
   .ebook-intro .ebook-actions {
     justify-content: center;
+  }
+  .ebook-intro .list {
+    justify-items: center;
+    text-align: left;
   }
   .ebook-cover { max-width: 320px; }
   .ebook-offer-card {
