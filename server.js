@@ -17,6 +17,7 @@ const stripe = stripeSecret ? new Stripe(stripeSecret) : null;
 const reviewsFile = path.join(root, "reviews.json");
 const kvUrl = process.env.KV_REST_API_URL;
 const kvToken = process.env.KV_REST_API_TOKEN;
+let memoryReviews = [];
 
 const mimeTypes = {
   ".html": "text/html",
@@ -61,8 +62,9 @@ async function readReviews() {
     return [];
   } catch (err) {
     if (err.code === "ENOENT") return [];
-    throw err;
+    console.warn("File read failed, falling back to memory:", err.message);
   }
+  return memoryReviews;
 }
 
 async function writeReviews(list) {
@@ -80,10 +82,15 @@ async function writeReviews(list) {
       if (!res.ok) throw new Error(`KV set failed: ${res.status}`);
       return;
     } catch (err) {
-      console.warn("KV write failed, falling back to file:", err.message);
+      console.warn("KV write failed, falling back to file/memory:", err.message);
     }
   }
-  await writeFile(reviewsFile, JSON.stringify(safe, null, 2), "utf-8");
+  try {
+    await writeFile(reviewsFile, JSON.stringify(safe, null, 2), "utf-8");
+  } catch (err) {
+    console.warn("File write failed, storing in memory only:", err.message);
+    memoryReviews = safe;
+  }
 }
 
 async function serveFile(res, filePath) {
