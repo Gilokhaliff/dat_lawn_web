@@ -15,9 +15,11 @@ const stripeSecret = process.env.STRIPE_SECRET_KEY;
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 const stripe = stripeSecret ? new Stripe(stripeSecret) : null;
 const reviewsFile = path.join(root, "reviews.json");
+const purchasesFile = path.join(root, "purchases.json");
 const kvUrl = process.env.KV_REST_API_URL;
 const kvToken = process.env.KV_REST_API_TOKEN;
 let memoryReviews = [];
+let memoryPurchases = [];
 
 const mimeTypes = {
   ".html": "text/html",
@@ -93,6 +95,60 @@ async function writeReviews(list) {
   }
 }
 
+async function readPurchases() {
+  if (kvUrl && kvToken) {
+    try {
+      const res = await fetch(`${kvUrl}/get/purchases`, {
+        headers: { Authorization: `Bearer ${kvToken}` },
+      });
+      if (!res.ok) throw new Error(`KV purchases get failed: ${res.status}`);
+      const data = await res.json();
+      if (data && typeof data.result === "string") {
+        const parsed = JSON.parse(data.result);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch (err) {
+      console.warn("KV purchases read failed, falling back:", err.message);
+    }
+  }
+  try {
+    const data = await readFile(purchasesFile, "utf-8");
+    const parsed = JSON.parse(data);
+    if (Array.isArray(parsed)) return parsed;
+  } catch (err) {
+    if (err.code !== "ENOENT") {
+      console.warn("Purchases file read failed, falling back to memory:", err.message);
+    }
+  }
+  return memoryPurchases;
+}
+
+async function writePurchases(list) {
+  const safe = Array.isArray(list) ? list.slice(-500) : [];
+  if (kvUrl && kvToken) {
+    try {
+      const res = await fetch(`${kvUrl}/set/purchases`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${kvToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ value: JSON.stringify(safe) }),
+      });
+      if (!res.ok) throw new Error(`KV purchases set failed: ${res.status}`);
+      return;
+    } catch (err) {
+      console.warn("KV purchases write failed, falling back:", err.message);
+    }
+  }
+  try {
+    await writeFile(purchasesFile, JSON.stringify(safe, null, 2), "utf-8");
+  } catch (err) {
+    console.warn("Purchases file write failed, storing memory only:", err.message);
+    memoryPurchases = safe;
+  }
+}
+
 async function serveFile(res, filePath) {
   try {
     const data = await readFile(filePath);
@@ -123,6 +179,9 @@ async function handleCheckout(req, res) {
       line_items: [{ price: priceId, quantity: 1 }],
       success_url: successUrl,
       cancel_url: cancelUrl,
+      customer_creation: "always",
+      phone_number_collection: { enabled: true },
+      metadata: { item: "ebook", priceId },
     });
     return sendJson(res, 200, { url: session.url });
   } catch (err) {
@@ -207,6 +266,26 @@ async function handleWebhook(req, res) {
     if (event.type === "checkout.session.completed") {
       const session = event.data.object;
       console.log("Checkout complete for:", session.customer_details?.email || "unknown email");
+      // Persist purchaser snapshot
+      try {
+        const existing = await readPurchases();
+        const record = {
+          id: session.id,
+          customer: {
+            name: session.customer_details?.name || "",
+            email: session.customer_details?.email || "",
+            phone: session.customer_details?.phone || "",
+          },
+          amount_total: session.amount_total,
+          currency: session.currency,
+          priceId: session.metadata?.priceId || "",
+          created: Date.now(),
+        };
+        const deduped = existing.filter((p) => p.id !== record.id);
+        await writePurchases([record, ...deduped]);
+      } catch (err) {
+        console.warn("Failed to store purchase:", err.message);
+      }
       // TODO: Trigger email with signed download link here.
     }
 
@@ -227,6 +306,15 @@ const server = http.createServer(async (req, res) => {
   }
   if ((req.method === "GET" || req.method === "POST") && pathname === "/api/reviews") {
     return handleReviews(req, res);
+  }
+  if (req.method === "GET" && pathname === "/api/purchases") {
+    try {
+      const purchases = await readPurchases();
+      return sendJson(res, 200, { purchases });
+    } catch (err) {
+      console.warn("Purchases fetch failed:", err.message);
+      return sendJson(res, 500, { purchases: [] });
+    }
   }
 
   if (pathname === "/") pathname = "/index.html";
