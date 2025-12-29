@@ -653,7 +653,7 @@ const products = {
         de: "Frühlings-Guide mit praktischen Schritten und Produktmengen.",
       },
       tagKey: "tag_pdf",
-      priceId: "price_1SjdB30YmDmRUccySp1GKr1F",
+      priceId: "price_1SjdZY0YmDmRUccyqK6ia5tp",
       price: "€29.99",
       image: "images/ebooks/fruehling.png",
       viewLink: "ebook.html",
