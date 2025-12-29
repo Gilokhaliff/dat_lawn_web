@@ -797,7 +797,49 @@ function formatDate(timestamp) {
   return date.toLocaleDateString(locale, { month: "short", day: "numeric", year: "numeric" });
 }
 
+function renderReviewSkeletons(count = 3) {
+  const list = $("#reviewsList");
+  const empty = $("#reviewsEmpty");
+  if (!list) return;
+  const placeholders = Array.from({ length: count })
+    .map(
+      () => `
+      <div class="review-skeleton">
+        <div class="skeleton-pill skeleton"></div>
+        <div class="skeleton-line skeleton"></div>
+        <div class="skeleton-line skeleton short"></div>
+      </div>`
+    )
+    .join("");
+  list.innerHTML = placeholders;
+  if (empty) empty.classList.add("hidden");
+}
+
+let toastStackEl;
+function ensureToastStack() {
+  if (toastStackEl) return toastStackEl;
+  const stack = document.createElement("div");
+  stack.className = "toast-stack";
+  document.body.appendChild(stack);
+  toastStackEl = stack;
+  return toastStackEl;
+}
+
+function showToast(message, type = "success") {
+  const stack = ensureToastStack();
+  const toast = document.createElement("div");
+  toast.className = `toast${type === "error" ? " error" : ""}`;
+  toast.textContent = message;
+  stack.appendChild(toast);
+  setTimeout(() => {
+    toast.style.opacity = "0";
+    toast.style.transform = "translateY(-6px)";
+    setTimeout(() => toast.remove(), 220);
+  }, 3200);
+}
+
 async function loadReviews() {
+  renderReviewSkeletons();
   try {
     const res = await fetch("/api/reviews");
     if (!res.ok) throw new Error(`Failed to load reviews: ${res.status}`);
@@ -838,13 +880,21 @@ function starDisplay(rating = 0) {
 function renderReviews() {
   const list = $("#reviewsList");
   const empty = $("#reviewsEmpty");
+  const ticker = $("#reviewsTicker");
+  const tickerTrack = $("#reviewsTickerTrack");
   if (!list) return;
   if (!reviews.length) {
     list.innerHTML = "";
     if (empty) empty.classList.remove("hidden");
+    if (ticker) ticker.classList.add("hidden");
+    if (tickerTrack) tickerTrack.innerHTML = "";
     return;
   }
-  const cards = reviews
+
+  const mainCards = reviews.slice(0, 3);
+  const overflow = reviews.slice(3);
+
+  const mainHtml = mainCards
     .map((r) => {
       const name = escapeHtml(r.name || "Guest");
       const text = escapeHtml(getReviewText(r));
@@ -863,14 +913,45 @@ function renderReviews() {
       `;
     })
     .join("");
-  list.innerHTML = cards;
+
+  list.innerHTML = mainHtml;
   if (empty) empty.classList.add("hidden");
+
+  if (ticker && tickerTrack) {
+    if (overflow.length) {
+      const tickerHtml = overflow
+        .map((r) => {
+          const name = escapeHtml(r.name || "Guest");
+          const text = escapeHtml(getReviewText(r)).slice(0, 220);
+          const formatted = text.replace(/\n/g, " ");
+          const dateLabel = formatDate(r.createdAt);
+          const stars = starDisplay(r.rating);
+          return `
+            <div class="ticker-item">
+              <span class="review-name">${name}</span>
+              <span class="review-date">${dateLabel}</span>
+              <div class="star-display" aria-hidden="true">${stars}</div>
+              <p class="review-text">${formatted}</p>
+            </div>
+          `;
+        })
+        .join("");
+      tickerTrack.innerHTML = tickerHtml + tickerHtml;
+      ticker.classList.remove("hidden");
+      tickerTrack.classList.toggle("running", true);
+    } else {
+      ticker.classList.add("hidden");
+      tickerTrack.innerHTML = "";
+      tickerTrack.classList.remove("running");
+    }
+  }
 }
 
 async function addReview(name, comment, rating) {
   const cleanComment = (comment || "").trim();
   const cleanName = (name || "").trim() || "Guest";
   if (!cleanComment) return false;
+  const dict = translations[currentLang] || translations.en;
   const payload = {
     name: cleanName.slice(0, 80),
     comment: cleanComment.slice(0, 800),
@@ -898,6 +979,7 @@ async function addReview(name, comment, rating) {
     } else {
       await loadReviews();
     }
+    showToast(dict.reviews_status || "Thanks! Your comment is live.");
     return true;
   } catch (err) {
     console.warn("Review submit failed", err);
@@ -906,6 +988,7 @@ async function addReview(name, comment, rating) {
       status.textContent = err.message || "Could not post your review. Please try again.";
       status.classList.remove("hidden");
     }
+    showToast(err.message || "Could not post your review. Please try again.", "error");
     return false;
   }
 }
@@ -972,6 +1055,29 @@ function toggleNav() {
     const clickToggle = toggle.contains(e.target);
     if (!clickInsideNav && !clickToggle) links.classList.remove("open");
   });
+}
+
+function initActiveNav() {
+  const sections = ["hero", "catalog", "highlights", "reviews", "faq", "contact"];
+  const links = sections
+    .map((id) => {
+      const el = document.getElementById(id);
+      const navLink = document.querySelector(`nav a[href="#${id}"]`);
+      return el && navLink ? { el, navLink } : null;
+    })
+    .filter(Boolean);
+  if (!links.length) return;
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        const match = links.find((l) => l.el === entry.target);
+        if (!match) return;
+        match.navLink.classList.toggle("active", entry.isIntersecting);
+      });
+    },
+    { threshold: 0.3 }
+  );
+  links.forEach(({ el }) => observer.observe(el));
 }
 
 function renderProducts() {
@@ -1072,6 +1178,39 @@ function forceProductLinksNewTab() {
   });
 }
 
+function initLightbox() {
+  let overlay = document.querySelector(".lightbox");
+  if (!overlay) {
+    overlay = document.createElement("div");
+    overlay.className = "lightbox";
+    overlay.innerHTML = `
+      <button class="lightbox-close" aria-label="Close">×</button>
+      <img alt="Product preview" />
+    `;
+    document.body.appendChild(overlay);
+  }
+  const imgTarget = overlay.querySelector("img");
+  const closeBtn = overlay.querySelector(".lightbox-close");
+  const close = () => overlay.classList.remove("open");
+  overlay.addEventListener("click", (e) => {
+    if (e.target === overlay) close();
+  });
+  if (closeBtn) closeBtn.addEventListener("click", close);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") close();
+  });
+  document.body.addEventListener("click", (e) => {
+    const target = e.target.closest(".product-photo img");
+    if (!target) return;
+    e.preventDefault();
+    if (imgTarget) {
+      imgTarget.src = target.src;
+      imgTarget.alt = target.alt || "Product image";
+    }
+    overlay.classList.add("open");
+  });
+}
+
 function renderFaq() {
   const list = $("#faqList");
   if (!list) return;
@@ -1102,6 +1241,7 @@ function initForms() {
         contactStatus.textContent = msg || "";
         contactStatus.classList.remove("hidden");
       }
+      showToast(msg || "Thanks! I will reply within 48 hours.");
       contactForm.reset();
     });
   }
@@ -1116,6 +1256,7 @@ function initForms() {
         newsletterStatus.textContent = msg || "";
         newsletterStatus.classList.remove("hidden");
       }
+      showToast(msg || "Checklist is on the way.");
       newsletterForm.reset();
     });
   }
@@ -1218,7 +1359,7 @@ function initScrollReveal() {
         }
       });
     },
-    { threshold: 0.15, rootMargin: "0px 0px -10% 0px" }
+    { threshold: 0.1, rootMargin: "0px 0px -5% 0px" }
   );
   nodes.forEach((node, idx) => {
     node.classList.add("reveal");
@@ -1227,8 +1368,43 @@ function initScrollReveal() {
   });
 }
 
+function initFloatingAccents() {
+  const configs = [
+    { top: "10%", left: "6%", size: 360, speed: 0.06, scale: 1 },
+    { top: "55%", left: "72%", size: 420, speed: 0.08, scale: 1.05 },
+    { bottom: "10%", right: "8%", size: 380, speed: 0.1, scale: 0.95 },
+  ];
+  const accents = configs.map((cfg) => {
+    const blob = document.createElement("span");
+    blob.className = "floating-accent";
+    blob.style.width = `${cfg.size}px`;
+    blob.style.height = `${cfg.size}px`;
+    blob.style.top = cfg.top || "auto";
+    blob.style.left = cfg.left || "auto";
+    blob.style.bottom = cfg.bottom || "auto";
+    blob.style.right = cfg.right || "auto";
+    blob.dataset.speed = cfg.speed;
+    blob.dataset.scale = cfg.scale;
+    document.body.appendChild(blob);
+    return blob;
+  });
+
+  const applyParallax = () => {
+    const y = window.scrollY || 0;
+    accents.forEach((blob) => {
+      const speed = Number(blob.dataset.speed) || 0.08;
+      const base = Number(blob.dataset.scale) || 1;
+      blob.style.transform = `translate3d(0, ${-y * speed}px, 0) scale(${base})`;
+    });
+  };
+
+  window.addEventListener("scroll", () => requestAnimationFrame(applyParallax), { passive: true });
+  applyParallax();
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   toggleNav();
+  initActiveNav();
   initLanguageToggle();
   initForms();
   loadReviews();
@@ -1236,4 +1412,6 @@ document.addEventListener("DOMContentLoaded", () => {
   setLanguage("de");
   initCheckoutButtons();
   initScrollReveal();
+  initFloatingAccents();
+  initLightbox();
 });
