@@ -20,7 +20,7 @@ const kvUrl = process.env.KV_REST_API_URL;
 const kvToken = process.env.KV_REST_API_TOKEN;
 const resendKey = process.env.RESEND_API_KEY;
 const resendFrom = process.env.RESEND_FROM || "onboarding@resend.dev";
-const downloadUrl = process.env.EBOOK_DOWNLOAD_URL || "https://www.datlawnguy.de/ebooks/fru%CC%88hling_e-book.pdf";
+const downloadUrl = process.env.EBOOK_DOWNLOAD_URL || "https://www.datlawnguy.de/ebooks/eBook1.pdf";
 let memoryReviews = [];
 let memoryPurchases = [];
 
