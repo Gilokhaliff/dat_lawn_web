@@ -18,6 +18,9 @@ const reviewsFile = path.join(root, "reviews.json");
 const purchasesFile = path.join(root, "purchases.json");
 const kvUrl = process.env.KV_REST_API_URL;
 const kvToken = process.env.KV_REST_API_TOKEN;
+const resendKey = process.env.RESEND_API_KEY;
+const resendFrom = process.env.RESEND_FROM || "onboarding@resend.dev";
+const downloadUrl = process.env.EBOOK_DOWNLOAD_URL || "https://www.datlawnguy.de/ebooks/fru%CC%88hling_e-book.pdf";
 let memoryReviews = [];
 let memoryPurchases = [];
 
@@ -147,6 +150,34 @@ async function writePurchases(list) {
     console.warn("Purchases file write failed, storing memory only:", err.message);
     memoryPurchases = safe;
   }
+}
+
+async function sendDownloadEmail(to, name = "there") {
+  if (!resendKey || !to) return;
+  const html = `
+    <div style="font-family:Arial,Helvetica,sans-serif;line-height:1.5;color:#0b1a12;">
+      <h2 style="margin:0 0 12px 0;">Danke für deinen Kauf${name ? `, ${escapeHtml(name)}` : ""}!</h2>
+      <p style="margin:0 0 12px 0;">Hier ist dein Ebook-Download:</p>
+      <p style="margin:0 0 16px 0;">
+        <a href="${downloadUrl}" style="background:#175c33;color:#fff;padding:10px 14px;border-radius:8px;text-decoration:none;font-weight:700;">E-Book herunterladen (PDF)</a>
+      </p>
+      <p style="margin:0;color:#4c5d51;">Falls der Button nicht funktioniert, nutze diesen Link: <br><a href="${downloadUrl}">${downloadUrl}</a></p>
+    </div>
+  `;
+
+  await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${resendKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from: resendFrom,
+      to,
+      subject: "DAT LAWN GUY - eBook Frühling Rasenpflege ohne Bullshit",
+      html,
+    }),
+  });
 }
 
 async function serveFile(res, filePath) {
@@ -287,6 +318,13 @@ async function handleWebhook(req, res) {
         console.warn("Failed to store purchase:", err.message);
       }
       // TODO: Trigger email with signed download link here.
+      try {
+        if (session.customer_details?.email && resendKey) {
+          await sendDownloadEmail(session.customer_details.email, session.customer_details.name || "there");
+        }
+      } catch (err) {
+        console.warn("Failed to send download email:", err.message);
+      }
     }
 
     res.writeHead(200, { "Content-Type": "application/json" });
