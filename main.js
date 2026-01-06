@@ -1335,6 +1335,7 @@ function initCheckoutButtons() {
 function initScrollReveal() {
   const targets = [
     ".hero",
+    ".ebook-feature",
     ".strip",
     ".catalog-group",
     ".product-card",

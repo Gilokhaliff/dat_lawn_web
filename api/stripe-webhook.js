@@ -34,7 +34,7 @@ function createSignedDownloadLink(email = "") {
   return `${downloadBase}?token=${token}`;
 }
 
-async function sendDownloadEmail(to, name = "") {
+async function sendDownloadEmail(to, name = "", idempotencyKey = "") {
   if (!resendKey || !to) return;
   const link = createSignedDownloadLink(to);
   const safeName = name ? `, ${toStringSafe(name)}` : "";
@@ -49,12 +49,15 @@ async function sendDownloadEmail(to, name = "") {
     </div>
   `;
 
+  const headers = {
+    Authorization: `Bearer ${resendKey}`,
+    "Content-Type": "application/json",
+  };
+  if (idempotencyKey) headers["Idempotency-Key"] = idempotencyKey;
+
   await fetch("https://api.resend.com/emails", {
     method: "POST",
-    headers: {
-      Authorization: `Bearer ${resendKey}`,
-      "Content-Type": "application/json",
-    },
+    headers,
     body: JSON.stringify({
       from: resendFrom,
       to,
@@ -97,7 +100,7 @@ export default async function handler(req, res) {
     const email = session.customer_details?.email;
     const name = session.customer_details?.name || "";
     try {
-      await sendDownloadEmail(email, name);
+      await sendDownloadEmail(email, name, event.id);
     } catch (err) {
       console.error("Failed to send download email:", err.message);
     }
