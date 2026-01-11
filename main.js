@@ -893,7 +893,11 @@ async function loadReviews() {
         text: typeof r.text === "string" ? r.text.slice(0, 800) : "",
         createdAt: r.createdAt || Date.now(),
         rating: Number(r.rating) || 0,
-        imageUrl: typeof r.imageUrl === "string" ? r.imageUrl : "",
+        imageUrl:
+          (typeof r.imageUrl === "string" && r.imageUrl) ||
+          (typeof r.image === "string" && r.image) ||
+          (typeof r.photo === "string" && r.photo) ||
+          "",
       }));
     } else {
       reviews = [];
@@ -946,17 +950,19 @@ function renderReviews() {
       const dateLabel = formatDate(r.createdAt);
       const stars = starDisplay(r.rating);
       const photo = r.imageUrl
-        ? `<div class="review-photo"><img src="${escapeHtml(r.imageUrl)}" alt="Lawn result photo" loading="lazy"></div>`
+        ? `<div class="review-thumb"><img src="${escapeHtml(r.imageUrl)}" alt="Lawn result photo" loading="lazy"></div>`
         : "";
       return `
-        <div class="review-card">
+        <div class="review-card${r.imageUrl ? " has-photo" : ""}"${r.imageUrl ? ` data-photo="${escapeHtml(r.imageUrl)}"` : ""}>
           <div class="review-meta">
             <span class="review-name">${name}</span>
             <span class="review-date">${dateLabel}</span>
           </div>
           <div class="star-display" aria-hidden="true">${stars}</div>
-          <p class="review-text">${formatted}</p>
-          ${photo}
+          <div class="review-content">
+            <p class="review-text">${formatted}</p>
+            ${photo}
+          </div>
         </div>
       `;
     })
@@ -1267,12 +1273,18 @@ function initLightbox() {
     if (e.key === "Escape") close();
   });
   document.body.addEventListener("click", (e) => {
-    const target = e.target.closest(".product-photo img");
-    if (!target) return;
+    const productImg = e.target.closest(".product-photo img");
+    const reviewCard = e.target.closest(".review-card.has-photo");
+    if (!productImg && !reviewCard) return;
     e.preventDefault();
     if (imgTarget) {
-      imgTarget.src = target.src;
-      imgTarget.alt = target.alt || "Product image";
+      if (productImg) {
+        imgTarget.src = productImg.src;
+        imgTarget.alt = productImg.alt || "Product image";
+      } else if (reviewCard?.dataset.photo) {
+        imgTarget.src = reviewCard.dataset.photo;
+        imgTarget.alt = "Review photo";
+      }
     }
     overlay.classList.add("open");
   });
