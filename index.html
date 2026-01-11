@@ -227,8 +227,16 @@
             <input id="reviewName" name="name" required data-i18n-placeholder="reviews_placeholder_name">
             <label for="reviewComment" data-i18n="reviews_label_comment">Comment</label>
             <textarea id="reviewComment" name="comment" required data-i18n-placeholder="reviews_placeholder_comment"></textarea>
-            <label for="reviewPhoto" class="photo-label" data-i18n="reviews_label_photo">Photo (optional) <span aria-hidden="true">📷</span></label>
-            <input id="reviewPhoto" name="photo" type="file" accept="image/*">
+            <label for="reviewPhoto" data-i18n="reviews_label_photo">Photo (optional)</label>
+            <div class="file-input">
+              <input id="reviewPhoto" name="photo" type="file" accept="image/*">
+              <span class="file-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 7h3l2-2h6l2 2h3a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2Z"/>
+                  <circle cx="12" cy="13" r="3.5"/>
+                </svg>
+              </span>
+            </div>
             <small class="muted" data-i18n="reviews_help_photo">Add a lawn photo (JPG/PNG, max 5MB).</small>
             <fieldset class="rating-field">
               <legend data-i18n="reviews_label_rating">Rating</legend>
