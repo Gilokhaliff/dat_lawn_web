@@ -797,6 +797,21 @@ function formatDate(timestamp) {
   return date.toLocaleDateString(locale, { month: "short", day: "numeric", year: "numeric" });
 }
 
+function setStatusLoading(statusEl, text) {
+  if (!statusEl) return;
+  const safe = escapeHtml(text || "");
+  statusEl.classList.add("loading");
+  statusEl.innerHTML = `${safe} <span class="loading-dots"><span></span><span></span><span></span></span>`;
+  statusEl.classList.remove("hidden");
+}
+
+function setStatusMessage(statusEl, text) {
+  if (!statusEl) return;
+  statusEl.classList.remove("loading");
+  statusEl.textContent = text || "";
+  statusEl.classList.remove("hidden");
+}
+
 function renderReviewSkeletons(count = 3) {
   const list = $("#reviewsList");
   const empty = $("#reviewsEmpty");
@@ -950,8 +965,18 @@ function renderReviews() {
 async function addReview(name, comment, rating) {
   const cleanComment = (comment || "").trim();
   const cleanName = (name || "").trim() || "Guest";
-  if (!cleanComment) return false;
+  if (!cleanComment) {
+    const commentInput = $("#reviewComment");
+    if (commentInput) {
+      commentInput.classList.add("input-error");
+      setTimeout(() => commentInput.classList.remove("input-error"), 600);
+    }
+    return false;
+  }
   const dict = translations[currentLang] || translations.en;
+  const status = $("#reviewStatus");
+  const loadingText = currentLang === "de" ? "Wird gesendet" : "Posting";
+  setStatusLoading(status, loadingText);
   const payload = {
     name: cleanName.slice(0, 80),
     comment: cleanComment.slice(0, 800),
@@ -983,10 +1008,8 @@ async function addReview(name, comment, rating) {
     return true;
   } catch (err) {
     console.warn("Review submit failed", err);
-    const status = $("#reviewStatus");
     if (status) {
-      status.textContent = err.message || "Could not post your review. Please try again.";
-      status.classList.remove("hidden");
+      setStatusMessage(status, err.message || "Could not post your review. Please try again.");
     }
     showToast(err.message || "Could not post your review. Please try again.", "error");
     return false;
@@ -1028,16 +1051,14 @@ function initReviewForm() {
     const added = await addReview(name, comment, rating);
     if (!added) {
       if (status) {
-        status.textContent = "Could not post your review. Please try again.";
-        status.classList.remove("hidden");
+        setStatusMessage(status, "Could not post your review. Please try again.");
       }
       return;
     }
     renderReviews();
     if (status) {
       const msg = (translations[currentLang] || translations.en).reviews_status;
-      status.textContent = msg || "";
-      status.classList.remove("hidden");
+      setStatusMessage(status, msg || "");
     }
     form.reset();
   });
@@ -1237,12 +1258,13 @@ function initForms() {
       const data = new FormData(contactForm);
       if (data.get("trap")) return;
       const msg = (translations[currentLang] || translations.en).contact_status;
-      if (contactStatus) {
-        contactStatus.textContent = msg || "";
-        contactStatus.classList.remove("hidden");
-      }
-      showToast(msg || "Thanks! I will reply within 48 hours.");
-      contactForm.reset();
+      const loadingText = currentLang === "de" ? "Wird gesendet" : "Sending";
+      setStatusLoading(contactStatus, loadingText);
+      setTimeout(() => {
+        setStatusMessage(contactStatus, msg || "");
+        showToast(msg || "Thanks! I will reply within 48 hours.");
+        contactForm.reset();
+      }, 500);
     });
   }
 
@@ -1252,12 +1274,13 @@ function initForms() {
     newsletterForm.addEventListener("submit", (e) => {
       e.preventDefault();
       const msg = (translations[currentLang] || translations.en).newsletter_status;
-      if (newsletterStatus) {
-        newsletterStatus.textContent = msg || "";
-        newsletterStatus.classList.remove("hidden");
-      }
-      showToast(msg || "Checklist is on the way.");
-      newsletterForm.reset();
+      const loadingText = currentLang === "de" ? "Wird gesendet" : "Sending";
+      setStatusLoading(newsletterStatus, loadingText);
+      setTimeout(() => {
+        setStatusMessage(newsletterStatus, msg || "");
+        showToast(msg || "Checklist is on the way.");
+        newsletterForm.reset();
+      }, 450);
     });
   }
 }
@@ -1270,6 +1293,7 @@ function setLanguage(lang) {
   renderProducts();
   renderFaq();
   renderReviews();
+  initFaqToggle();
   const dict = translations[currentLang] || translations.en;
   const contactStatus = $("#contactStatus");
   if (contactStatus && !contactStatus.classList.contains("hidden")) {
@@ -1329,6 +1353,46 @@ async function startCheckout(priceId, btn) {
 function initCheckoutButtons() {
   $$(".checkout-btn").forEach((btn) => {
     btn.addEventListener("click", () => startCheckout(btn.dataset.price, btn));
+  });
+}
+
+function initRipples() {
+  document.addEventListener("click", (e) => {
+    const target = e.target.closest(".btn, .nav-toggle");
+    if (!target) return;
+    const rect = target.getBoundingClientRect();
+    const ripple = document.createElement("span");
+    ripple.className = "ripple-dot";
+    const size = Math.max(rect.width, rect.height);
+    ripple.style.width = `${size}px`;
+    ripple.style.height = `${size}px`;
+    ripple.style.left = `${e.clientX - rect.left - size / 2}px`;
+    ripple.style.top = `${e.clientY - rect.top - size / 2}px`;
+    target.appendChild(ripple);
+    ripple.addEventListener("animationend", () => ripple.remove(), { once: true });
+  });
+}
+
+function initScrollHints() {
+  if (!window.matchMedia("(max-width: 900px)").matches) return;
+  $$(".catalog-group .grid-3").forEach((grid) => {
+    grid.classList.add("scroll-hint");
+    const clearHint = () => grid.classList.remove("scroll-hint");
+    grid.addEventListener("scroll", clearHint, { once: true, passive: true });
+    grid.addEventListener("touchstart", clearHint, { once: true, passive: true });
+  });
+}
+
+function initFaqToggle() {
+  $$(".faq-item").forEach((item) => {
+    item.classList.remove("collapsed");
+    item.addEventListener("click", () => item.classList.toggle("collapsed"));
+  });
+}
+
+function initInputFeedback() {
+  $$("input, textarea").forEach((field) => {
+    field.addEventListener("focus", () => field.classList.remove("input-error"));
   });
 }
 
@@ -1415,4 +1479,8 @@ document.addEventListener("DOMContentLoaded", () => {
   initScrollReveal();
   initFloatingAccents();
   initLightbox();
+  initRipples();
+  initScrollHints();
+  initFaqToggle();
+  initInputFeedback();
 });
