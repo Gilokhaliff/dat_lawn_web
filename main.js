@@ -106,6 +106,9 @@ const translations = {
     reviews_placeholder_comment: "What changed for your lawn?",
     reviews_label_photo: "Photo (optional)",
     reviews_help_photo: "Add a lawn photo (JPG/PNG, max 5MB).",
+    reviews_file_button: "Choose file",
+    reviews_file_empty: "No file chosen",
+    reviews_upload_error: "Photo upload failed.",
     reviews_label_rating: "Rating",
     reviews_button: "Post comment",
     reviews_status: "Thanks! Your comment is live.",
@@ -305,6 +308,9 @@ const translations = {
     reviews_placeholder_comment: "Was hat sich auf deinem Rasen verändert?",
     reviews_label_photo: "Foto (optional)",
     reviews_help_photo: "Füge ein Rasenfoto hinzu (JPG/PNG, max. 5 MB).",
+    reviews_file_button: "Datei auswählen",
+    reviews_file_empty: "Keine Datei ausgewählt",
+    reviews_upload_error: "Foto-Upload fehlgeschlagen.",
     reviews_label_rating: "Bewertung",
     reviews_button: "Kommentar posten",
     reviews_status: "Danke! Dein Kommentar ist live.",
@@ -847,6 +853,25 @@ function showToast(message, type = "success") {
   }, 3200);
 }
 
+function updateFileName(input) {
+  const wrapper = input.closest(".file-input");
+  const display = wrapper ? wrapper.querySelector(".file-name") : null;
+  if (!display) return;
+  if (input.files && input.files[0]) {
+    display.textContent = input.files[0].name;
+  } else {
+    const dict = translations[currentLang] || translations.en;
+    display.textContent = dict.reviews_file_empty || "No file chosen";
+  }
+}
+
+function initFileInputs() {
+  $$(".file-input input[type='file']").forEach((input) => {
+    updateFileName(input);
+    input.addEventListener("change", () => updateFileName(input));
+  });
+}
+
 function getCloudinaryConfig() {
   const form = $("#reviewForm");
   if (!form) return null;
@@ -1352,6 +1377,7 @@ function setLanguage(lang) {
   renderFaq();
   renderReviews();
   initFaqToggle();
+  initFileInputs();
   const dict = translations[currentLang] || translations.en;
   const contactStatus = $("#contactStatus");
   if (contactStatus && !contactStatus.classList.contains("hidden")) {
@@ -1541,4 +1567,5 @@ document.addEventListener("DOMContentLoaded", () => {
   initScrollHints();
   initFaqToggle();
   initInputFeedback();
+  initFileInputs();
 });

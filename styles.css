@@ -1408,18 +1408,39 @@ textarea:focus {
 
 .file-input {
   position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.65rem 0.8rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid rgba(209, 213, 207, 0.9);
 }
 
 .file-input input[type="file"] {
-  width: 100%;
-  padding-right: 2.2rem;
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.file-button {
+  background: #ffffff;
+  border: 1px solid rgba(117, 125, 120, 0.45);
+  padding: 0.35rem 0.6rem;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.file-name {
+  color: var(--muted);
+  font-size: 0.95rem;
+  flex: 1 1 auto;
 }
 
 .file-icon {
-  position: absolute;
-  right: 0.75rem;
-  top: 50%;
-  transform: translateY(-50%);
+  margin-left: auto;
   width: 18px;
   height: 18px;
   color: #4c5d51;
