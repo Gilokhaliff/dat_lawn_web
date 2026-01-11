@@ -1016,6 +1016,21 @@ main {
   line-height: 1.7;
 }
 
+.review-photo {
+  margin-top: 0.6rem;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(17, 36, 24, 0.12);
+  background: #f7f5ee;
+}
+
+.review-photo img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
 .alert.loading {
   display: inline-flex;
   align-items: center;

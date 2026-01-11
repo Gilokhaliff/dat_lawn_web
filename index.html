@@ -222,11 +222,14 @@
         </div>
         <div class="card">
           <h3 data-i18n="reviews_form_title">Leave a comment</h3>
-          <form id="reviewForm">
+          <form id="reviewForm" data-cloud-name="disyyjisw" data-upload-preset="datlawnpreset">
             <label for="reviewName" data-i18n="reviews_label_name">Name</label>
             <input id="reviewName" name="name" required data-i18n-placeholder="reviews_placeholder_name">
             <label for="reviewComment" data-i18n="reviews_label_comment">Comment</label>
             <textarea id="reviewComment" name="comment" required data-i18n-placeholder="reviews_placeholder_comment"></textarea>
+            <label for="reviewPhoto" data-i18n="reviews_label_photo">Photo (optional)</label>
+            <input id="reviewPhoto" name="photo" type="file" accept="image/*">
+            <small class="muted" data-i18n="reviews_help_photo">Add a lawn photo (JPG/PNG, max 5MB).</small>
             <fieldset class="rating-field">
               <legend data-i18n="reviews_label_rating">Rating</legend>
               <div class="star-input" id="reviewStars" role="radiogroup" aria-label="Rating">

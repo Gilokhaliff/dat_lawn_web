@@ -253,6 +253,8 @@ async function handleReviews(req, res) {
       const cleanName = (body.name || "").toString().trim().slice(0, 80) || "Guest";
       const cleanText = (body.comment || body.text || "").toString().trim().slice(0, 800);
       const cleanRating = Math.max(0, Math.min(5, Math.round(Number(body.rating) || 0)));
+      const rawImage = (body.imageUrl || "").toString().trim();
+      const cleanImage = /^https?:\/\//i.test(rawImage) ? rawImage.slice(0, 500) : "";
       if (!cleanText) return sendJson(res, 400, { error: "Comment required" });
       const existing = await readReviews();
       const review = {
@@ -260,6 +262,7 @@ async function handleReviews(req, res) {
         text: cleanText,
         createdAt: Date.now(),
         rating: cleanRating,
+        imageUrl: cleanImage,
       };
       const updated = [review, ...existing].slice(0, 200);
       await writeReviews(updated);

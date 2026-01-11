@@ -104,6 +104,8 @@ const translations = {
     reviews_label_comment: "Comment",
     reviews_placeholder_name: "Your name or initials",
     reviews_placeholder_comment: "What changed for your lawn?",
+    reviews_label_photo: "Photo (optional)",
+    reviews_help_photo: "Add a lawn photo (JPG/PNG, max 5MB).",
     reviews_label_rating: "Rating",
     reviews_button: "Post comment",
     reviews_status: "Thanks! Your comment is live.",
@@ -301,6 +303,8 @@ const translations = {
     reviews_label_comment: "Kommentar",
     reviews_placeholder_name: "Dein Name oder Initialen",
     reviews_placeholder_comment: "Was hat sich auf deinem Rasen verändert?",
+    reviews_label_photo: "Foto (optional)",
+    reviews_help_photo: "Füge ein Rasenfoto hinzu (JPG/PNG, max. 5 MB).",
     reviews_label_rating: "Bewertung",
     reviews_button: "Kommentar posten",
     reviews_status: "Danke! Dein Kommentar ist live.",
@@ -843,6 +847,40 @@ function showToast(message, type = "success") {
   }, 3200);
 }
 
+function getCloudinaryConfig() {
+  const form = $("#reviewForm");
+  if (!form) return null;
+  const cloudName = form.dataset.cloudName || window.CLOUDINARY_CLOUD_NAME || "";
+  const uploadPreset = form.dataset.uploadPreset || window.CLOUDINARY_UPLOAD_PRESET || "";
+  if (!cloudName || !uploadPreset) return null;
+  return { cloudName, uploadPreset };
+}
+
+async function uploadReviewImage(file, statusEl) {
+  const config = getCloudinaryConfig();
+  if (!config) throw new Error("Photo upload not configured.");
+  if (!file) return "";
+  const maxSize = 5 * 1024 * 1024;
+  if (file.size > maxSize) {
+    throw new Error("Photo is too large (max 5MB).");
+  }
+  const dict = translations[currentLang] || translations.en;
+  const uploadingText = currentLang === "de" ? "Foto wird hochgeladen" : "Uploading photo";
+  setStatusLoading(statusEl, uploadingText);
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", config.uploadPreset);
+  const res = await fetch(`https://api.cloudinary.com/v1_1/${config.cloudName}/image/upload`, {
+    method: "POST",
+    body: formData,
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok || !data.secure_url) {
+    throw new Error(dict.reviews_upload_error || "Photo upload failed.");
+  }
+  return data.secure_url;
+}
+
 async function loadReviews() {
   renderReviewSkeletons();
   try {
@@ -855,6 +893,7 @@ async function loadReviews() {
         text: typeof r.text === "string" ? r.text.slice(0, 800) : "",
         createdAt: r.createdAt || Date.now(),
         rating: Number(r.rating) || 0,
+        imageUrl: typeof r.imageUrl === "string" ? r.imageUrl : "",
       }));
     } else {
       reviews = [];
@@ -906,6 +945,9 @@ function renderReviews() {
       const formatted = text.replace(/\n/g, "<br>");
       const dateLabel = formatDate(r.createdAt);
       const stars = starDisplay(r.rating);
+      const photo = r.imageUrl
+        ? `<div class="review-photo"><img src="${escapeHtml(r.imageUrl)}" alt="Lawn result photo" loading="lazy"></div>`
+        : "";
       return `
         <div class="review-card">
           <div class="review-meta">
@@ -914,6 +956,7 @@ function renderReviews() {
           </div>
           <div class="star-display" aria-hidden="true">${stars}</div>
           <p class="review-text">${formatted}</p>
+          ${photo}
         </div>
       `;
     })
@@ -952,7 +995,7 @@ function renderReviews() {
   }
 }
 
-async function addReview(name, comment, rating) {
+async function addReview(name, comment, rating, imageUrl = "") {
   const cleanComment = (comment || "").trim();
   const cleanName = (name || "").trim() || "Guest";
   if (!cleanComment) {
@@ -971,6 +1014,7 @@ async function addReview(name, comment, rating) {
     name: cleanName.slice(0, 80),
     comment: cleanComment.slice(0, 800),
     rating: Math.max(0, Math.min(5, Math.round(Number(rating) || 0))),
+    imageUrl: imageUrl || "",
   };
   try {
     const res = await fetch("/api/reviews", {
@@ -988,6 +1032,7 @@ async function addReview(name, comment, rating) {
         text: data.review.text || payload.comment,
         createdAt: data.review.createdAt || Date.now(),
         rating: data.review.rating || payload.rating,
+        imageUrl: data.review.imageUrl || payload.imageUrl,
       });
       reviews = reviews.slice(0, 30);
       renderReviews();
@@ -1035,10 +1080,21 @@ function initReviewForm() {
     const nameInput = $("#reviewName");
     const commentInput = $("#reviewComment");
     const ratingInput = $("#reviewRating");
+    const photoInput = $("#reviewPhoto");
     const name = nameInput ? nameInput.value : "";
     const comment = commentInput ? commentInput.value : "";
     const rating = ratingInput ? ratingInput.value : 5;
-    const added = await addReview(name, comment, rating);
+    let imageUrl = "";
+    if (photoInput && photoInput.files && photoInput.files[0]) {
+      try {
+        imageUrl = await uploadReviewImage(photoInput.files[0], status);
+      } catch (err) {
+        setStatusMessage(status, err.message || "Photo upload failed.");
+        showToast(err.message || "Photo upload failed.", "error");
+        return;
+      }
+    }
+    const added = await addReview(name, comment, rating, imageUrl);
     if (!added) {
       if (status) {
         setStatusMessage(status, "Could not post your review. Please try again.");
