@@ -1398,6 +1398,11 @@ textarea {
 
 textarea { min-height: 120px; resize: vertical; }
 label { display: block; font-weight: 700; color: var(--ink); margin-top: 0.25rem; }
+.photo-label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
 
 input:focus,
 textarea:focus {
