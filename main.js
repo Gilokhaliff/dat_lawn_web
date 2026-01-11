@@ -730,16 +730,6 @@ const faqs = [
   },
   {
     q: {
-      en: "Which kit should I start with?",
-      de: "Mit welchem Kit soll ich starten?",
-    },
-    a: {
-      en: "If you just want tidy cuts, start with the Starter Stripe Kit. For bold stripes, go Pro Striping.",
-      de: "Für saubere Schnitte: Starter Stripe Kit. Für kräftige Streifen: Pro Striping.",
-    },
-  },
-  {
-    q: {
       en: "Are the fertilizers pet-safe?",
       de: "Sind die Dünger haustierfreundlich?",
     },
