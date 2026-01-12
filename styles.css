@@ -930,7 +930,32 @@ main {
   animation: fadeUp 0.9s ease 0.1s both;
 }
 
-.reviews-layout { align-items: start; }
+#reviews { --reviews-card-height: clamp(520px, 70vh, 640px); }
+
+.reviews-layout { align-items: stretch; }
+.reviews-layout > .card {
+  height: var(--reviews-card-height);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.reviews-layout .reviews-list {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  padding-right: 0.25rem;
+}
+
+.reviews-layout .review-ticker { margin-top: auto; }
+
+.reviews-layout .card form {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 0.15rem;
+}
 .reviews-list {
   display: grid;
   gap: 1rem;
@@ -1051,9 +1076,10 @@ main {
 }
 
 .review-thumbs {
-  display: grid;
+  display: flex;
   gap: 0.4rem;
-  grid-auto-rows: 56px;
+  align-items: flex-start;
+  flex: 0 0 auto;
 }
 
 .review-thumb.more img { filter: brightness(0.75); }
@@ -1070,6 +1096,133 @@ main {
 }
 
 .review-card.has-photo { cursor: pointer; }
+
+.review-gallery {
+  position: fixed;
+  inset: 0;
+  background: rgba(248, 244, 235, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  z-index: 999;
+  padding: 1rem;
+  backdrop-filter: blur(10px) saturate(140%);
+}
+
+.review-gallery.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.review-gallery-panel {
+  position: relative;
+  width: min(92vw, 960px);
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.25rem 1.6rem 1.4rem;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.06);
+  border: none;
+  box-shadow: 0 18px 44px rgba(11, 26, 18, 0.18);
+  backdrop-filter: blur(14px) saturate(130%);
+  color: var(--ink);
+}
+
+.review-gallery-close {
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  border: none;
+  background: transparent;
+  color: var(--ink);
+  font-size: 1.5rem;
+  width: auto;
+  height: auto;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  text-shadow: 0 2px 8px rgba(11, 26, 18, 0.25);
+}
+
+.review-gallery-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding-right: 2.2rem;
+}
+
+.review-gallery-name {
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.review-gallery-date {
+  color: #6f756f;
+  font-size: 0.9rem;
+}
+
+.review-gallery-stars .star-filled { color: var(--accent); }
+.review-gallery-stars .star-empty { color: rgba(39, 58, 45, 0.3); }
+
+.review-gallery-text {
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  white-space: pre-line;
+  max-height: 20vh;
+  overflow: auto;
+}
+
+.review-gallery-track {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.review-gallery-slider {
+  display: flex;
+  gap: 1rem;
+}
+
+.review-gallery-slide {
+  flex: 0 0 100%;
+  scroll-snap-align: center;
+  border-radius: 18px;
+  overflow: hidden;
+  background: transparent;
+}
+
+.review-gallery-slide img {
+  width: 100%;
+  height: clamp(220px, 52vh, 520px);
+  object-fit: contain;
+  display: block;
+  background: transparent;
+}
+
+.review-gallery-dots {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.review-gallery-dot {
+  width: 28px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(15, 40, 25, 0.18);
+}
+
+.review-gallery-dot.active {
+  background: #f0d189;
+}
 
 .alert.loading {
   display: inline-flex;
@@ -1119,7 +1272,7 @@ main {
 }
 
 .ticker-track.running {
-  animation: tickerMove 24s linear infinite;
+  animation: tickerMove 60s linear infinite;
 }
 
 @keyframes tickerMove {
@@ -1136,6 +1289,18 @@ main {
   padding: 0.75rem 0.9rem;
   box-shadow: 0 14px 36px rgba(11, 26, 18, 0.08);
   backdrop-filter: blur(22px) saturate(160%);
+}
+
+.ticker-item.has-photo { cursor: pointer; }
+
+.ticker-item .review-content {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+}
+
+.ticker-item .review-text {
+  margin: 0.35rem 0 0;
 }
 
 .ticker-item .review-name { font-weight: 800; display: block; }
@@ -1461,6 +1626,75 @@ textarea:focus {
   flex: 1 1 auto;
 }
 
+.file-preview {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+  margin-top: 0.55rem;
+}
+
+.file-thumb,
+.file-add {
+  width: clamp(48px, 12vw, 72px);
+  height: clamp(48px, 12vw, 72px);
+  border-radius: 14px;
+  border: 1px solid rgba(170, 176, 170, 0.6);
+  background: rgba(255, 255, 255, 0.7);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  box-shadow: 0 10px 22px rgba(7, 16, 12, 0.12);
+}
+
+.file-thumb {
+  position: relative;
+  padding: 0;
+  cursor: default;
+}
+
+.file-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.file-remove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(16, 26, 20, 0.7);
+  color: #f6f4ef;
+  font-size: 16px;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(6, 12, 9, 0.35);
+}
+
+.file-remove:hover { background: rgba(12, 18, 14, 0.85); }
+
+.file-add {
+  cursor: pointer;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #2e3f33;
+  border-style: dashed;
+  transition: transform 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.file-add:hover {
+  transform: translateY(-2px);
+  border-color: rgba(106, 116, 110, 0.75);
+  color: #1e2d23;
+}
+
 .file-count {
   display: block;
   margin-top: 0.35rem;
@@ -1646,9 +1880,17 @@ h3 { font-family: var(--font); font-weight: 700; }
   .promo-band { margin: 0.5rem 0 1rem; }
   .promo-content { flex-direction: column; align-items: flex-start; }
   .promo-title { font-size: 1.1rem; }
-  .review-content { flex-direction: column; }
-  .review-thumbs { grid-auto-rows: 88px; }
-  .review-thumb { width: 100%; height: 88px; }
+  .review-content { flex-direction: row; }
+  .review-thumb { width: 52px; height: 52px; }
+  .review-gallery-panel { padding: 1.1rem; }
+  .review-gallery-text { max-height: 26vh; }
+  #reviews { --reviews-card-height: auto; }
+  .reviews-layout > .card { height: auto; }
+  .reviews-layout .reviews-list,
+  .reviews-layout .card form {
+    overflow: visible;
+    padding-right: 0;
+  }
   .product-card { padding: 0.85rem; scroll-snap-align: start; }
   .product-photo { aspect-ratio: 4 / 3; }
   .catalog-group .grid-3 {

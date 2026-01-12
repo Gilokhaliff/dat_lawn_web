@@ -105,7 +105,7 @@ const translations = {
     reviews_placeholder_name: "Your name or initials",
     reviews_placeholder_comment: "What changed for your lawn?",
     reviews_label_photo: "Photo (optional)",
-    reviews_help_photo: "Add lawn photos (JPG/PNG, max 5MB each).",
+    reviews_help_photo: "Add lawn photos (JPG/PNG, max 10MB each).",
     reviews_file_button: "Choose file",
     reviews_file_empty: "No file chosen",
     reviews_file_single: "file selected",
@@ -193,7 +193,7 @@ const translations = {
     ebook_contact_desc: "Questions about fit, timing, or tools? Message me before you buy.",
     ebook_back: "Back to catalog",
     ebook_buy_button: "Buy now",
-    ebook_buy_button_price: "Buy now (€29.99)",
+    ebook_buy_button_price: "Buy now €29.99",
     ebook_contact: "Questions? Message me",
     ebook_offer_pill: "Ready for thick green?",
     ebook_offer_heading: "Get the 6-week plan",
@@ -309,7 +309,7 @@ const translations = {
     reviews_placeholder_name: "Dein Name oder Initialen",
     reviews_placeholder_comment: "Was hat sich auf deinem Rasen verändert?",
     reviews_label_photo: "Foto (optional)",
-    reviews_help_photo: "Füge Rasenfotos hinzu (JPG/PNG, max. 5 MB je Bild).",
+    reviews_help_photo: "Füge Rasenfotos hinzu (JPG/PNG, max. 10 MB je Bild).",
     reviews_file_button: "Datei auswählen",
     reviews_file_empty: "Keine Datei ausgewählt",
     reviews_file_single: "Datei ausgewählt",
@@ -397,7 +397,7 @@ const translations = {
     ebook_contact_desc: "Fragen zu Timing, Werkzeug oder ob es passt? Schreib mir vor dem Kauf.",
     ebook_back: "Zurück zum Katalog",
     ebook_buy_button: "Jetzt kaufen",
-    ebook_buy_button_price: "Jetzt kaufen (29,99 €)",
+    ebook_buy_button_price: "Jetzt kaufen 29,99 €",
     ebook_contact: "Fragen? Schreib mir",
     ebook_offer_pill: "Bereit für sattes Grün?",
     ebook_offer_heading: "Hol dir den 6-Wochen-Plan",
@@ -857,24 +857,63 @@ function showToast(message, type = "success") {
   }, 3200);
 }
 
+function getSelectedFiles(input) {
+  if (Array.isArray(input._selectedFiles)) return input._selectedFiles;
+  return input.files ? Array.from(input.files) : [];
+}
+
+function fileKey(file) {
+  return `${file.name}-${file.size}-${file.lastModified}`;
+}
+
+function setSelectedFiles(input, files) {
+  const merged = Array.from(files || []);
+  input._selectedFiles = merged;
+  if (typeof DataTransfer !== "undefined") {
+    const dt = new DataTransfer();
+    merged.forEach((file) => dt.items.add(file));
+    input.files = dt.files;
+  }
+}
+
+function mergeSelectedFiles(input, newFiles) {
+  const existing = getSelectedFiles(input);
+  const map = new Map();
+  existing.forEach((file) => {
+    map.set(fileKey(file), file);
+  });
+  newFiles.forEach((file) => {
+    map.set(fileKey(file), file);
+  });
+  setSelectedFiles(input, map.values());
+}
+
+function removeSelectedFile(input, key) {
+  const remaining = getSelectedFiles(input).filter((file) => fileKey(file) !== key);
+  setSelectedFiles(input, remaining);
+  updateFileName(input);
+  updateFilePreview(input);
+}
+
 function updateFileName(input) {
   const wrapper = input.closest(".file-input");
   const display = wrapper ? wrapper.querySelector(".file-name") : null;
   const count = wrapper ? wrapper.parentElement.querySelector(".file-count") : null;
   if (!display) return;
   const dict = translations[currentLang] || translations.en;
-  const total = input.files ? input.files.length : 0;
+  const files = getSelectedFiles(input);
+  const total = files.length;
   if (total) {
     const singleLabel = dict.reviews_file_single || "file selected";
     const multiLabel = dict.reviews_file_multi || "files selected";
     if (total === 1) {
-      display.textContent = input.files[0].name;
+      display.textContent = files[0].name;
       if (count) {
         count.textContent = `1 ${singleLabel}`;
         count.classList.remove("is-hidden");
       }
     } else {
-      display.textContent = input.files[total - 1].name;
+      display.textContent = files[total - 1].name;
       if (count) {
         count.textContent = `${total} ${multiLabel}`;
         count.classList.remove("is-hidden");
@@ -889,10 +928,62 @@ function updateFileName(input) {
   }
 }
 
+function updateFilePreview(input) {
+  const wrapper = input.closest(".file-input");
+  const preview = wrapper ? wrapper.parentElement.querySelector(".file-preview") : null;
+  if (!preview) return;
+  preview.querySelectorAll(".file-thumb img").forEach((img) => {
+    const url = img.dataset.objectUrl;
+    if (url) URL.revokeObjectURL(url);
+  });
+  preview.querySelectorAll(".file-thumb").forEach((el) => el.remove());
+  const addTile = preview.querySelector(".file-add");
+  const files = getSelectedFiles(input);
+  if (!files.length) return;
+  files.forEach((file) => {
+    if (!file.type.startsWith("image/")) return;
+    const url = URL.createObjectURL(file);
+    const thumb = document.createElement("button");
+    thumb.type = "button";
+    thumb.className = "file-thumb";
+    thumb.setAttribute("aria-label", file.name);
+    const close = document.createElement("button");
+    close.type = "button";
+    close.className = "file-remove";
+    close.setAttribute("aria-label", `Remove ${file.name}`);
+    close.textContent = "×";
+    close.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      removeSelectedFile(input, fileKey(file));
+    });
+    const img = document.createElement("img");
+    img.src = url;
+    img.alt = file.name;
+    img.loading = "lazy";
+    img.dataset.objectUrl = url;
+    thumb.appendChild(close);
+    thumb.appendChild(img);
+    if (addTile) {
+      preview.insertBefore(thumb, addTile);
+    } else {
+      preview.appendChild(thumb);
+    }
+  });
+}
+
 function initFileInputs() {
   $$(".file-input input[type='file']").forEach((input) => {
     updateFileName(input);
-    input.addEventListener("change", () => updateFileName(input));
+    updateFilePreview(input);
+    input.addEventListener("change", () => {
+      const newlyPicked = input.files ? Array.from(input.files) : [];
+      if (newlyPicked.length) {
+        mergeSelectedFiles(input, newlyPicked);
+      }
+      updateFileName(input);
+      updateFilePreview(input);
+    });
   });
 }
 
@@ -909,13 +1000,13 @@ async function uploadReviewImages(files, statusEl) {
   const config = getCloudinaryConfig();
   if (!config) throw new Error("Photo upload not configured.");
   if (!files || !files.length) return [];
-  const maxSize = 5 * 1024 * 1024;
+  const maxSize = 10 * 1024 * 1024;
   const dict = translations[currentLang] || translations.en;
   const urls = [];
   for (let i = 0; i < files.length; i += 1) {
     const file = files[i];
     if (file.size > maxSize) {
-      throw new Error("Photo is too large (max 5MB).");
+      throw new Error("Photo is too large (max 10MB).");
     }
     const uploadingText =
       currentLang === "de"
@@ -988,39 +1079,34 @@ function starDisplay(rating = 0) {
 function renderReviews() {
   const list = $("#reviewsList");
   const empty = $("#reviewsEmpty");
-  const ticker = $("#reviewsTicker");
-  const tickerTrack = $("#reviewsTickerTrack");
   if (!list) return;
   if (!reviews.length) {
     list.innerHTML = "";
     if (empty) empty.classList.remove("hidden");
-    if (ticker) ticker.classList.add("hidden");
-    if (tickerTrack) tickerTrack.innerHTML = "";
     return;
   }
 
-  const mainCards = reviews.slice(0, 3);
-  const overflow = reviews.slice(3);
-
-  const mainHtml = mainCards
-    .map((r) => {
+  const mainHtml = reviews
+    .map((r, idx) => {
+      const reviewIndex = Number.isFinite(reviews.indexOf(r)) ? reviews.indexOf(r) : idx;
       const name = escapeHtml(r.name || "Guest");
       const text = escapeHtml(getReviewText(r));
       const formatted = text.replace(/\n/g, "<br>");
       const dateLabel = formatDate(r.createdAt);
       const stars = starDisplay(r.rating);
       const images = Array.isArray(r.imageUrls) ? r.imageUrls : [];
-      const thumbs = images.slice(0, 2).map((url, idx) => {
-        const safeUrl = escapeHtml(url);
-        const moreCount = images.length > 2 && idx === 1 ? `<span class="thumb-count">+${images.length - 1}</span>` : "";
-        return `<button type="button" class="review-thumb${images.length > 2 && idx === 1 ? " more" : ""}" data-photo="${safeUrl}">
-            <img src="${safeUrl}" alt="Lawn result photo" loading="lazy">
-            ${moreCount}
-          </button>`;
-      }).join("");
-      const photo = thumbs ? `<div class="review-thumbs">${thumbs}</div>` : "";
+      const primaryImage = images.length ? escapeHtml(images[0]) : "";
+      const extraCount = images.length > 1 ? images.length - 1 : 0;
+      const photo = primaryImage
+        ? `<div class="review-thumbs">
+            <button type="button" class="review-thumb${extraCount ? " more" : ""}" data-photo="${primaryImage}" data-review-index="${reviewIndex}" data-photo-index="0">
+              <img src="${primaryImage}" alt="Lawn result photo" loading="lazy">
+              ${extraCount ? `<span class="thumb-count">+${extraCount}</span>` : ""}
+            </button>
+          </div>`
+        : "";
       return `
-        <div class="review-card${images.length ? " has-photo" : ""}"${images.length ? ` data-photo="${escapeHtml(images[0])}"` : ""}>
+        <div class="review-card${images.length ? " has-photo" : ""}"${images.length ? ` data-photo="${escapeHtml(images[0])}" data-review-index="${reviewIndex}"` : ""}>
           <div class="review-meta">
             <span class="review-name">${name}</span>
             <span class="review-date">${dateLabel}</span>
@@ -1037,35 +1123,6 @@ function renderReviews() {
 
   list.innerHTML = mainHtml;
   if (empty) empty.classList.add("hidden");
-
-  if (ticker && tickerTrack) {
-    if (overflow.length) {
-      const tickerHtml = overflow
-        .map((r) => {
-          const name = escapeHtml(r.name || "Guest");
-          const text = escapeHtml(getReviewText(r)).slice(0, 220);
-          const formatted = text.replace(/\n/g, " ");
-          const dateLabel = formatDate(r.createdAt);
-          const stars = starDisplay(r.rating);
-          return `
-            <div class="ticker-item">
-              <span class="review-name">${name}</span>
-              <span class="review-date">${dateLabel}</span>
-              <div class="star-display" aria-hidden="true">${stars}</div>
-              <p class="review-text">${formatted}</p>
-            </div>
-          `;
-        })
-        .join("");
-      tickerTrack.innerHTML = tickerHtml + tickerHtml;
-      ticker.classList.remove("hidden");
-      tickerTrack.classList.toggle("running", true);
-    } else {
-      ticker.classList.add("hidden");
-      tickerTrack.innerHTML = "";
-      tickerTrack.classList.remove("running");
-    }
-  }
 }
 
 async function addReview(name, comment, rating, imageUrls = []) {
@@ -1180,6 +1237,11 @@ function initReviewForm() {
       setStatusMessage(status, msg || "");
     }
     form.reset();
+    if (photoInput) {
+      photoInput._selectedFiles = [];
+      updateFileName(photoInput);
+      updateFilePreview(photoInput);
+    }
   });
 }
 
@@ -1341,23 +1403,108 @@ function initLightbox() {
   });
   document.body.addEventListener("click", (e) => {
     const productImg = e.target.closest(".product-photo img");
-    const reviewThumb = e.target.closest(".review-thumb");
-    const reviewCard = e.target.closest(".review-card.has-photo");
-    if (!productImg && !reviewThumb && !reviewCard) return;
+    if (!productImg) return;
     e.preventDefault();
     if (imgTarget) {
-      if (productImg) {
-        imgTarget.src = productImg.src;
-        imgTarget.alt = productImg.alt || "Product image";
-      } else if (reviewThumb?.dataset.photo) {
-        imgTarget.src = reviewThumb.dataset.photo;
-        imgTarget.alt = "Review photo";
-      } else if (reviewCard?.dataset.photo) {
-        imgTarget.src = reviewCard.dataset.photo;
-        imgTarget.alt = "Review photo";
-      }
+      imgTarget.src = productImg.src;
+      imgTarget.alt = productImg.alt || "Product image";
     }
     overlay.classList.add("open");
+  });
+}
+
+let reviewGallery;
+function ensureReviewGallery() {
+  if (reviewGallery) return reviewGallery;
+  const overlay = document.createElement("div");
+  overlay.className = "review-gallery";
+  overlay.innerHTML = `
+    <div class="review-gallery-panel">
+      <button class="review-gallery-close" aria-label="Close">×</button>
+      <div class="review-gallery-header">
+        <div class="review-gallery-meta">
+          <div class="review-gallery-name"></div>
+          <div class="review-gallery-stars" aria-hidden="true"></div>
+        </div>
+        <div class="review-gallery-date"></div>
+      </div>
+      <p class="review-gallery-text"></p>
+      <div class="review-gallery-track">
+        <div class="review-gallery-slider"></div>
+      </div>
+      <div class="review-gallery-dots" aria-hidden="true"></div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  const closeBtn = overlay.querySelector(".review-gallery-close");
+  const close = () => overlay.classList.remove("open");
+  overlay.addEventListener("click", (e) => {
+    if (e.target === overlay) close();
+  });
+  if (closeBtn) closeBtn.addEventListener("click", close);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") close();
+  });
+  reviewGallery = {
+    overlay,
+    name: overlay.querySelector(".review-gallery-name"),
+    stars: overlay.querySelector(".review-gallery-stars"),
+    date: overlay.querySelector(".review-gallery-date"),
+    text: overlay.querySelector(".review-gallery-text"),
+    track: overlay.querySelector(".review-gallery-track"),
+    slider: overlay.querySelector(".review-gallery-slider"),
+    dots: overlay.querySelector(".review-gallery-dots"),
+  };
+  reviewGallery.track.addEventListener("scroll", () => {
+    const { dots, track } = reviewGallery;
+    if (!dots || !track) return;
+    const width = track.clientWidth || 1;
+    const index = Math.round(track.scrollLeft / width);
+    dots.querySelectorAll(".review-gallery-dot").forEach((dot, i) => {
+      dot.classList.toggle("active", i === index);
+    });
+  });
+  return reviewGallery;
+}
+
+function openReviewGallery(reviewIndex = 0, startIndex = 0) {
+  const entry = reviews[reviewIndex];
+  if (!entry || !Array.isArray(entry.imageUrls) || !entry.imageUrls.length) return;
+  const gallery = ensureReviewGallery();
+  const name = entry.name || "Guest";
+  const text = getReviewText(entry);
+  gallery.name.textContent = name;
+  gallery.date.textContent = formatDate(entry.createdAt);
+  gallery.stars.innerHTML = starDisplay(entry.rating);
+  gallery.text.textContent = text;
+  gallery.slider.innerHTML = entry.imageUrls
+    .map((url) => {
+      const safeUrl = escapeHtml(url);
+      return `<div class="review-gallery-slide"><img src="${safeUrl}" alt="Review photo" loading="lazy"></div>`;
+    })
+    .join("");
+  gallery.dots.innerHTML = entry.imageUrls
+    .map((_, i) => `<span class="review-gallery-dot${i === startIndex ? " active" : ""}"></span>`)
+    .join("");
+  requestAnimationFrame(() => {
+    const width = gallery.track.clientWidth || 0;
+    gallery.track.scrollLeft = width * startIndex;
+  });
+  gallery.overlay.classList.add("open");
+}
+
+function initReviewGallery() {
+  document.body.addEventListener("click", (e) => {
+    const reviewThumb = e.target.closest(".review-thumb");
+    const reviewCard = e.target.closest(".review-card.has-photo");
+    const tickerItem = e.target.closest(".ticker-item.has-photo");
+    if (!reviewThumb && !reviewCard && !tickerItem) return;
+    e.preventDefault();
+    const source = reviewThumb || reviewCard || tickerItem;
+    const reviewIndex = Number(source.dataset.reviewIndex || 0);
+    const photoIndex = Number(source.dataset.photoIndex || 0);
+    if (Number.isNaN(reviewIndex)) return;
+    openReviewGallery(reviewIndex, Number.isNaN(photoIndex) ? 0 : photoIndex);
   });
 }
 
@@ -1609,6 +1756,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initScrollReveal();
   initFloatingAccents();
   initLightbox();
+  initReviewGallery();
   initRipples();
   initScrollHints();
   initFaqToggle();

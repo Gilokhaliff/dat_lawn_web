@@ -96,7 +96,7 @@
             <li data-i18n="ebook_highlight3">Direkter Download nach dem Kauf.</li>
           </ul>
           <div class="feature-actions">
-            <button class="btn btn-primary glow checkout-btn" data-price="price_1Sj0Fq0YmDmRUccy6lMbBIpE" data-i18n="ebook_buy_button_price">Jetzt kaufen (€29.99)</button>
+            <button class="btn btn-primary glow checkout-btn" data-price="price_1Sj0Fq0YmDmRUccy6lMbBIpE" data-i18n="ebook_buy_button_price">Jetzt kaufen 29,99 €</button>
             <a class="btn btn-ghost" href="/ebook.html" data-i18n="product_view">View</a>
           </div>
         </div>
@@ -216,9 +216,6 @@
         <div class="card glass">
           <div class="reviews-list" id="reviewsList"></div>
           <p class="muted reviews-empty hidden" id="reviewsEmpty" data-i18n="reviews_empty">No reviews yet. Be the first.</p>
-          <div class="review-ticker hidden" id="reviewsTicker">
-            <div class="ticker-track" id="reviewsTickerTrack"></div>
-          </div>
         </div>
         <div class="card">
           <h3 data-i18n="reviews_form_title">Leave a comment</h3>
@@ -239,8 +236,11 @@
                 </svg>
               </span>
             </div>
+            <div class="file-preview" id="reviewPhotoPreview">
+              <label class="file-add" for="reviewPhoto" aria-label="Add photo">+</label>
+            </div>
             <small class="file-count muted" data-i18n="reviews_file_empty">No file chosen</small>
-            <small class="muted" data-i18n="reviews_help_photo">Add lawn photos (JPG/PNG, max 5MB each).</small>
+            <small class="muted" data-i18n="reviews_help_photo">Add lawn photos (JPG/PNG, max 10MB each).</small>
             <fieldset class="rating-field">
               <legend data-i18n="reviews_label_rating">Rating</legend>
               <div class="star-input" id="reviewStars" role="radiogroup" aria-label="Rating">
