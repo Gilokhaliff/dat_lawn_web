@@ -253,6 +253,11 @@ async function handleReviews(req, res) {
       const cleanName = (body.name || "").toString().trim().slice(0, 80) || "Guest";
       const cleanText = (body.comment || body.text || "").toString().trim().slice(0, 800);
       const cleanRating = Math.max(0, Math.min(5, Math.round(Number(body.rating) || 0)));
+      const rawImages = Array.isArray(body.imageUrls) ? body.imageUrls : [];
+      const cleanImages = rawImages
+        .filter((url) => typeof url === "string" && /^https?:\/\//i.test(url))
+        .map((url) => url.slice(0, 500))
+        .slice(0, 4);
       const rawImage = (body.imageUrl || "").toString().trim();
       const cleanImage = /^https?:\/\//i.test(rawImage) ? rawImage.slice(0, 500) : "";
       if (!cleanText) return sendJson(res, 400, { error: "Comment required" });
@@ -262,7 +267,7 @@ async function handleReviews(req, res) {
         text: cleanText,
         createdAt: Date.now(),
         rating: cleanRating,
-        imageUrl: cleanImage,
+        imageUrls: cleanImages.length ? cleanImages : cleanImage ? [cleanImage] : [],
       };
       const updated = [review, ...existing].slice(0, 200);
       await writeReviews(updated);

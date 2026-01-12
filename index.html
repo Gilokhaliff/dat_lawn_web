@@ -229,7 +229,7 @@
             <textarea id="reviewComment" name="comment" required data-i18n-placeholder="reviews_placeholder_comment"></textarea>
             <label for="reviewPhoto" data-i18n="reviews_label_photo">Photo (optional)</label>
             <div class="file-input">
-              <input id="reviewPhoto" name="photo" type="file" accept="image/*">
+              <input id="reviewPhoto" name="photo" type="file" accept="image/*" multiple>
               <label class="file-button" for="reviewPhoto" data-i18n="reviews_file_button">Choose file</label>
               <span class="file-name" data-i18n="reviews_file_empty">No file chosen</span>
               <span class="file-icon" aria-hidden="true">
@@ -239,7 +239,8 @@
                 </svg>
               </span>
             </div>
-            <small class="muted" data-i18n="reviews_help_photo">Add a lawn photo (JPG/PNG, max 5MB).</small>
+            <small class="file-count muted" data-i18n="reviews_file_empty">No file chosen</small>
+            <small class="muted" data-i18n="reviews_help_photo">Add lawn photos (JPG/PNG, max 5MB each).</small>
             <fieldset class="rating-field">
               <legend data-i18n="reviews_label_rating">Rating</legend>
               <div class="star-input" id="reviewStars" role="radiogroup" aria-label="Rating">

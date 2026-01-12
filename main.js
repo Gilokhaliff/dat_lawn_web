@@ -105,9 +105,11 @@ const translations = {
     reviews_placeholder_name: "Your name or initials",
     reviews_placeholder_comment: "What changed for your lawn?",
     reviews_label_photo: "Photo (optional)",
-    reviews_help_photo: "Add a lawn photo (JPG/PNG, max 5MB).",
+    reviews_help_photo: "Add lawn photos (JPG/PNG, max 5MB each).",
     reviews_file_button: "Choose file",
     reviews_file_empty: "No file chosen",
+    reviews_file_single: "file selected",
+    reviews_file_multi: "files selected",
     reviews_upload_error: "Photo upload failed.",
     reviews_label_rating: "Rating",
     reviews_button: "Post comment",
@@ -307,9 +309,11 @@ const translations = {
     reviews_placeholder_name: "Dein Name oder Initialen",
     reviews_placeholder_comment: "Was hat sich auf deinem Rasen verändert?",
     reviews_label_photo: "Foto (optional)",
-    reviews_help_photo: "Füge ein Rasenfoto hinzu (JPG/PNG, max. 5 MB).",
+    reviews_help_photo: "Füge Rasenfotos hinzu (JPG/PNG, max. 5 MB je Bild).",
     reviews_file_button: "Datei auswählen",
     reviews_file_empty: "Keine Datei ausgewählt",
+    reviews_file_single: "Datei ausgewählt",
+    reviews_file_multi: "Dateien ausgewählt",
     reviews_upload_error: "Foto-Upload fehlgeschlagen.",
     reviews_label_rating: "Bewertung",
     reviews_button: "Kommentar posten",
@@ -856,12 +860,32 @@ function showToast(message, type = "success") {
 function updateFileName(input) {
   const wrapper = input.closest(".file-input");
   const display = wrapper ? wrapper.querySelector(".file-name") : null;
+  const count = wrapper ? wrapper.parentElement.querySelector(".file-count") : null;
   if (!display) return;
-  if (input.files && input.files[0]) {
-    display.textContent = input.files[0].name;
+  const dict = translations[currentLang] || translations.en;
+  const total = input.files ? input.files.length : 0;
+  if (total) {
+    const singleLabel = dict.reviews_file_single || "file selected";
+    const multiLabel = dict.reviews_file_multi || "files selected";
+    if (total === 1) {
+      display.textContent = input.files[0].name;
+      if (count) {
+        count.textContent = `1 ${singleLabel}`;
+        count.classList.remove("is-hidden");
+      }
+    } else {
+      display.textContent = input.files[total - 1].name;
+      if (count) {
+        count.textContent = `${total} ${multiLabel}`;
+        count.classList.remove("is-hidden");
+      }
+    }
   } else {
-    const dict = translations[currentLang] || translations.en;
     display.textContent = dict.reviews_file_empty || "No file chosen";
+    if (count) {
+      count.textContent = "";
+      count.classList.add("is-hidden");
+    }
   }
 }
 
@@ -881,29 +905,37 @@ function getCloudinaryConfig() {
   return { cloudName, uploadPreset };
 }
 
-async function uploadReviewImage(file, statusEl) {
+async function uploadReviewImages(files, statusEl) {
   const config = getCloudinaryConfig();
   if (!config) throw new Error("Photo upload not configured.");
-  if (!file) return "";
+  if (!files || !files.length) return [];
   const maxSize = 5 * 1024 * 1024;
-  if (file.size > maxSize) {
-    throw new Error("Photo is too large (max 5MB).");
-  }
   const dict = translations[currentLang] || translations.en;
-  const uploadingText = currentLang === "de" ? "Foto wird hochgeladen" : "Uploading photo";
-  setStatusLoading(statusEl, uploadingText);
-  const formData = new FormData();
-  formData.append("file", file);
-  formData.append("upload_preset", config.uploadPreset);
-  const res = await fetch(`https://api.cloudinary.com/v1_1/${config.cloudName}/image/upload`, {
-    method: "POST",
-    body: formData,
-  });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok || !data.secure_url) {
-    throw new Error(dict.reviews_upload_error || "Photo upload failed.");
+  const urls = [];
+  for (let i = 0; i < files.length; i += 1) {
+    const file = files[i];
+    if (file.size > maxSize) {
+      throw new Error("Photo is too large (max 5MB).");
+    }
+    const uploadingText =
+      currentLang === "de"
+        ? `Foto wird hochgeladen (${i + 1}/${files.length})`
+        : `Uploading photo (${i + 1}/${files.length})`;
+    setStatusLoading(statusEl, uploadingText);
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", config.uploadPreset);
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${config.cloudName}/image/upload`, {
+      method: "POST",
+      body: formData,
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.secure_url) {
+      throw new Error(dict.reviews_upload_error || "Photo upload failed.");
+    }
+    urls.push(data.secure_url);
   }
-  return data.secure_url;
+  return urls;
 }
 
 async function loadReviews() {
@@ -918,11 +950,14 @@ async function loadReviews() {
         text: typeof r.text === "string" ? r.text.slice(0, 800) : "",
         createdAt: r.createdAt || Date.now(),
         rating: Number(r.rating) || 0,
-        imageUrl:
-          (typeof r.imageUrl === "string" && r.imageUrl) ||
-          (typeof r.image === "string" && r.image) ||
-          (typeof r.photo === "string" && r.photo) ||
-          "",
+        imageUrls: Array.isArray(r.imageUrls)
+          ? r.imageUrls.filter((url) => typeof url === "string" && url)
+          : [
+              (typeof r.imageUrl === "string" && r.imageUrl) ||
+                (typeof r.image === "string" && r.image) ||
+                (typeof r.photo === "string" && r.photo) ||
+                "",
+            ].filter(Boolean),
       }));
     } else {
       reviews = [];
@@ -974,11 +1009,18 @@ function renderReviews() {
       const formatted = text.replace(/\n/g, "<br>");
       const dateLabel = formatDate(r.createdAt);
       const stars = starDisplay(r.rating);
-      const photo = r.imageUrl
-        ? `<div class="review-thumb"><img src="${escapeHtml(r.imageUrl)}" alt="Lawn result photo" loading="lazy"></div>`
-        : "";
+      const images = Array.isArray(r.imageUrls) ? r.imageUrls : [];
+      const thumbs = images.slice(0, 2).map((url, idx) => {
+        const safeUrl = escapeHtml(url);
+        const moreCount = images.length > 2 && idx === 1 ? `<span class="thumb-count">+${images.length - 1}</span>` : "";
+        return `<button type="button" class="review-thumb${images.length > 2 && idx === 1 ? " more" : ""}" data-photo="${safeUrl}">
+            <img src="${safeUrl}" alt="Lawn result photo" loading="lazy">
+            ${moreCount}
+          </button>`;
+      }).join("");
+      const photo = thumbs ? `<div class="review-thumbs">${thumbs}</div>` : "";
       return `
-        <div class="review-card${r.imageUrl ? " has-photo" : ""}"${r.imageUrl ? ` data-photo="${escapeHtml(r.imageUrl)}"` : ""}>
+        <div class="review-card${images.length ? " has-photo" : ""}"${images.length ? ` data-photo="${escapeHtml(images[0])}"` : ""}>
           <div class="review-meta">
             <span class="review-name">${name}</span>
             <span class="review-date">${dateLabel}</span>
@@ -1026,7 +1068,7 @@ function renderReviews() {
   }
 }
 
-async function addReview(name, comment, rating, imageUrl = "") {
+async function addReview(name, comment, rating, imageUrls = []) {
   const cleanComment = (comment || "").trim();
   const cleanName = (name || "").trim() || "Guest";
   if (!cleanComment) {
@@ -1045,7 +1087,7 @@ async function addReview(name, comment, rating, imageUrl = "") {
     name: cleanName.slice(0, 80),
     comment: cleanComment.slice(0, 800),
     rating: Math.max(0, Math.min(5, Math.round(Number(rating) || 0))),
-    imageUrl: imageUrl || "",
+    imageUrls: Array.isArray(imageUrls) ? imageUrls : [],
   };
   try {
     const res = await fetch("/api/reviews", {
@@ -1063,7 +1105,7 @@ async function addReview(name, comment, rating, imageUrl = "") {
         text: data.review.text || payload.comment,
         createdAt: data.review.createdAt || Date.now(),
         rating: data.review.rating || payload.rating,
-        imageUrl: data.review.imageUrl || payload.imageUrl,
+        imageUrls: data.review.imageUrls || payload.imageUrls,
       });
       reviews = reviews.slice(0, 30);
       renderReviews();
@@ -1115,17 +1157,17 @@ function initReviewForm() {
     const name = nameInput ? nameInput.value : "";
     const comment = commentInput ? commentInput.value : "";
     const rating = ratingInput ? ratingInput.value : 5;
-    let imageUrl = "";
+    let imageUrls = [];
     if (photoInput && photoInput.files && photoInput.files[0]) {
       try {
-        imageUrl = await uploadReviewImage(photoInput.files[0], status);
+        imageUrls = await uploadReviewImages(Array.from(photoInput.files), status);
       } catch (err) {
         setStatusMessage(status, err.message || "Photo upload failed.");
         showToast(err.message || "Photo upload failed.", "error");
         return;
       }
     }
-    const added = await addReview(name, comment, rating, imageUrl);
+    const added = await addReview(name, comment, rating, imageUrls);
     if (!added) {
       if (status) {
         setStatusMessage(status, "Could not post your review. Please try again.");
@@ -1299,13 +1341,17 @@ function initLightbox() {
   });
   document.body.addEventListener("click", (e) => {
     const productImg = e.target.closest(".product-photo img");
+    const reviewThumb = e.target.closest(".review-thumb");
     const reviewCard = e.target.closest(".review-card.has-photo");
-    if (!productImg && !reviewCard) return;
+    if (!productImg && !reviewThumb && !reviewCard) return;
     e.preventDefault();
     if (imgTarget) {
       if (productImg) {
         imgTarget.src = productImg.src;
         imgTarget.alt = productImg.alt || "Product image";
+      } else if (reviewThumb?.dataset.photo) {
+        imgTarget.src = reviewThumb.dataset.photo;
+        imgTarget.alt = "Review photo";
       } else if (reviewCard?.dataset.photo) {
         imgTarget.src = reviewCard.dataset.photo;
         imgTarget.alt = "Review photo";
