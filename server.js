@@ -22,6 +22,7 @@ const kvToken = process.env.KV_REST_API_TOKEN;
 const adminToken = process.env.REVIEWS_ADMIN_TOKEN;
 const resendKey = process.env.RESEND_API_KEY;
 const resendFrom = process.env.RESEND_FROM || "onboarding@resend.dev";
+const contactTo = process.env.CONTACT_TO || "datlawnguy0@gmail.com";
 const downloadUrl = process.env.EBOOK_DOWNLOAD_URL || "https://www.datlawnguy.de/ebooks/eBook1-v2.pdf";
 const downloadSecret = process.env.DOWNLOAD_SECRET || "dev-secret-change-me";
 const downloadBase = process.env.DOWNLOAD_BASE || "https://www.datlawnguy.de/api/download";
@@ -424,6 +425,47 @@ async function handleTestDownloadEmail(req, res) {
   }
 }
 
+async function handleContact(req, res) {
+  if (req.method !== "POST") return sendJson(res, 405, { error: "Method not allowed" });
+  if (!resendKey) return sendJson(res, 500, { error: "Email not configured" });
+  try {
+    const body = await readBody(req);
+    const name = (body.name || "Guest").toString().trim().slice(0, 120);
+    const email = (body.email || body.contact || "").toString().trim().slice(0, 200);
+    const message = (body.message || "").toString().trim().slice(0, 2000);
+    if (!email || !email.includes("@") || !message) {
+      return sendJson(res, 400, { error: "Name, email, and message required" });
+    }
+    const html = `
+      <div style="font-family:Arial,Helvetica,sans-serif;line-height:1.5;color:#0b1a12;">
+        <h2 style="margin:0 0 12px 0;">New website message</h2>
+        <p style="margin:0 0 6px 0;"><strong>Name:</strong> ${escapeHtml(name)}</p>
+        <p style="margin:0 0 6px 0;"><strong>Email:</strong> ${escapeHtml(email)}</p>
+        <p style="margin:12px 0 0 0;"><strong>Message:</strong></p>
+        <p style="margin:6px 0 0 0;white-space:pre-line;">${escapeHtml(message)}</p>
+      </div>
+    `;
+    await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${resendKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: resendFrom,
+        to: contactTo,
+        reply_to: email,
+        subject: `DAT LAWN GUY - Contact form (${name})`,
+        html,
+      }),
+    });
+    return sendJson(res, 200, { ok: true });
+  } catch (err) {
+    console.error("Contact email failed:", err.message);
+    return sendJson(res, 500, { error: "Email send failed" });
+  }
+}
+
 const server = http.createServer(async (req, res) => {
   const parsed = url.parse(req.url);
   let pathname = decodeURIComponent(parsed.pathname || "/");
@@ -439,6 +481,9 @@ const server = http.createServer(async (req, res) => {
   }
   if (req.method === "POST" && pathname === "/api/test-download-email") {
     return handleTestDownloadEmail(req, res);
+  }
+  if (req.method === "POST" && pathname === "/api/contact") {
+    return handleContact(req, res);
   }
   if (req.method === "GET" && pathname === "/api/purchases") {
     try {

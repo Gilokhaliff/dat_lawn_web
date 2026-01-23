@@ -141,6 +141,7 @@ const translations = {
     contact_placeholder_message: "Starter kit, striping, weed rescue...",
     contact_form_btn: "Send",
     contact_status: "Got it! Expect a reply within 48 hours.",
+    contact_error: "Could not send your message. Please try again.",
     footer_brand_sub: "Pro-grade gear, tested weekly",
     footer_note: "Affiliate links may earn a commission. I only list what I use on real lawns.",
     footer_location: "Based in Brunswick, Lower Saxony, Germany.",
@@ -345,6 +346,7 @@ const translations = {
     contact_placeholder_message: "Starter-Kit, Streifen, Unkraut-Rescue...",
     contact_form_btn: "Senden",
     contact_status: "Danke! Antwort folgt innerhalb von 48 Stunden.",
+    contact_error: "Nachricht konnte nicht gesendet werden. Bitte versuch es erneut.",
     footer_brand_sub: "Profi-Rasen-Equipment, jede Woche getestet",
     footer_note: "Affiliate-Links bringen Provision. Ich liste nur, was ich selbst nutze.",
     footer_location: "Sitz: Braunschweig, Niedersachsen, Deutschland.",
@@ -1529,18 +1531,36 @@ function initForms() {
   const contactForm = $("#contactForm");
   const contactStatus = $("#contactStatus");
   if (contactForm) {
-    contactForm.addEventListener("submit", (e) => {
+    contactForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       const data = new FormData(contactForm);
       if (data.get("trap")) return;
       const msg = (translations[currentLang] || translations.en).contact_status;
+      const errMsg = (translations[currentLang] || translations.en).contact_error;
       const loadingText = currentLang === "de" ? "Wird gesendet" : "Sending";
       setStatusLoading(contactStatus, loadingText);
-      setTimeout(() => {
+      const payload = {
+        name: data.get("name") || "",
+        email: data.get("contact") || "",
+        message: data.get("message") || "",
+      };
+      try {
+        const res = await fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const out = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          throw new Error(out.error || errMsg || "Unable to send message");
+        }
         setStatusMessage(contactStatus, msg || "");
         showToast(msg || "Thanks! I will reply within 48 hours.");
         contactForm.reset();
-      }, 500);
+      } catch (err) {
+        setStatusMessage(contactStatus, err.message || errMsg || "");
+        showToast(err.message || errMsg || "Could not send message.", "error");
+      }
     });
   }
 
