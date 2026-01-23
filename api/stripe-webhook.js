@@ -3,7 +3,7 @@ import crypto from "crypto";
 
 const stripeSecret = process.env.STRIPE_SECRET_KEY;
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-const downloadUrl = process.env.EBOOK_DOWNLOAD_URL || "https://www.datlawnguy.de/ebooks/eBook1.pdf";
+const downloadUrl = process.env.EBOOK_DOWNLOAD_URL || "https://www.datlawnguy.de/ebooks/eBook1-v2.pdf";
 const downloadSecret = process.env.DOWNLOAD_SECRET || "dev-secret-change-me";
 const downloadBase = process.env.DOWNLOAD_BASE || "https://www.datlawnguy.de/api/download";
 const resendKey = process.env.RESEND_API_KEY;

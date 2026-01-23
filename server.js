@@ -19,11 +19,13 @@ const reviewsFile = path.join(root, "reviews.json");
 const purchasesFile = path.join(root, "purchases.json");
 const kvUrl = process.env.KV_REST_API_URL;
 const kvToken = process.env.KV_REST_API_TOKEN;
+const adminToken = process.env.REVIEWS_ADMIN_TOKEN;
 const resendKey = process.env.RESEND_API_KEY;
 const resendFrom = process.env.RESEND_FROM || "onboarding@resend.dev";
-const downloadUrl = process.env.EBOOK_DOWNLOAD_URL || "https://www.datlawnguy.de/ebooks/eBook1.pdf";
+const downloadUrl = process.env.EBOOK_DOWNLOAD_URL || "https://www.datlawnguy.de/ebooks/eBook1-v2.pdf";
 const downloadSecret = process.env.DOWNLOAD_SECRET || "dev-secret-change-me";
 const downloadBase = process.env.DOWNLOAD_BASE || "https://www.datlawnguy.de/api/download";
+const adminToken = process.env.REVIEWS_ADMIN_TOKEN;
 let memoryReviews = [];
 let memoryPurchases = [];
 
@@ -237,6 +239,24 @@ async function handleCheckout(req, res) {
 }
 
 async function handleReviews(req, res) {
+  if (req.method === "DELETE") {
+    if (!adminToken) return sendJson(res, 500, { error: "Admin token not configured" });
+    const provided =
+      req.headers["x-admin-token"] ||
+      new URL(req.url, `http://${req.headers.host}`).searchParams.get("token") ||
+      "";
+    if (!provided || provided !== adminToken) {
+      return sendJson(res, 401, { error: "Unauthorized" });
+    }
+    try {
+      await writeReviews([]);
+      return sendJson(res, 200, { ok: true });
+    } catch (err) {
+      console.error("Clear reviews failed:", err.message);
+      return sendJson(res, 500, { error: "Unable to clear reviews" });
+    }
+  }
+
   if (req.method === "GET") {
     try {
       const reviews = await readReviews();
@@ -355,6 +375,55 @@ async function handleWebhook(req, res) {
   });
 }
 
+async function handleTestDownloadEmail(req, res) {
+  if (req.method !== "POST") return sendJson(res, 405, { error: "Method not allowed" });
+  if (!adminToken) return sendJson(res, 500, { error: "Admin token not configured" });
+  const provided = req.headers["x-admin-token"] || "";
+  if (!provided || provided !== adminToken) {
+    return sendJson(res, 401, { error: "Unauthorized" });
+  }
+  if (!resendKey) return sendJson(res, 500, { error: "Resend not configured" });
+  try {
+    const body = await readBody(req);
+    const email = (body.email || "").toString().trim();
+    const name = (body.name || "").toString().trim().slice(0, 120);
+    if (!email || !email.includes("@")) {
+      return sendJson(res, 400, { error: "Valid email required" });
+    }
+    const link = createSignedDownloadLink(email);
+    const safeName = name ? `, ${escapeHtml(name)}` : "";
+    const html = `
+      <div style="font-family:Arial,Helvetica,sans-serif;line-height:1.5;color:#0b1a12;">
+        <h2 style="margin:0 0 12px 0;">Danke für deinen Kauf${safeName}!</h2>
+        <p style="margin:0 0 12px 0;">Hier ist dein Ebook-Download:</p>
+        <p style="margin:0 0 16px 0;">
+          <a href="${link}" style="background:#175c33;color:#fff;padding:10px 14px;border-radius:8px;text-decoration:none;font-weight:700;">E-Book herunterladen (PDF)</a>
+        </p>
+        <p style="margin:0;color:#4c5d51;">Falls der Button nicht funktioniert, nutze diesen Link: <br><a href="${link}">${link}</a></p>
+      </div>
+    `;
+    const headers = {
+      Authorization: `Bearer ${resendKey}`,
+      "Content-Type": "application/json",
+      "Idempotency-Key": `test-${Date.now()}`,
+    };
+    await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        from: resendFrom,
+        to: email,
+        subject: "DAT LAWN GUY - eBook Frühling Rasenpflege ohne Bullshit",
+        html,
+      }),
+    });
+    return sendJson(res, 200, { ok: true });
+  } catch (err) {
+    console.error("Test email failed:", err.message);
+    return sendJson(res, 500, { error: "Email send failed" });
+  }
+}
+
 const server = http.createServer(async (req, res) => {
   const parsed = url.parse(req.url);
   let pathname = decodeURIComponent(parsed.pathname || "/");
@@ -365,8 +434,11 @@ const server = http.createServer(async (req, res) => {
   if (req.method === "POST" && pathname === "/api/stripe-webhook") {
     return handleWebhook(req, res);
   }
-  if ((req.method === "GET" || req.method === "POST") && pathname === "/api/reviews") {
+  if ((req.method === "GET" || req.method === "POST" || req.method === "DELETE") && pathname === "/api/reviews") {
     return handleReviews(req, res);
+  }
+  if (req.method === "POST" && pathname === "/api/test-download-email") {
+    return handleTestDownloadEmail(req, res);
   }
   if (req.method === "GET" && pathname === "/api/purchases") {
     try {

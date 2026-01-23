@@ -1,5 +1,6 @@
 const kvUrl = process.env.KV_REST_API_URL;
 const kvToken = process.env.KV_REST_API_TOKEN;
+const adminToken = process.env.REVIEWS_ADMIN_TOKEN;
 
 function send(res, status, payload) {
   res.status(status).json(payload);
@@ -40,6 +41,20 @@ export default async function handler(req, res) {
       return send(res, 200, { reviews });
     } catch (err) {
       return send(res, 500, { reviews: [] });
+    }
+  }
+
+  if (req.method === "DELETE") {
+    if (!adminToken) return send(res, 500, { error: "Admin token not configured" });
+    const provided = req.headers["x-admin-token"] || req.query?.token || "";
+    if (!provided || provided !== adminToken) {
+      return send(res, 401, { error: "Unauthorized" });
+    }
+    try {
+      await writeReviews([]);
+      return send(res, 200, { ok: true });
+    } catch (err) {
+      return send(res, 500, { error: "Unable to clear reviews" });
     }
   }
 
