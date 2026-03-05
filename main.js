@@ -604,6 +604,45 @@ const products = {
       price: "$",
     },
     {
+      name: {
+        en: "Soil Power Bundle: HuminIron + Liqhumus + Fulvagra + Amino Power",
+        de: "Bodenpower-Bundle:HuminIron + Liqhumus + Fulvagra + Amino Power",
+      },
+      note: {
+        en: "Complete soil-strength bundle focused on humic and amino inputs to improve uptake, root activity, and stress tolerance.",
+        de: "Komplettes Boden-Stärkungsbundle mit Humin- und Amino-Komponenten für bessere Nährstoffaufnahme, Wurzelaktivität und Stresstoleranz.",
+      },
+      tagKey: "tag_affiliate",
+      link: "https://lazygarden.shop/products/bodenpower-bundle-huminiron-liqhumus-fulvagra-amino?sca_ref=10730270.syGdpEv6N43shzcn",
+      image: "images/consumables/Bodenpower.webp",
+      price: "$$$",
+    },
+    {
+      name: { en: "Lawn Rescue Bundle", de: "Das \"Rasen-Retter\" Bundle" },
+      note: {
+        en: "Recovery-focused bundle for weak or damaged lawns, designed to stabilize turf and rebuild density step by step.",
+        de: "Rettungsbundle für geschwächte oder beschädigte Rasenflächen, um den Bestand zu stabilisieren und die Dichte gezielt wieder aufzubauen.",
+      },
+      tagKey: "tag_affiliate",
+      link: "https://lazygarden.shop/products/das-rasen-retter-bundle?sca_ref=10730270.syGdpEv6N43shzcn",
+      image: "images/consumables/Rasenretterbundle.webp",
+      price: "$$$",
+    },
+    {
+      name: {
+        en: "BIOCANNA Worry-Free Pack - Complete Organic Fertilizer Set",
+        de: "BIOCANNA Sorglos-Paket – Komplettset organischer Dünger",
+      },
+      note: {
+        en: "All-in-one BIOCANNA set for an organic feed routine with coordinated products, ideal if you want one consistent program.",
+        de: "BIOCANNA-Komplettset für eine organische Dünger-Routine mit aufeinander abgestimmten Produkten - ideal als durchgängiges Programm.",
+      },
+      tagKey: "tag_affiliate",
+      link: "https://lazygarden.shop/products/sorglos-packet-biocanna?sca_ref=10730270.syGdpEv6N43shzcn",
+      image: "images/consumables/Biocanna.webp",
+      price: "$$$",
+    },
+    {
       name: { en: "Lawn soil mix", de: "Rasenerde" },
       note: {
         en: "Fine lawn soil for topdressing thin spots and leveling. Improves seed-to-soil contact and moisture retention after overseeding.",

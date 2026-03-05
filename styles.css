@@ -759,8 +759,24 @@ main {
 }
 
 .product-actions {
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
+  align-items: center;
+}
+
+.product-card > .view-link,
+.product-actions .view-link {
+  width: 7.4rem;
+  height: 2.7rem;
+  padding: 0;
+  flex: 0 0 7.4rem;
+  font-size: 0.98rem;
+  line-height: 1.2;
+  justify-content: center;
+  justify-self: start;
+  align-self: start;
+  white-space: nowrap;
 }
 
 .ebook-hero {
