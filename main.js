@@ -582,6 +582,28 @@ const products = {
       price: "$$",
     },
     {
+      name: { en: "Soil pH test", de: "pH Boden Test" },
+      note: {
+        en: "Quick pH check so you can decide whether lime or fertilizer adjustments are needed before seeding or feeding.",
+        de: "Schneller pH-Check, damit du vor Saat oder Düngung entscheiden kannst, ob Kalk oder eine Anpassung nötig ist.",
+      },
+      tagKey: "tag_affiliate",
+      link: "https://amzn.to/4l7MN6o",
+      image: "images/consumables/neudorff_pH.jpg",
+      price: "$",
+    },
+    {
+      name: { en: "Lawn lime", de: "Rasen Kalk" },
+      note: {
+        en: "Raises low soil pH and improves nutrient availability, especially useful before the main growing phase.",
+        de: "Hebt einen zu niedrigen Boden-pH an und verbessert die Nährstoffverfügbarkeit, besonders vor der Hauptwachstumsphase.",
+      },
+      tagKey: "tag_affiliate",
+      link: "https://amzn.to/4bmV8jk",
+      image: "images/consumables/Compo_kalk.jpg",
+      price: "$",
+    },
+    {
       name: { en: "Lawn soil mix", de: "Rasenerde" },
       note: {
         en: "Fine lawn soil for topdressing thin spots and leveling. Improves seed-to-soil contact and moisture retention after overseeding.",

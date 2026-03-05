@@ -26,7 +26,6 @@ const contactTo = process.env.CONTACT_TO || "datlawnguy0@gmail.com";
 const downloadUrl = process.env.EBOOK_DOWNLOAD_URL || "https://www.datlawnguy.de/ebooks/eBook1-v2.pdf";
 const downloadSecret = process.env.DOWNLOAD_SECRET || "dev-secret-change-me";
 const downloadBase = process.env.DOWNLOAD_BASE || "https://www.datlawnguy.de/api/download";
-const adminToken = process.env.REVIEWS_ADMIN_TOKEN;
 let memoryReviews = [];
 let memoryPurchases = [];
 
