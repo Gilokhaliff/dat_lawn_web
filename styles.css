@@ -3600,16 +3600,34 @@ h3 { font-family: var(--font); font-weight: 700; letter-spacing: -0.012em; }
   #toolsGrid > *,
   #consumablesGrid > *,
   #videoGrid > * {
-    flex-basis: 84vw;
-    max-width: 84vw;
+    flex-basis: 76vw;
+    max-width: 76vw;
   }
 
-  .product-card { gap: 0.45rem; }
-  .product-card > strong { font-size: 1rem; }
-  .product-card > .muted {
+  .product-card {
+    gap: 0.38rem;
+    padding: 0.72rem;
+  }
+  .product-photo {
+    aspect-ratio: 16 / 10;
+    border-radius: 10px;
+  }
+  .product-card > strong {
     font-size: 0.95rem;
-    -webkit-line-clamp: 5;
-    min-height: calc(1.5em * 5);
+    -webkit-line-clamp: 2;
+    min-height: calc(1.3em * 2);
+  }
+  .product-card > .muted {
+    font-size: 0.9rem;
+    line-height: 1.45;
+    -webkit-line-clamp: 3;
+    min-height: calc(1.45em * 3);
+  }
+  .product-actions .btn,
+  .product-card > .view-link,
+  .product-actions .view-link {
+    height: 2.35rem;
+    font-size: 0.9rem;
   }
 
   .why-grid { gap: 0.75rem; }
@@ -3662,7 +3680,7 @@ h3 { font-family: var(--font); font-weight: 700; letter-spacing: -0.012em; }
   #toolsGrid > *,
   #consumablesGrid > *,
   #videoGrid > * {
-    flex-basis: 88vw;
-    max-width: 88vw;
+    flex-basis: 82vw;
+    max-width: 82vw;
   }
 }
