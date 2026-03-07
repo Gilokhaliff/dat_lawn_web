@@ -1584,13 +1584,41 @@ function toggleNav() {
   const toggle = $(".nav-toggle");
   const links = $("#navLinks");
   if (!toggle || !links) return;
-  toggle.addEventListener("click", () => links.classList.toggle("open"));
-  $$("nav a").forEach((a) => a.addEventListener("click", () => links.classList.remove("open")));
+
+  const closeMenu = () => {
+    links.classList.remove("open");
+    toggle.setAttribute("aria-expanded", "false");
+    document.body.classList.remove("nav-open");
+  };
+
+  const openMenu = () => {
+    links.classList.add("open");
+    toggle.setAttribute("aria-expanded", "true");
+    document.body.classList.add("nav-open");
+  };
+
+  toggle.setAttribute("aria-expanded", "false");
+  toggle.setAttribute("aria-controls", "navLinks");
+
+  toggle.addEventListener("click", () => {
+    if (links.classList.contains("open")) {
+      closeMenu();
+      return;
+    }
+    openMenu();
+  });
+
+  $$("nav a").forEach((a) => a.addEventListener("click", closeMenu));
+
   document.addEventListener("click", (e) => {
     if (!links.classList.contains("open")) return;
     const clickInsideNav = links.contains(e.target);
     const clickToggle = toggle.contains(e.target);
-    if (!clickInsideNav && !clickToggle) links.classList.remove("open");
+    if (!clickInsideNav && !clickToggle) closeMenu();
+  });
+
+  window.addEventListener("resize", () => {
+    if (!window.matchMedia("(max-width: 900px)").matches) closeMenu();
   });
 }
 
