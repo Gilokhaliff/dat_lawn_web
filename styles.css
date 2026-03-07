@@ -3559,6 +3559,7 @@ h3 { font-family: var(--font); font-weight: 700; letter-spacing: -0.012em; }
   :root { --page-gutter: 0.9rem; }
   .brand-text span { font-size: 0.94rem; }
   .brand-text small { display: none; }
+  .nav-social { display: none; }
   .nav-social .social-link {
     width: 1.72rem;
     height: 1.72rem;
@@ -3574,22 +3575,38 @@ h3 { font-family: var(--font); font-weight: 700; letter-spacing: -0.012em; }
     border-radius: 16px;
   }
   .hero-copy { padding: 0.95rem 0.95rem 0; }
+  .hero-pill { display: none; }
   .hero-copy h1 {
     font-size: clamp(1.75rem, 10vw, 2.4rem);
     line-height: 1.05;
   }
   .hero .lead {
-    font-size: 0.98rem;
-    line-height: 1.45;
+    font-size: 0.92rem;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
   .hero-panel {
     width: calc(100% - 1rem);
     margin: 0 0.5rem 0.6rem;
+    padding: 0.5rem;
+    border-radius: 10px;
   }
+  .hero-panel-copy { display: none; }
   .stats-bar {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0.35rem;
   }
+  .stats-bar div { padding: 0.3rem 0.38rem; }
+  .stats-bar strong { font-size: 0.88rem; }
+  .stats-bar span {
+    font-size: 0.66rem;
+    line-height: 1.14;
+  }
+  .hero .cta-row { margin-top: 0.72rem; }
+  .hero .cta-row .btn-ghost { display: none; }
 
   .cta-row .btn {
     width: 100%;
@@ -3632,6 +3649,7 @@ h3 { font-family: var(--font); font-weight: 700; letter-spacing: -0.012em; }
 
   .why-grid { gap: 0.75rem; }
   .review-card { padding: 0.72rem 0.78rem; }
+  .strip { display: none; }
 
   .footer-grid {
     grid-template-columns: 1fr;
@@ -3656,6 +3674,13 @@ h3 { font-family: var(--font); font-weight: 700; letter-spacing: -0.012em; }
   body.ebook-page .ebook-actions .btn,
   body.ebook-page .offer-right .btn {
     width: 100%;
+  }
+  .mobile-sticky-cta {
+    width: calc(100vw - 1.25rem);
+    min-height: 2.55rem;
+    padding: 0.58rem 0.9rem;
+    font-size: 0.96rem;
+    bottom: max(0.45rem, env(safe-area-inset-bottom));
   }
 }
 

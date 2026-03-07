@@ -2673,14 +2673,36 @@ function initStickyCta() {
   const cta = $(".mobile-sticky-cta");
   const contact = $("#contact");
   if (!cta || !contact) return;
-  const observer = new IntersectionObserver(
+  const hero = $("#hero");
+  let heroVisible = Boolean(hero);
+  let contactVisible = false;
+
+  const sync = () => {
+    cta.classList.toggle("is-hidden", heroVisible || contactVisible);
+  };
+
+  if (hero) {
+    const heroObserver = new IntersectionObserver(
+      (entries) => {
+        heroVisible = Boolean(entries[0]?.isIntersecting);
+        sync();
+      },
+      { threshold: 0.25 }
+    );
+    heroObserver.observe(hero);
+  } else {
+    heroVisible = false;
+  }
+
+  const contactObserver = new IntersectionObserver(
     (entries) => {
-      const entry = entries[0];
-      cta.classList.toggle("is-hidden", Boolean(entry?.isIntersecting));
+      contactVisible = Boolean(entries[0]?.isIntersecting);
+      sync();
     },
     { threshold: 0.2 }
   );
-  observer.observe(contact);
+  contactObserver.observe(contact);
+  sync();
 }
 
 function initFaqToggle() {
