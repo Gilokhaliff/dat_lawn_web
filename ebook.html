@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,32 +7,47 @@
   <link rel="icon" type="image/png" href="datlogo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Inter+Tight:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <script src="main.js" defer></script>
 </head>
-<body>
+<body class="ebook-page">
   <header>
-    <div class="container nav">
-      <a class="brand" href="/">
-        <div class="mark"><img src="datlogo.png" alt="DAT Lawn Guy logo" class="logo-img"></div>
-        <div class="brand-text">
-          <span>DAT LAWN GUY</span>
-          <small>Professional Green keeper</small>
+    <div class="nav-shell">
+      <div class="nav-top">
+        <a class="brand" href="/">
+          <div class="mark"><img src="datlogo.png" alt="DAT Lawn Guy logo" class="logo-img"></div>
+          <div class="brand-text">
+            <span>DAT LAWN GUY</span>
+            <small data-i18n="brand_subtitle">Pro-grade gear, tested weekly</small>
+          </div>
+        </a>
+        <div class="nav-actions">
+          <div class="social-links nav-social" aria-label="Social links">
+            <a class="social-link" href="https://www.instagram.com/dat.lawnguy" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <img src="images/icons/instagram.png" alt="">
+            </a>
+            <a class="social-link" href="https://www.youtube.com/@dat.lawnguy" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+              <img src="images/icons/youtube.png" alt="">
+            </a>
+            <a class="social-link" href="https://www.tiktok.com/@dat.lawnguy?_r=1&_t=ZG-94UjfMTixiT" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+              <img src="images/icons/tiktok.png" alt="">
+            </a>
+          </div>
+          <a class="btn btn-gold nav-cta" data-i18n="nav_cta" href="/#contact">Get a recommendation</a>
+          <div class="lang-switch" id="langSwitch" aria-label="Language toggle" role="group">
+            <button class="lang-btn active" data-lang="de" type="button">DE</button>
+            <button class="lang-btn" data-lang="en" type="button">EN</button>
+          </div>
+          <button class="nav-toggle" aria-label="Toggle navigation">Menu</button>
         </div>
-      </a>
-      <nav>
+      </div>
+      <nav class="nav-primary">
         <ul id="navLinks">
           <li><a data-i18n="nav_home" href="/">Home</a></li>
+          <li><a href="/#ebooks">Ebook</a></li>
         </ul>
       </nav>
-      <div class="nav-actions">
-        <div class="lang-switch" id="langSwitch" aria-label="Language toggle" role="group">
-          <button class="lang-btn active" data-lang="de" type="button">DE</button>
-          <button class="lang-btn" data-lang="en" type="button">EN</button>
-        </div>
-        <button class="nav-toggle" aria-label="Toggle navigation">Menu</button>
-      </div>
     </div>
   </header>
 

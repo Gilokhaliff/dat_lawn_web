@@ -18,15 +18,44 @@ const translations = {
     chip1: "Field-tested selections",
     chip2: "Safety notes + rates",
     chip3: "Find me on Instagram",
+    trust_weekly_value: "30+",
+    trust_weekly_label: "lawns per week",
+    trust_years_value: "10+",
+    trust_years_label: "years in turf care",
+    trust_real_value: "100%",
+    trust_real_label: "real-use recommendations",
+    quiz_title: "Find your top 3 picks",
+    quiz_sub: "Answer 4 quick questions and get a focused shortlist.",
+    quiz_q1: "Sun exposure",
+    quiz_q1_opt1: "Mixed",
+    quiz_q1_opt2: "Mostly sun",
+    quiz_q1_opt3: "Mostly shade",
+    quiz_q2: "Main issue",
+    quiz_q2_opt1: "Thin lawn",
+    quiz_q2_opt2: "Yellow color",
+    quiz_q2_opt3: "Weeds",
+    quiz_q2_opt4: "Compacted soil",
+    quiz_q3: "Pets at home?",
+    quiz_q3_opt1: "No",
+    quiz_q3_opt2: "Yes",
+    quiz_q4: "How much effort?",
+    quiz_q4_opt1: "Low",
+    quiz_q4_opt2: "Medium",
+    quiz_q4_opt3: "High",
+    quiz_cta: "Show top 3",
+    quiz_result_title: "Recommended for your setup",
+    quiz_empty: "No perfect match found yet. Try broader filters.",
+    cta_external_shop: "External shop opens in a new tab",
+    top_pick: "Top pick",
     hero_card_text:
       "<strong>Weekly routes.</strong> Everything listed and pictured rides in my truck. No filler, just what survives real lawns.",
-    stat1_label: "lawn freaks influenced",
-    stat2_label: "certified tools",
-    stat3_label: "reply on DMs",
+    stat1_label: "people reached",
+    stat2_label: "recommendations",
+    stat3_label: "reply time via email & DM",
     strip_seen: "Field work",
     strip_seen_list: "Active greenkeeper, weekly routes",
     strip_tested: "Community",
-    strip_tested_list: "25k+ lawn freaks learning together",
+    strip_tested_list: "40k lawn freaks learning together",
     strip_guarantee: "Transparency",
     strip_guarantee_list: "No paid hype, only what I use",
     promo_pill: "Ongoing perk",
@@ -34,6 +63,9 @@ const translations = {
     promo_sub: "Use my code on any Rasenwelt item, anytime.",
     promo_band_text: "5% off every Rasenwelt product • Code: datlawncode5 • No expiry",
     promo_code_label: "Code",
+    promo_copy_hint: "Click the code to copy it instantly.",
+    promo_copy_success: "Code copied. Paste it at checkout.",
+    promo_copy_error: "Copy failed. Please copy the code manually.",
     promo_cta: "Shop Rasenwelt",
     bundles_pill: "Featured bundles",
     bundles_heading: "Ready-to-go kits for fast wins",
@@ -68,6 +100,69 @@ const translations = {
     group1_sub: "Mowers, trimmers, edging, soil probes.",
     group2_title: "Consumables",
     group2_sub: "Fertilizers, weed control, surfactants.",
+    filter_all: "All",
+    filter_fertilizer: "Fertilizer",
+    filter_soil: "Soil",
+    filter_weed: "Weed control",
+    filter_bundle: "Bundles",
+    problem_filter_label: "Problem",
+    problem_all: "All",
+    problem_yellow: "Yellow lawn",
+    problem_weeds: "Weeds",
+    problem_compacted: "Compacted soil",
+    problem_thin: "Thin lawn",
+    problem_pet: "Pets",
+    seasonal_pill: "Seasonal focus",
+    seasonal_apply: "Show recommended picks",
+    seasonal_select_label: "Season",
+    seasonal_option_placeholder: "Select",
+    seasonal_intro_title: "Choose your season",
+    seasonal_intro_body:
+      "Pick a season first, then click \"Show recommended picks\" to display the matching product recommendations.",
+    seasonal_option_spring: "Spring",
+    seasonal_option_summer: "Summer",
+    seasonal_option_fall: "Fall",
+    seasonal_spring_title: "Spring reset (Mar-May)",
+    seasonal_spring_body: "Starter feed, spring feed, and soil prep to build dense turf from day one.",
+    seasonal_summer_title: "Summer stress control (Jun-Aug)",
+    seasonal_summer_body: "Heat-season plan with stable feeding and soil support to protect color and roots.",
+    seasonal_fall_title: "Fall density build (Sep-Nov)",
+    seasonal_fall_body: "Recovery-focused setup to strengthen turf before winter and prep for spring.",
+    seasonal_winter_title: "Winter prep mode (Dec-Feb)",
+    seasonal_winter_body: "Build a clear plan and lock in your recovery bundle before spring pressure starts.",
+    seasonal_plan_label: "Recommended products",
+    seasonal_plan_spring:
+      "Starter fertilizer, spring fertilizer, soil improver, soil pH test, Soil Power Bundle, lawn soil mix, lawn seed (Poa supina).",
+    seasonal_plan_summer: "Summer fertilizer, soil improver, slow-release fertilizer.",
+    seasonal_plan_fall: "Fall fertilizer, soil improver, lawn seed (Poa supina).",
+    seasonal_poa_warning:
+      "Note: Poa supina is a high-maintenance grass type and may not be suitable for beginners.",
+    seasonal_seed_need_warning: "Use lawn seed in fall only when needed.",
+    compare_title: "Compare picks",
+    compare_hint: "Select up to 3 products to compare.",
+    compare_clear: "Clear",
+    compare_add: "Compare",
+    compare_remove: "Remove",
+    compare_price: "Price tier",
+    compare_effort: "Effort",
+    compare_category: "Category",
+    meta_fit_label: "For",
+    meta_when_label: "When",
+    fit_general: "Regular lawn care",
+    fit_recovery: "Recovery work",
+    fit_weed: "Weed pressure",
+    fit_soil: "Soil improvement",
+    fit_bundle: "Full routines",
+    fit_content: "Content production",
+    when_now: "Right now",
+    when_as_needed: "As needed",
+    when_cool: "Cool season",
+    when_fall: "Fall window",
+    when_routine: "Season routine",
+    effort_low: "Low",
+    effort_medium: "Medium",
+    effort_high: "High",
+    sticky_cta: "Get recommendation",
     group5_title: "Professional video gear",
     group5_sub: "What I use to film kits, demos, and guides.",
     group3_title: "Ebooks & Guides",
@@ -195,6 +290,9 @@ const translations = {
     ebook_back: "Back to catalog",
     ebook_buy_button: "Buy now",
     ebook_buy_button_price: "Buy now €29.99",
+    ebook_cta_title: "Start today and get the 6-week plan instantly.",
+    ebook_cta_sub: "Direct PDF download right after checkout.",
+    ebook_cta_proof: "Secure checkout · Instant download · Includes checklists",
     ebook_contact: "Questions? Message me",
     ebook_offer_pill: "Ready for thick green?",
     ebook_offer_heading: "Get the 6-week plan",
@@ -221,15 +319,44 @@ const translations = {
     chip1: "Praxisgetestete Auswahl",
     chip2: "Sicherheit + Mengenangaben",
     chip3: "Finde mich auf Instagram",
+    trust_weekly_value: "30+",
+    trust_weekly_label: "Rasen pro Woche",
+    trust_years_value: "10+",
+    trust_years_label: "Jahre Praxiserfahrung",
+    trust_real_value: "100%",
+    trust_real_label: "echte Empfehlungen",
+    quiz_title: "Finde deine Top-3-Produkte",
+    quiz_sub: "Beantworte 4 kurze Fragen und erhalte eine fokussierte Auswahl.",
+    quiz_q1: "Sonneneinstrahlung",
+    quiz_q1_opt1: "Gemischt",
+    quiz_q1_opt2: "Vorwiegend Sonne",
+    quiz_q1_opt3: "Vorwiegend Schatten",
+    quiz_q2: "Hauptproblem",
+    quiz_q2_opt1: "Lückiger Rasen",
+    quiz_q2_opt2: "Gelbe Farbe",
+    quiz_q2_opt3: "Unkraut",
+    quiz_q2_opt4: "Verdichteter Boden",
+    quiz_q3: "Haustiere im Haushalt?",
+    quiz_q3_opt1: "Nein",
+    quiz_q3_opt2: "Ja",
+    quiz_q4: "Wie viel Aufwand?",
+    quiz_q4_opt1: "Niedrig",
+    quiz_q4_opt2: "Mittel",
+    quiz_q4_opt3: "Hoch",
+    quiz_cta: "Top 3 zeigen",
+    quiz_result_title: "Empfohlen für deine Situation",
+    quiz_empty: "Noch kein perfekter Treffer. Versuche breitere Filter.",
+    cta_external_shop: "Externer Shop öffnet in neuem Tab",
+    top_pick: "Top-Pick",
     hero_card_text:
       "<strong>Wöchentliche Touren.</strong> Die gelisteten und gezeigten Tools liegen in meinem Truck. Kein Schnickschnack, nur was echte Gärten überlebt.",
-    stat1_label: "Lawn Freaks erreicht",
-    stat2_label: "Zertifizierte Tools",
-    stat3_label: "Antwortzeit per DM",
+    stat1_label: "Menschen erreicht",
+    stat2_label: "Empfehlungen",
+    stat3_label: "Antwortzeit per Mail & DM",
     strip_seen: "Praxis",
     strip_seen_list: "Aktiver Greenkeeper, wöchentliche Touren",
     strip_tested: "Community",
-    strip_tested_list: "25k+ Lawn Freaks lernen mit",
+    strip_tested_list: "40k Lawn Freaks lernen mit",
     strip_guarantee: "Transparenz",
     strip_guarantee_list: "Keine gekaufte Werbung, nur was ich nutze",
     promo_pill: "Dauerhafter Vorteil",
@@ -237,6 +364,9 @@ const translations = {
     promo_sub: "Code für jedes Rasenwelt-Teil, jederzeit nutzbar.",
     promo_band_text: "5% auf jedes Rasenwelt-Produkt • Code: datlawncode5 • Kein Ablaufdatum",
     promo_code_label: "Code",
+    promo_copy_hint: "Klicke auf den Code, um ihn direkt zu kopieren.",
+    promo_copy_success: "Code kopiert. Beim Checkout einfach einfügen.",
+    promo_copy_error: "Kopieren fehlgeschlagen. Bitte den Code manuell kopieren.",
     promo_cta: "Rasenwelt shoppen",
     bundles_pill: "Empfohlene Bundles",
     bundles_heading: "Fertige Kits für schnelle Erfolge",
@@ -273,6 +403,69 @@ const translations = {
     group1_sub: "Mäher, Trimmer, Kanten, Bodenproben.",
     group2_title: "Verbrauchsmaterial",
     group2_sub: "Dünger, Unkrautkontrolle, Netzmittel.",
+    filter_all: "Alle",
+    filter_fertilizer: "Dünger",
+    filter_soil: "Boden",
+    filter_weed: "Unkraut",
+    filter_bundle: "Bundles",
+    problem_filter_label: "Problem",
+    problem_all: "Alle",
+    problem_yellow: "Gelber Rasen",
+    problem_weeds: "Unkraut",
+    problem_compacted: "Verdichteter Boden",
+    problem_thin: "Lückiger Rasen",
+    problem_pet: "Haustiere",
+    seasonal_pill: "Saisonfokus",
+    seasonal_apply: "Empfohlene Produkte zeigen",
+    seasonal_select_label: "Jahreszeit",
+    seasonal_option_placeholder: "Auswählen",
+    seasonal_intro_title: "Wähle deine Jahreszeit",
+    seasonal_intro_body:
+      "Bitte zuerst eine Jahreszeit auswählen und dann auf \"Empfohlene Produkte zeigen\" klicken, um die passenden Empfehlungen zu sehen.",
+    seasonal_option_spring: "Frühling",
+    seasonal_option_summer: "Sommer",
+    seasonal_option_fall: "Herbst",
+    seasonal_spring_title: "Frühjahrs-Reset (Mär-Mai)",
+    seasonal_spring_body: "Starterdüngung, Frühjahrsdüngung und Bodenaufbau für einen dichten Start in die Saison.",
+    seasonal_summer_title: "Sommer-Stresskontrolle (Jun-Aug)",
+    seasonal_summer_body: "Hitze-Plan mit stabiler Versorgung und Bodenunterstützung für Farbe und Wurzelkraft.",
+    seasonal_fall_title: "Herbst-Dichteaufbau (Sep-Nov)",
+    seasonal_fall_body: "Regenerations-Setup zur Stärkung vor dem Winter und als Basis für das nächste Frühjahr.",
+    seasonal_winter_title: "Winter-Vorbereitung (Dez-Feb)",
+    seasonal_winter_body: "Jetzt klar planen und dein Regenerations-Bundle vorbereiten, bevor das Frühjahrsfenster startet.",
+    seasonal_plan_label: "Empfohlene Produkte",
+    seasonal_plan_spring:
+      "Starterdünger, Frühjahrsdünger, Bodenverbesserer, pH Boden Test, Bodenpower-Bundle, Rasenerde, Rasensamen (Poa Supina).",
+    seasonal_plan_summer: "Sommerdünger, Bodenverbesserer, Langzeitdünger.",
+    seasonal_plan_fall: "Herbstdünger, Bodenverbesserer, Rasensamen (Poa Supina).",
+    seasonal_poa_warning:
+      "Hinweis: Poa Supina ist eine sehr pflegebedürftige Rasensorte und für Anfänger oft nicht ideal.",
+    seasonal_seed_need_warning: "Rasensamen im Herbst nur bei Bedarf verwenden.",
+    compare_title: "Produkte vergleichen",
+    compare_hint: "Wähle bis zu 3 Produkte für den Vergleich.",
+    compare_clear: "Zurücksetzen",
+    compare_add: "Vergleichen",
+    compare_remove: "Entfernen",
+    compare_price: "Preisniveau",
+    compare_effort: "Aufwand",
+    compare_category: "Kategorie",
+    meta_fit_label: "Für",
+    meta_when_label: "Wann",
+    fit_general: "Regelmäßige Pflege",
+    fit_recovery: "Regeneration",
+    fit_weed: "Unkrautdruck",
+    fit_soil: "Bodenverbesserung",
+    fit_bundle: "Komplette Routine",
+    fit_content: "Content-Produktion",
+    when_now: "Jetzt",
+    when_as_needed: "Bei Bedarf",
+    when_cool: "Kühle Saison",
+    when_fall: "Herbstfenster",
+    when_routine: "Saisonroutine",
+    effort_low: "Niedrig",
+    effort_medium: "Mittel",
+    effort_high: "Hoch",
+    sticky_cta: "Empfehlung holen",
     group5_title: "Pro-Video-Equipment",
     group5_sub: "Was ich für Kit-Videos, Demos und Guides nutze.",
     group3_title: "Ebooks & Guides",
@@ -400,6 +593,9 @@ const translations = {
     ebook_back: "Zurück zum Katalog",
     ebook_buy_button: "Jetzt kaufen",
     ebook_buy_button_price: "Jetzt kaufen 29,99 €",
+    ebook_cta_title: "Starte heute und hol dir den 6-Wochen-Plan sofort.",
+    ebook_cta_sub: "Direkter PDF-Download direkt nach dem Checkout.",
+    ebook_cta_proof: "Sicherer Checkout · Sofortdownload · inkl. Checklisten",
     ebook_contact: "Fragen? Schreib mir",
     ebook_offer_pill: "Bereit für sattes Grün?",
     ebook_offer_heading: "Hol dir den 6-Wochen-Plan",
@@ -834,6 +1030,30 @@ const $$ = (s, scope = document) => Array.from(scope.querySelectorAll(s));
 
 let currentLang = "en";
 let reviews = [];
+let consumablesFilter = "all";
+let seasonalSeasonKey = "";
+let activeSeasonRecommendationKey = "";
+let compareSelection = [];
+let compareLookup = new Map();
+let productClickCounts = {};
+
+function readClickCounts() {
+  try {
+    const raw = localStorage.getItem("datlawn_click_counts_v1");
+    const parsed = raw ? JSON.parse(raw) : {};
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch (err) {
+    return {};
+  }
+}
+
+function writeClickCounts() {
+  try {
+    localStorage.setItem("datlawn_click_counts_v1", JSON.stringify(productClickCounts));
+  } catch (err) {
+    // ignore storage errors
+  }
+}
 
 function applyStaticTranslations(lang) {
   const dict = translations[lang] || translations.en;
@@ -907,17 +1127,69 @@ function ensureToastStack() {
   return toastStackEl;
 }
 
-function showToast(message, type = "success") {
+function showToast(message, type = "success", options = {}) {
   const stack = ensureToastStack();
   const toast = document.createElement("div");
-  toast.className = `toast${type === "error" ? " error" : ""}`;
+  const minimal = Boolean(options?.minimal);
+  const duration = Number.isFinite(options?.duration) ? Number(options.duration) : 3200;
+  toast.className = `toast${type === "error" ? " error" : ""}${minimal ? " minimal" : ""}`;
   toast.textContent = message;
   stack.appendChild(toast);
   setTimeout(() => {
     toast.style.opacity = "0";
     toast.style.transform = "translateY(-6px)";
     setTimeout(() => toast.remove(), 220);
-  }, 3200);
+  }, duration);
+}
+
+function copyTextFallback(text = "") {
+  const area = document.createElement("textarea");
+  area.value = text;
+  area.setAttribute("readonly", "");
+  area.style.position = "fixed";
+  area.style.top = "-9999px";
+  document.body.appendChild(area);
+  area.select();
+  let copied = false;
+  try {
+    copied = document.execCommand("copy");
+  } catch (err) {
+    copied = false;
+  }
+  area.remove();
+  return copied;
+}
+
+async function copyText(text = "") {
+  if (!text) return false;
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch (err) {
+    // fallback below
+  }
+  return copyTextFallback(text);
+}
+
+function initPromoCodeCopy() {
+  const copyBtn = $("#promoCodeCopy");
+  const codeValue = $("#promoCodeValue");
+  if (!copyBtn || !codeValue) return;
+  copyBtn.addEventListener("click", async () => {
+    const code = (codeValue.textContent || "").trim();
+    if (!code) return;
+    const dict = translations[currentLang] || translations.en;
+    const copied = await copyText(code);
+    if (!copied) {
+      showToast(dict.promo_copy_error || "Copy failed. Please copy the code manually.", "error", { minimal: true, duration: 2200 });
+      return;
+    }
+    copyBtn.classList.add("copied");
+    setTimeout(() => copyBtn.classList.remove("copied"), 1200);
+    showToast(dict.promo_copy_success || "Code copied. Paste it at checkout.", "success", { minimal: true, duration: 1800 });
+  });
 }
 
 function getSelectedFiles(input) {
@@ -1345,6 +1617,464 @@ function initActiveNav() {
   links.forEach(({ el }) => observer.observe(el));
 }
 
+function inferConsumableCategory(item = {}) {
+  const text = `${item?.name?.en || ""} ${item?.name?.de || ""} ${item?.note?.en || ""} ${item?.note?.de || ""}`.toLowerCase();
+  if (/bundle|paket|set/.test(text)) return "bundle";
+  if (/unkraut|weed|herbicide/.test(text)) return "weed";
+  if (/boden|soil|erde|ph|kalk|humus|fulva|amino|humin/.test(text)) return "soil";
+  return "fertilizer";
+}
+
+function inferConsumableProblems(item = {}) {
+  const text = `${item?.name?.en || ""} ${item?.name?.de || ""} ${item?.note?.en || ""} ${item?.note?.de || ""}`.toLowerCase();
+  const set = new Set();
+  if (/yellow|gelb|chlorose|farbe|color|eisen|iron|stickstoff|nitrogen|dunger|duenger|dünger|fertilizer/.test(text)) set.add("yellow");
+  if (/weed|unkraut|herbicide|vernichter/.test(text)) set.add("weeds");
+  if (/compacted|verdicht|boden|soil|ph|kalk|humus|humin|fulva|amino/.test(text)) set.add("compacted");
+  if (/thin|lucke|lücke|nachsaat|saat|seed|starter|rescue|retter|bundle/.test(text)) set.add("thin");
+  if (item.tagKey === "tag_pet" || /pet|haustier/.test(text)) set.add("pet");
+  return set;
+}
+
+function getSectionCategoryLabel(sectionId, dict) {
+  if (sectionId === "toolsGrid") return dict.group1_title || "Tools";
+  if (sectionId === "consumablesGrid") return dict.group2_title || "Consumables";
+  if (sectionId === "videoGrid") return dict.group5_title || "Video gear";
+  if (sectionId === "ebooksGrid") return dict.group3_title || "Ebooks";
+  return "";
+}
+
+function inferFitKey(item = {}, sectionId = "consumablesGrid") {
+  if (sectionId === "videoGrid") return "fit_content";
+  if (sectionId === "toolsGrid") return "fit_general";
+  if (inferConsumableCategory(item) === "bundle") return "fit_bundle";
+  if (inferConsumableCategory(item) === "weed") return "fit_weed";
+  if (inferConsumableCategory(item) === "soil") return "fit_soil";
+  if (/rescue|retter|recover|regener/.test(`${item?.name?.en || ""} ${item?.name?.de || ""}`.toLowerCase())) return "fit_recovery";
+  return "fit_general";
+}
+
+function inferWhenKey(item = {}) {
+  if (item.tagKey === "tag_now") return "when_now";
+  if (item.tagKey === "tag_spot") return "when_as_needed";
+  if (item.tagKey === "tag_cool") return "when_cool";
+  if (item.tagKey === "tag_fall") return "when_fall";
+  return "when_routine";
+}
+
+function inferEffortKey(item = {}, sectionId = "consumablesGrid") {
+  if (inferConsumableCategory(item) === "bundle") return "effort_low";
+  if (sectionId === "toolsGrid" || sectionId === "videoGrid") return "effort_high";
+  if (inferConsumableCategory(item) === "weed") return "effort_medium";
+  return "effort_medium";
+}
+
+function getProductId(sectionId = "", idx = 0) {
+  return `${sectionId}:${idx}`;
+}
+
+function getTopPickIds(limit = 3) {
+  const ranked = Object.entries(productClickCounts)
+    .filter(([, count]) => Number(count) > 0)
+    .sort((a, b) => Number(b[1]) - Number(a[1]))
+    .slice(0, limit)
+    .map(([id]) => id);
+  if (ranked.length) return ranked;
+  return ["toolsGrid:0", "consumablesGrid:0", "videoGrid:0"].slice(0, limit);
+}
+
+function trackProductClick(productId = "") {
+  if (!productId) return;
+  productClickCounts[productId] = Number(productClickCounts[productId] || 0) + 1;
+  writeClickCounts();
+}
+
+function renderProductSkeletons() {
+  const mapping = [
+    ["toolsGrid", 3],
+    ["consumablesGrid", 3],
+    ["videoGrid", 3],
+    ["ebooksGrid", 1],
+  ];
+  mapping.forEach(([id, count]) => {
+    const grid = document.getElementById(id);
+    if (!grid) return;
+    const cards = Array.from({ length: count })
+      .map(
+        () => `
+        <div class="product-card product-skeleton">
+          <div class="product-photo skeleton"></div>
+          <div class="skeleton-line skeleton"></div>
+          <div class="skeleton-line skeleton short"></div>
+          <div class="product-actions">
+            <div class="skeleton-pill skeleton"></div>
+          </div>
+        </div>
+      `
+      )
+      .join("");
+    grid.innerHTML = cards;
+  });
+}
+
+function scoreQuizMatch({ item, sectionId, issue = "thin", sun = "mixed", pets = "no", effort = "medium" }) {
+  let score = 0;
+  const problems = inferConsumableProblems(item);
+  if (problems.has(issue)) score += 4;
+  if (issue === "yellow" && item.tagKey === "tag_now") score += 2;
+  if (issue === "weeds" && inferConsumableCategory(item) === "weed") score += 3;
+  if (issue === "compacted" && inferConsumableCategory(item) === "soil") score += 2;
+  if (issue === "thin" && (/seed|nachsaat|bundle|retter|starter/i.test(`${item.name?.en || ""} ${item.name?.de || ""}`))) score += 2;
+
+  if (pets === "yes") {
+    if (item.tagKey === "tag_pet") score += 3;
+    if (inferConsumableCategory(item) === "weed") score -= 2;
+  }
+
+  const effortKey = inferEffortKey(item, sectionId);
+  if (effort === "low" && effortKey === "effort_low") score += 2;
+  if (effort === "medium" && effortKey === "effort_medium") score += 2;
+  if (effort === "high" && effortKey === "effort_high") score += 2;
+
+  if (sun === "shade" && /shade|schatten|poa/i.test(`${item.name?.en || ""} ${item.name?.de || ""} ${item.note?.en || ""} ${item.note?.de || ""}`)) score += 2;
+  if (sun === "sun" && item.tagKey === "tag_now") score += 1;
+
+  if (sectionId === "consumablesGrid") score += 1;
+  return score;
+}
+
+function getQuizRecommendations(formData) {
+  const answers = {
+    sun: formData.get("sun") || "mixed",
+    issue: formData.get("issue") || "thin",
+    pets: formData.get("pets") || "no",
+    effort: formData.get("effort") || "medium",
+  };
+
+  const pool = [];
+  [["toolsGrid", products.tools], ["consumablesGrid", products.consumables], ["videoGrid", products.videoGear]].forEach(([sectionId, items]) => {
+    items.forEach((item, idx) => {
+      pool.push({
+        id: getProductId(sectionId, idx),
+        sectionId,
+        item,
+        score: scoreQuizMatch({ item, sectionId, ...answers }),
+      });
+    });
+  });
+  return pool.sort((a, b) => b.score - a.score).slice(0, 3);
+}
+
+function initMiniQuiz() {
+  const form = $("#quizForm");
+  const results = $("#quizResults");
+  if (!form || !results) return;
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+    const dict = translations[currentLang] || translations.en;
+    const picks = getQuizRecommendations(formData);
+    if (!picks.length) {
+      results.classList.remove("hidden");
+      results.innerHTML = `<p class="muted">${dict.quiz_empty || "No perfect match found yet. Try broader filters."}</p>`;
+      return;
+    }
+    const view = dict.product_view || "View";
+    const title = dict.quiz_result_title || "Recommended for your setup";
+    results.classList.remove("hidden");
+    results.innerHTML = `
+      <strong>${title}</strong>
+      <div class="quiz-list">
+        ${picks
+          .map(({ id, item }) => {
+            const name = item.name[currentLang] || item.name.en;
+            const link = item.viewLink || item.link || "#";
+            return `<a class="quiz-pick view-link" data-product-id="${id}" href="${link}">${escapeHtml(name)} <span>${view}</span></a>`;
+          })
+          .join("")}
+      </div>
+    `;
+    forceProductLinksNewTab();
+  });
+}
+
+function matchesConsumableFilters(item = {}) {
+  return consumablesFilter === "all" || inferConsumableCategory(item) === consumablesFilter;
+}
+
+function getFilteredConsumables(items = []) {
+  return items.filter((item) => matchesConsumableFilters(item));
+}
+
+function updateConsumablesFilterUI() {
+  $$("#consumablesFilters .filter-chip").forEach((chip) => {
+    const active = chip.dataset.filter === consumablesFilter;
+    chip.classList.toggle("active", active);
+    chip.setAttribute("aria-pressed", active ? "true" : "false");
+  });
+}
+
+function setConsumablesFilters({ category } = {}) {
+  if (category) consumablesFilter = category;
+  updateConsumablesFilterUI();
+}
+
+function getDefaultSeasonKey(date = new Date()) {
+  const month = date.getMonth(); // 0=Jan
+  if (month >= 2 && month <= 4) return "spring";
+  if (month >= 5 && month <= 7) return "summer";
+  if (month >= 8 && month <= 10) return "fall";
+  return "spring";
+}
+
+function getSeasonalPatterns(seasonKey = "") {
+  if (seasonKey === "spring") {
+    return [
+      /starterd(?:ü|u)nger|starter fertilizer/i,
+      /fr(?:ü|u)hjahrsd(?:ü|u)nger|spring fertilizer|langzeitd(?:ü|u)nger|slow-release/i,
+      /bodenverbesserer|soil improver/i,
+      /soil p\s*h test|p\s*h boden test|ph boden test/i,
+      /bodenpower|soil power bundle|huminiron|liqhumus|fulvagra|amino power/i,
+      /rasenerde|lawn soil mix/i,
+      /poa\s*supina|rasensamen/i,
+    ];
+  }
+  if (seasonKey === "summer") {
+    return [
+      /sommerd(?:ü|u)nger|summer fertilizer/i,
+      /bodenverbesserer|soil improver/i,
+      /langzeitd(?:ü|u)nger|slow-release/i,
+    ];
+  }
+  if (seasonKey === "fall") {
+    return [
+      /herbstd(?:ü|u)nger|fall fertilizer/i,
+      /bodenverbesserer|soil improver/i,
+      /poa\s*supina|rasensamen/i,
+    ];
+  }
+  return [];
+}
+
+function getSeasonalMeta(seasonKey = "", dict = translations[currentLang] || translations.en) {
+  if (seasonKey === "summer") {
+    return {
+      title: dict.seasonal_summer_title || "Summer",
+      body: dict.seasonal_summer_body || "",
+      plan: dict.seasonal_plan_summer || "",
+      showPoaWarning: false,
+      showSeedNeedWarning: false,
+    };
+  }
+  if (seasonKey === "fall") {
+    return {
+      title: dict.seasonal_fall_title || "Fall",
+      body: dict.seasonal_fall_body || "",
+      plan: dict.seasonal_plan_fall || "",
+      showPoaWarning: true,
+      showSeedNeedWarning: true,
+    };
+  }
+  if (seasonKey === "spring") {
+    return {
+      title: dict.seasonal_spring_title || "Spring",
+      body: dict.seasonal_spring_body || "",
+      plan: dict.seasonal_plan_spring || "",
+      showPoaWarning: true,
+      showSeedNeedWarning: false,
+    };
+  }
+  return {
+    title: dict.seasonal_intro_title || "Choose your season",
+    body: dict.seasonal_intro_body || "",
+    plan: "",
+    showPoaWarning: false,
+    showSeedNeedWarning: false,
+  };
+}
+
+function getProductLookupText(item = {}) {
+  return `${item?.name?.en || ""} ${item?.name?.de || ""} ${item?.note?.en || ""} ${item?.note?.de || ""}`.toLowerCase();
+}
+
+function isPoaSupinaItem(item = {}) {
+  return /poa\s*supina/.test(getProductLookupText(item));
+}
+
+function isSeasonRecommendedItem(item = {}, seasonKey = "") {
+  if (!seasonKey) return true;
+  const patterns = getSeasonalPatterns(seasonKey);
+  if (!patterns.length) return true;
+  const text = getProductLookupText(item);
+  return patterns.some((pattern) => pattern.test(text));
+}
+
+function renderSeasonalNote() {
+  const note = $("#seasonalNote");
+  if (!note) return;
+  const dict = translations[currentLang] || translations.en;
+  const season = ["spring", "summer", "fall"].includes(seasonalSeasonKey) ? seasonalSeasonKey : "";
+  const hasSeason = Boolean(season);
+  const meta = getSeasonalMeta(season, dict);
+  const pill = dict.seasonal_pill || "Seasonal focus";
+  const seasonLabel = dict.seasonal_select_label || "Season";
+  const apply = dict.seasonal_apply || "Show recommended picks";
+  const optionPlaceholder = dict.seasonal_option_placeholder || "Select";
+  const optionSpring = dict.seasonal_option_spring || "Spring";
+  const optionSummer = dict.seasonal_option_summer || "Summer";
+  const optionFall = dict.seasonal_option_fall || "Fall";
+  const planLabel = dict.seasonal_plan_label || "Recommended products";
+  const poaWarning = dict.seasonal_poa_warning || "";
+  const seedNeedWarning = dict.seasonal_seed_need_warning || "";
+
+  note.innerHTML = `
+    <div class="seasonal-head">
+      <span class="pill">${pill}</span>
+      <strong>${meta.title}</strong>
+    </div>
+    <p class="muted seasonal-body">${meta.body}</p>
+    ${meta.plan ? `<p class="seasonal-plan"><strong>${planLabel}:</strong> ${meta.plan}</p>` : ""}
+    ${meta.showPoaWarning ? `<p class="seasonal-warning">${poaWarning}</p>` : ""}
+    ${meta.showSeedNeedWarning ? `<p class="seasonal-warning">${seedNeedWarning}</p>` : ""}
+    <div class="seasonal-controls">
+      <label for="seasonalSeasonSelect">${seasonLabel}</label>
+      <select id="seasonalSeasonSelect" class="seasonal-select">
+        <option value=""${hasSeason ? "" : " selected"}>${optionPlaceholder}</option>
+        <option value="spring"${season === "spring" ? " selected" : ""}>${optionSpring}</option>
+        <option value="summer"${season === "summer" ? " selected" : ""}>${optionSummer}</option>
+        <option value="fall"${season === "fall" ? " selected" : ""}>${optionFall}</option>
+      </select>
+      <button class="btn btn-ghost seasonal-apply" type="button" data-season="${season}"${hasSeason ? "" : " disabled"}>${apply}</button>
+    </div>
+  `;
+}
+
+function initSeasonalNote() {
+  const note = $("#seasonalNote");
+  if (!note) return;
+  note.addEventListener("change", (e) => {
+    const select = e.target.closest("#seasonalSeasonSelect");
+    if (!select) return;
+    const next = ["spring", "summer", "fall"].includes(select.value) ? select.value : "";
+    seasonalSeasonKey = next;
+    renderSeasonalNote();
+  });
+  note.addEventListener("click", (e) => {
+    const trigger = e.target.closest(".seasonal-apply");
+    if (!trigger) return;
+    const seasonCandidate = trigger.dataset.season || seasonalSeasonKey;
+    const season = ["spring", "summer", "fall"].includes(seasonCandidate) ? seasonCandidate : "";
+    if (!season) return;
+    seasonalSeasonKey = season;
+    activeSeasonRecommendationKey = season;
+    setConsumablesFilters({ category: "all" });
+    renderProducts();
+    forceProductLinksNewTab();
+    $("#consumablesGrid")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+}
+
+function initConsumablesFilters() {
+  const categoryWrap = $("#consumablesFilters");
+  if (!categoryWrap) return;
+  if (categoryWrap) categoryWrap.addEventListener("click", (e) => {
+    const chip = e.target.closest(".filter-chip[data-filter]");
+    if (!chip) return;
+    const next = chip.dataset.filter || "all";
+    if (next === consumablesFilter) return;
+    activeSeasonRecommendationKey = "";
+    consumablesFilter = next;
+    setConsumablesFilters({ category: next });
+    renderProducts();
+    forceProductLinksNewTab();
+  });
+  setConsumablesFilters({ category: consumablesFilter });
+}
+
+function toggleCompareSelection(compareId = "") {
+  if (!compareId) return;
+  if (compareSelection.includes(compareId)) {
+    compareSelection = compareSelection.filter((id) => id !== compareId);
+    return;
+  }
+  if (compareSelection.length >= 3) compareSelection.shift();
+  compareSelection.push(compareId);
+}
+
+function renderComparePanel() {
+  const panel = $("#comparePanel");
+  const grid = $("#compareGrid");
+  if (!panel || !grid) return;
+  const dict = translations[currentLang] || translations.en;
+  const view = dict.product_view || "View";
+  const compareItems = compareSelection
+    .map((id) => ({ id, entry: compareLookup.get(id) }))
+    .filter((row) => row.entry && row.entry.item);
+
+  if (!compareItems.length) {
+    panel.classList.add("hidden");
+    grid.innerHTML = "";
+    return;
+  }
+
+  panel.classList.remove("hidden");
+  grid.innerHTML = compareItems
+    .map(({ id, entry }) => {
+      const { item, sectionId } = entry;
+      const name = item.name[currentLang] || item.name.en;
+      const fitKey = inferFitKey(item, sectionId);
+      const whenKey = inferWhenKey(item);
+      const effortKey = inferEffortKey(item, sectionId);
+      const fitValue = dict[fitKey] || translations.en[fitKey] || "";
+      const whenValue = dict[whenKey] || translations.en[whenKey] || "";
+      const effortValue = dict[effortKey] || translations.en[effortKey] || "";
+      const sectionLabel = getSectionCategoryLabel(sectionId, dict);
+      const link = item.viewLink || item.link || "";
+      const price = item.price || "-";
+      return `
+        <div class="compare-item">
+          <strong>${name}</strong>
+          <p class="muted compare-category">${dict.compare_category || "Category"}: ${sectionLabel}</p>
+          <dl>
+            <div><dt>${dict.compare_price || "Price tier"}</dt><dd>${price}</dd></div>
+            <div><dt>${dict.meta_fit_label || "For"}</dt><dd>${fitValue}</dd></div>
+            <div><dt>${dict.meta_when_label || "When"}</dt><dd>${whenValue}</dd></div>
+            <div><dt>${dict.compare_effort || "Effort"}</dt><dd>${effortValue}</dd></div>
+          </dl>
+          <div class="compare-actions">
+            ${link ? `<a class="btn btn-ghost view-link" data-product-id="${id}" href="${link}">${view}</a>` : ""}
+            <button class="btn btn-ghost compare-remove" type="button" data-compare-id="${id}">${dict.compare_remove || "Remove"}</button>
+          </div>
+        </div>
+      `;
+    })
+    .join("");
+}
+
+function initCompare() {
+  document.addEventListener("click", (e) => {
+    const toggle = e.target.closest(".compare-toggle[data-compare-id]");
+    if (toggle) {
+      toggleCompareSelection(toggle.dataset.compareId || "");
+      renderProducts();
+      forceProductLinksNewTab();
+      return;
+    }
+    const remove = e.target.closest(".compare-remove[data-compare-id]");
+    if (remove) {
+      compareSelection = compareSelection.filter((id) => id !== remove.dataset.compareId);
+      renderProducts();
+      forceProductLinksNewTab();
+      return;
+    }
+    const clear = e.target.closest("#compareClear");
+    if (clear) {
+      compareSelection = [];
+      renderProducts();
+    }
+  });
+}
+
 function renderProducts() {
   const mapping = [
     ["toolsGrid", products.tools],
@@ -1353,49 +2083,76 @@ function renderProducts() {
     ["ebooksGrid", products.ebooks],
   ];
   const dict = translations[currentLang] || translations.en;
+  const topPickIds = new Set(getTopPickIds(3));
+  const topPickText = dict.top_pick || "Top pick";
+  compareLookup = new Map();
+  mapping.forEach(([id, items]) => {
+    items.forEach((item, idx) => {
+      compareLookup.set(getProductId(id, idx), { item, sectionId: id, index: idx });
+    });
+  });
+  compareSelection = compareSelection.filter((id) => compareLookup.has(id)).slice(-3);
   mapping.forEach(([id, items]) => {
     const grid = document.getElementById(id);
     if (!grid) return;
-    grid.innerHTML = items
-      .map((item) => {
+    const indexed = items.map((item, idx) => ({ item, idx }));
+    let visible = id === "consumablesGrid" ? indexed.filter(({ item }) => matchesConsumableFilters(item)) : indexed;
+    if (id === "consumablesGrid" && activeSeasonRecommendationKey) {
+      visible = visible.filter(({ item }) => isSeasonRecommendedItem(item, activeSeasonRecommendationKey));
+    }
+    grid.innerHTML = visible
+      .map(({ item, idx }) => {
         const name = item.name[currentLang] || item.name.en;
         const note = item.note[currentLang] || item.note.en;
-        const tag = dict[item.tagKey] || translations.en[item.tagKey] || "";
         const view = dict.product_view || "View";
         const buy = dict.product_buy || "Buy";
         const initial = (name || "").trim().charAt(0) || "?";
         const safeInitial = escapeHtml(initial);
+        const compareId = getProductId(id, idx);
+        const isTopPick = topPickIds.has(compareId);
+        const showPoaNote =
+          id === "consumablesGrid" &&
+          activeSeasonRecommendationKey &&
+          (activeSeasonRecommendationKey === "spring" || activeSeasonRecommendationKey === "fall") &&
+          isPoaSupinaItem(item);
+        const poaNote = dict.seasonal_poa_warning || "";
+        const seedNeedNote = dict.seasonal_seed_need_warning || "";
+        const seasonalNoteExtra = showPoaNote
+          ? `<br><span class="seasonal-inline-note">${poaNote}${
+              activeSeasonRecommendationKey === "fall" ? ` ${seedNeedNote}` : ""
+            }</span>`
+          : "";
         const photoClass = item.imageClass ? ` ${item.imageClass}` : "";
+        const eager = idx < 2 ? "eager" : "lazy";
+        const priority = idx < 2 ? "high" : "low";
         const imageBlock = item.image
-          ? `<div class="product-photo${photoClass}" data-initial="${safeInitial}"><img src="${item.image}" alt="${name}" loading="lazy"></div>`
+          ? `<div class="product-photo${photoClass}" data-initial="${safeInitial}"><img src="${item.image}" alt="${name}" loading="${eager}" fetchpriority="${priority}"></div>`
           : `<div class="product-photo placeholder${photoClass}"><span>${safeInitial}</span></div>`;
         const hasViewLink = Boolean(item.viewLink);
         const hasBuy = Boolean(item.priceId);
-        const action = hasViewLink || hasBuy
-          ? `<div class="product-actions">
-              ${hasViewLink ? `<a class="btn btn-ghost view-link" href="${item.viewLink}">${view}</a>` : ""}
-              ${
-                hasBuy
-                  ? `<button class="btn btn-primary checkout-btn" data-price="${item.priceId}">${buy}</button>`
-                  : item.link
-                  ? `<a class="btn btn-ghost view-link" href="${item.link}">${view}</a>`
-                  : ""
-              }
-            </div>`
-          : `<a class="btn btn-ghost view-link" href="${item.link}">${view}</a>`;
+        const actions = [];
+        if (hasViewLink) actions.push(`<a class="btn btn-ghost view-link" data-product-id="${compareId}" href="${item.viewLink}">${view}</a>`);
+        if (hasBuy) actions.push(`<button class="btn btn-primary checkout-btn" data-product-id="${compareId}" data-price="${item.priceId}">${buy}</button>`);
+        if (!hasViewLink && !hasBuy && item.link) actions.push(`<a class="btn btn-ghost view-link" data-product-id="${compareId}" href="${item.link}">${view}</a>`);
+        const action = actions.length
+          ? `<div class="product-actions${actions.length === 1 ? " single" : ""}">${actions.join("")}</div>`
+          : "";
         return `
         <div class="product-card">
           ${imageBlock}
           <strong>${name}</strong>
-          <p class="muted">${note}</p>
+          ${isTopPick ? `<span class="top-pick-badge">${topPickText}</span>` : ""}
+          <p class="muted">${note}${seasonalNoteExtra}</p>
           ${action}
         </div>
       `;
       })
       .join("");
-    initCheckoutButtons();
-    attachImageFallbacks();
   });
+  initCheckoutButtons();
+  attachImageFallbacks();
+  renderComparePanel();
+  refreshProductCarousels();
 }
 
 function renderTestimonials() {
@@ -1431,15 +2188,49 @@ function attachImageFallbacks() {
 }
 
 function forceProductLinksNewTab() {
-  $$(".product-card a").forEach((a) => {
+  $$(".product-card a, #comparePanel a, #quizResults a").forEach((a) => {
     if (!a) return;
-    if (a.classList.contains("view-link")) return;
+    const href = a.getAttribute("href") || "";
+    if (!/^https?:\/\//i.test(href)) return;
     if (!a.target || a.target === "_self") a.target = "_blank";
     const existingRel = a.getAttribute("rel") || "";
     const relParts = new Set(existingRel.split(/\s+/).filter(Boolean));
     relParts.add("noopener");
     relParts.add("noreferrer");
     a.setAttribute("rel", Array.from(relParts).join(" "));
+  });
+}
+
+function isExternalHttpLink(href = "") {
+  if (!/^https?:\/\//i.test(href)) return false;
+  try {
+    const url = new URL(href, window.location.href);
+    return url.origin !== window.location.origin;
+  } catch (err) {
+    return false;
+  }
+}
+
+function initProductCtaFeedback() {
+  document.addEventListener("click", (e) => {
+    const link = e.target.closest(".view-link, .quiz-pick");
+    if (link) {
+      const id = link.dataset.productId || "";
+      if (id) {
+        trackProductClick(id);
+      }
+      const href = link.getAttribute("href") || "";
+      if (isExternalHttpLink(href)) {
+        const dict = translations[currentLang] || translations.en;
+        showToast(dict.cta_external_shop || "External shop opens in a new tab");
+      }
+      return;
+    }
+
+    const checkout = e.target.closest(".checkout-btn[data-product-id]");
+    if (checkout) {
+      trackProductClick(checkout.dataset.productId || "");
+    }
   });
 }
 
@@ -1647,7 +2438,9 @@ function setLanguage(lang) {
   document.documentElement.lang = currentLang;
   document.documentElement.dataset.lang = currentLang;
   applyStaticTranslations(currentLang);
+  renderSeasonalNote();
   renderProducts();
+  updateConsumablesFilterUI();
   renderFaq();
   renderReviews();
   initFaqToggle();
@@ -1741,6 +2534,127 @@ function initScrollHints() {
   });
 }
 
+function initProductCarousels() {
+  $$(".product-carousel[data-carousel]").forEach((carousel) => {
+    if (carousel.dataset.carouselBound === "1") return;
+    const track = $(".grid-3", carousel);
+    const prevBtn = $(".carousel-nav.prev", carousel);
+    const nextBtn = $(".carousel-nav.next", carousel);
+    const dotsWrap = $(".carousel-dots", carousel);
+    if (!track || !prevBtn || !nextBtn || !dotsWrap) return;
+
+    let dotsCount = -1;
+
+    const getPageCount = () => {
+      const viewport = Math.max(track.clientWidth, 1);
+      return Math.max(1, Math.ceil(track.scrollWidth / viewport));
+    };
+
+    const getActivePage = () => {
+      const viewport = Math.max(track.clientWidth, 1);
+      const maxPage = Math.max(0, getPageCount() - 1);
+      return Math.min(maxPage, Math.max(0, Math.round(track.scrollLeft / viewport)));
+    };
+
+    const buildDots = (pages) => {
+      if (pages === dotsCount) return;
+      dotsCount = pages;
+      if (pages <= 1) {
+        dotsWrap.innerHTML = "";
+        return;
+      }
+      dotsWrap.innerHTML = Array.from({ length: pages }, (_, i) => {
+        return `<button class="carousel-dot" type="button" data-page="${i}" aria-label="Go to slide ${i + 1}"></button>`;
+      }).join("");
+      $$(".carousel-dot", dotsWrap).forEach((dot) => {
+        dot.addEventListener("click", () => {
+          const page = Number(dot.dataset.page || "0");
+          track.scrollTo({ left: Math.max(0, page) * track.clientWidth, behavior: "smooth" });
+        });
+      });
+    };
+
+    const syncDots = () => {
+      const active = getActivePage();
+      $$(".carousel-dot", dotsWrap).forEach((dot, idx) => {
+        dot.classList.toggle("active", idx === active);
+      });
+    };
+
+    const syncButtons = () => {
+      const maxScroll = Math.max(0, track.scrollWidth - track.clientWidth);
+      prevBtn.disabled = track.scrollLeft <= 2;
+      nextBtn.disabled = track.scrollLeft >= maxScroll - 2;
+      const hideControls = maxScroll <= 2;
+      prevBtn.hidden = hideControls;
+      nextBtn.hidden = hideControls;
+    };
+
+    const getStep = () => {
+      const firstCard = track.firstElementChild;
+      if (!firstCard) return track.clientWidth * 0.92;
+      const gap = parseFloat(getComputedStyle(track).gap || "0") || 0;
+      return firstCard.getBoundingClientRect().width + gap;
+    };
+
+    const update = () => {
+      buildDots(getPageCount());
+      syncDots();
+      syncButtons();
+    };
+
+    prevBtn.addEventListener("click", () => {
+      track.scrollBy({ left: -getStep(), behavior: "smooth" });
+    });
+
+    nextBtn.addEventListener("click", () => {
+      track.scrollBy({ left: getStep(), behavior: "smooth" });
+    });
+
+    track.addEventListener(
+      "scroll",
+      () => {
+        window.requestAnimationFrame(update);
+      },
+      { passive: true }
+    );
+
+    window.addEventListener(
+      "resize",
+      () => {
+        window.requestAnimationFrame(update);
+      },
+      { passive: true }
+    );
+
+    carousel._refreshCarousel = update;
+    carousel.dataset.carouselBound = "1";
+    update();
+  });
+}
+
+function refreshProductCarousels() {
+  $$(".product-carousel[data-carousel]").forEach((carousel) => {
+    if (typeof carousel._refreshCarousel === "function") {
+      carousel._refreshCarousel();
+    }
+  });
+}
+
+function initStickyCta() {
+  const cta = $(".mobile-sticky-cta");
+  const contact = $("#contact");
+  if (!cta || !contact) return;
+  const observer = new IntersectionObserver(
+    (entries) => {
+      const entry = entries[0];
+      cta.classList.toggle("is-hidden", Boolean(entry?.isIntersecting));
+    },
+    { threshold: 0.2 }
+  );
+  observer.observe(contact);
+}
+
 function initFaqToggle() {
   $$(".faq-item").forEach((item) => {
     item.classList.remove("collapsed");
@@ -1777,8 +2691,7 @@ function initScrollReveal() {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           entry.target.classList.add("visible");
-        } else {
-          entry.target.classList.remove("visible");
+          observer.unobserve(entry.target);
         }
       });
     },
@@ -1830,9 +2743,18 @@ document.addEventListener("DOMContentLoaded", () => {
   initActiveNav();
   initLanguageToggle();
   initForms();
+  productClickCounts = readClickCounts();
+  renderProductSkeletons();
   loadReviews();
   initReviewForm();
+  initMiniQuiz();
+  initConsumablesFilters();
+  initSeasonalNote();
+  initCompare();
+  initPromoCodeCopy();
+  initProductCtaFeedback();
   setLanguage("de");
+  initProductCarousels();
   initCheckoutButtons();
   initScrollReveal();
   initFloatingAccents();
@@ -1840,6 +2762,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initReviewGallery();
   initRipples();
   initScrollHints();
+  initStickyCta();
   initFaqToggle();
   initInputFeedback();
   initFileInputs();
