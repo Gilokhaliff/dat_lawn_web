@@ -1044,6 +1044,18 @@ let compareSelection = [];
 let compareLookup = new Map();
 let productClickCounts = {};
 
+function motionAllowed() {
+  return !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function hasFinePointer() {
+  return window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+}
+
+function isCompactViewport() {
+  return window.matchMedia("(max-width: 900px)").matches;
+}
+
 function readClickCounts() {
   try {
     const raw = localStorage.getItem("datlawn_click_counts_v1");
@@ -1149,6 +1161,40 @@ function showToast(message, type = "success", options = {}) {
   }, duration);
 }
 
+function burstParticles(x, y, options = {}) {
+  if (!motionAllowed()) return;
+  const count = Number.isFinite(options.count) ? Number(options.count) : 16;
+  const host = document.createElement("span");
+  host.className = "burst-host";
+  host.style.left = `${x}px`;
+  host.style.top = `${y}px`;
+  const palette = Array.isArray(options.colors) && options.colors.length
+    ? options.colors
+    : ["#e2bf73", "#1f7a43", "#f5f8f6", "#c9a24d"];
+  for (let i = 0; i < count; i += 1) {
+    const dot = document.createElement("span");
+    dot.className = "burst-dot";
+    const angle = (Math.PI * 2 * i) / count + Math.random() * 0.35;
+    const distance = 14 + Math.random() * 34;
+    dot.style.setProperty("--dx", `${Math.cos(angle) * distance}px`);
+    dot.style.setProperty("--dy", `${Math.sin(angle) * distance}px`);
+    dot.style.setProperty("--scale", `${0.65 + Math.random() * 0.65}`);
+    dot.style.setProperty("--delay", `${Math.random() * 100}ms`);
+    dot.style.background = palette[i % palette.length];
+    host.appendChild(dot);
+  }
+  document.body.appendChild(host);
+  setTimeout(() => host.remove(), 900);
+}
+
+function burstFromElement(el, options = {}) {
+  if (!el || typeof el.getBoundingClientRect !== "function") return;
+  const rect = el.getBoundingClientRect();
+  const x = rect.left + rect.width / 2;
+  const y = rect.top + rect.height / 2;
+  burstParticles(x, y, options);
+}
+
 function copyTextFallback(text = "") {
   const area = document.createElement("textarea");
   area.value = text;
@@ -1195,6 +1241,7 @@ function initPromoCodeCopy() {
     }
     copyBtn.classList.add("copied");
     setTimeout(() => copyBtn.classList.remove("copied"), 1200);
+    burstFromElement(copyBtn, { count: 14 });
     showToast(dict.promo_copy_success || "Code copied. Paste it at checkout.", "success", { minimal: true, duration: 1800 });
   });
 }
@@ -1512,6 +1559,7 @@ async function addReview(name, comment, rating, imageUrls = []) {
       await loadReviews();
     }
     showToast(dict.reviews_status || "Thanks! Your comment is live.");
+    burstFromElement($("#reviewForm button[type='submit']") || $("#reviewForm"), { count: 20 });
     return true;
   } catch (err) {
     console.warn("Review submit failed", err);
@@ -1631,6 +1679,12 @@ function toggleNav() {
 
 function initActiveNav() {
   const sections = ["hero", "catalog", "highlights", "reviews", "faq", "contact"];
+  const navList = $("#navLinks");
+  const indicator = navList ? document.createElement("span") : null;
+  if (indicator && !$(".nav-indicator", navList)) {
+    indicator.className = "nav-indicator";
+    navList.appendChild(indicator);
+  }
   const links = sections
     .map((id) => {
       const el = document.getElementById(id);
@@ -1639,17 +1693,47 @@ function initActiveNav() {
     })
     .filter(Boolean);
   if (!links.length) return;
+  let activeLink = links[0].navLink;
+
+  const placeIndicator = (linkEl) => {
+    if (!indicator || !linkEl || window.matchMedia("(max-width: 900px)").matches) return;
+    const parentRect = navList.getBoundingClientRect();
+    const linkRect = linkEl.getBoundingClientRect();
+    indicator.style.width = `${linkRect.width}px`;
+    indicator.style.height = `${linkRect.height}px`;
+    indicator.style.transform = `translate(${(linkRect.left - parentRect.left).toFixed(2)}px, ${(linkRect.top - parentRect.top).toFixed(2)}px)`;
+    indicator.style.opacity = "1";
+  };
+
+  const setActiveLink = (nextLink) => {
+    if (!nextLink) return;
+    links.forEach(({ navLink }) => navLink.classList.toggle("active", navLink === nextLink));
+    activeLink = nextLink;
+    placeIndicator(activeLink);
+  };
+
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         const match = links.find((l) => l.el === entry.target);
         if (!match) return;
-        match.navLink.classList.toggle("active", entry.isIntersecting);
+        if (entry.isIntersecting) setActiveLink(match.navLink);
       });
     },
     { threshold: 0.3 }
   );
   links.forEach(({ el }) => observer.observe(el));
+
+  if (indicator) {
+    links.forEach(({ navLink }) => {
+      navLink.addEventListener("mouseenter", () => placeIndicator(navLink));
+      navLink.addEventListener("focus", () => placeIndicator(navLink));
+      navLink.addEventListener("mouseleave", () => placeIndicator(activeLink));
+      navLink.addEventListener("click", () => setActiveLink(navLink));
+    });
+    window.addEventListener("resize", () => placeIndicator(activeLink), { passive: true });
+    requestAnimationFrame(() => placeIndicator(activeLink));
+  }
 }
 
 function inferConsumableCategory(item = {}) {
@@ -2123,7 +2207,24 @@ function initDescriptionToggles() {
     const dict = translations[currentLang] || translations.en;
     const readMore = dict.read_more || "Read more";
     const readLess = dict.read_less || "Read less";
-    description.classList.toggle("is-clamped", isExpanded);
+    const collapsedHeight = Number(description.dataset.clampedHeight || 0);
+
+    if (isExpanded) {
+      description.style.maxHeight = `${description.scrollHeight}px`;
+      requestAnimationFrame(() => {
+        description.classList.add("is-clamped");
+        if (collapsedHeight > 0) description.style.maxHeight = `${collapsedHeight}px`;
+      });
+    } else {
+      const startHeight = collapsedHeight || description.clientHeight;
+      description.classList.remove("is-clamped");
+      const fullHeight = description.scrollHeight;
+      description.style.maxHeight = `${startHeight}px`;
+      requestAnimationFrame(() => {
+        description.style.maxHeight = `${fullHeight}px`;
+      });
+    }
+
     toggle.setAttribute("aria-expanded", isExpanded ? "false" : "true");
     toggle.textContent = isExpanded ? readMore : readLess;
   });
@@ -2144,11 +2245,20 @@ function updateDescriptionToggleVisibility() {
     const toggle = card.querySelector(".desc-toggle[data-desc-target]");
     if (!description || !toggle) return;
     description.classList.add("is-clamped");
+    description.style.maxHeight = "";
     toggle.textContent = readMore;
     toggle.setAttribute("aria-expanded", "false");
-    const hasOverflow = description.scrollHeight - description.clientHeight > 2;
+    const collapsedHeight = description.clientHeight;
+    const fullHeight = description.scrollHeight;
+    const hasOverflow = fullHeight - collapsedHeight > 2;
+    description.dataset.clampedHeight = `${collapsedHeight}`;
     toggle.classList.toggle("hidden", !hasOverflow);
-    if (!hasOverflow) description.classList.remove("is-clamped");
+    if (!hasOverflow) {
+      description.classList.remove("is-clamped");
+      description.style.maxHeight = `${fullHeight}px`;
+      return;
+    }
+    description.style.maxHeight = `${collapsedHeight}px`;
   });
 }
 
@@ -2191,8 +2301,8 @@ function renderProducts() {
         const descriptionId = `desc-${id}-${idx}`;
         const isTopPick = topPickIds.has(compareId);
         const badges = [];
-        if (isTopPick) badges.push(`<span class="top-pick-badge">${topPickText}</span>`);
-        if (item.comingSoon) badges.push(`<span class="soon-badge">${comingSoonText}</span>`);
+        if (isTopPick) badges.push(`<span class="top-pick-badge badge-tip" data-tip="${escapeHtml(topPickText)}">${topPickText}</span>`);
+        if (item.comingSoon) badges.push(`<span class="soon-badge badge-tip" data-tip="${escapeHtml(comingSoonText)}">${comingSoonText}</span>`);
         const badgeRow = badges.length ? `<div class="product-meta">${badges.join("")}</div>` : "";
         const showPoaNote =
           id === "consumablesGrid" &&
@@ -2222,9 +2332,9 @@ function renderProducts() {
           ? `<div class="product-actions${actions.length === 1 ? " single" : ""}">${actions.join("")}</div>`
           : "";
         return `
-        <div class="product-card">
+        <div class="product-card motion-sheen interactive-product content-enter" style="--sheen-delay: ${(idx % 7) * 0.55}s; --stagger: ${Math.min(idx, 8) * 55}ms;">
           ${imageBlock}
-          <strong>${name}</strong>
+          <strong class="product-title">${name}</strong>
           ${badgeRow}
           <p class="muted product-desc is-clamped" id="${descriptionId}">${note}${seasonalNoteExtra}</p>
           <button type="button" class="desc-toggle hidden" data-desc-target="${descriptionId}" aria-expanded="false">${readMoreText}</button>
@@ -2233,9 +2343,14 @@ function renderProducts() {
       `;
       })
       .join("");
+    requestAnimationFrame(() => {
+      $$(".content-enter", grid).forEach((card) => card.classList.remove("content-enter"));
+    });
   });
   initCheckoutButtons();
   attachImageFallbacks();
+  initInteractiveProductCards();
+  initMagneticButtons();
   renderComparePanel();
   refreshProductCarousels();
   requestAnimationFrame(updateDescriptionToggleVisibility);
@@ -2471,6 +2586,7 @@ function initForms() {
   if (contactForm) {
     contactForm.addEventListener("submit", async (e) => {
       e.preventDefault();
+      const submitter = e.submitter || $("button[type='submit']", contactForm);
       const data = new FormData(contactForm);
       if (data.get("trap")) return;
       const msg = (translations[currentLang] || translations.en).contact_status;
@@ -2494,6 +2610,7 @@ function initForms() {
         }
         setStatusMessage(contactStatus, msg || "");
         showToast(msg || "Thanks! I will reply within 48 hours.");
+        burstFromElement(submitter || contactForm, { count: 18 });
         contactForm.reset();
       } catch (err) {
         setStatusMessage(contactStatus, err.message || errMsg || "");
@@ -2507,12 +2624,14 @@ function initForms() {
   if (newsletterForm) {
     newsletterForm.addEventListener("submit", (e) => {
       e.preventDefault();
+      const submitter = e.submitter || $("button[type='submit']", newsletterForm);
       const msg = (translations[currentLang] || translations.en).newsletter_status;
       const loadingText = currentLang === "de" ? "Wird gesendet" : "Sending";
       setStatusLoading(newsletterStatus, loadingText);
       setTimeout(() => {
         setStatusMessage(newsletterStatus, msg || "");
         showToast(msg || "Checklist is on the way.");
+        burstFromElement(submitter || newsletterForm, { count: 14 });
         newsletterForm.reset();
       }, 450);
     });
@@ -2548,6 +2667,7 @@ function setLanguage(lang) {
     btn.classList.toggle("active", btn.dataset.lang === currentLang);
   });
   forceProductLinksNewTab();
+  requestAnimationFrame(() => window.dispatchEvent(new Event("resize")));
 }
 
 function initLanguageToggle() {
@@ -2620,6 +2740,297 @@ function initScrollHints() {
   });
 }
 
+function initScrollProgress() {
+  if (!motionAllowed()) return;
+  if ($(".scroll-progress")) return;
+  const progress = document.createElement("span");
+  progress.className = "scroll-progress";
+  progress.setAttribute("aria-hidden", "true");
+  document.body.appendChild(progress);
+  const update = () => {
+    const doc = document.documentElement;
+    const max = Math.max(1, doc.scrollHeight - window.innerHeight);
+    const ratio = Math.max(0, Math.min(1, window.scrollY / max));
+    progress.style.setProperty("--scroll-progress", ratio.toFixed(4));
+  };
+  window.addEventListener("scroll", () => requestAnimationFrame(update), { passive: true });
+  window.addEventListener("resize", () => requestAnimationFrame(update), { passive: true });
+  update();
+}
+
+function initHeroParallax() {
+  if (!motionAllowed()) return;
+  const stage = $(".hero-stage");
+  const media = $(".hero-media", stage || document);
+  if (!stage || !media) return;
+  const compact = isCompactViewport();
+
+  const updateScrollShift = () => {
+    const shiftLimit = compact ? 12 : 26;
+    const speed = compact ? 0.02 : 0.04;
+    const shift = Math.max(-shiftLimit, Math.min(shiftLimit, -window.scrollY * speed));
+    media.style.setProperty("--hero-scroll-y", `${shift.toFixed(2)}px`);
+  };
+
+  window.addEventListener("scroll", () => requestAnimationFrame(updateScrollShift), { passive: true });
+  updateScrollShift();
+
+  if (!hasFinePointer()) return;
+
+  let targetX = 0;
+  let targetY = 0;
+  let currentX = 0;
+  let currentY = 0;
+  let rafId = 0;
+
+  const animate = () => {
+    currentX += (targetX - currentX) * 0.12;
+    currentY += (targetY - currentY) * 0.12;
+    media.style.setProperty("--hero-pointer-x", `${currentX.toFixed(2)}px`);
+    media.style.setProperty("--hero-pointer-y", `${currentY.toFixed(2)}px`);
+    stage.style.setProperty("--hero-copy-shift-x", `${(-currentX * 0.22).toFixed(2)}px`);
+    stage.style.setProperty("--hero-copy-shift-y", `${(-currentY * 0.22).toFixed(2)}px`);
+    rafId = requestAnimationFrame(animate);
+  };
+
+  stage.addEventListener("pointermove", (e) => {
+    const rect = stage.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+    targetX = (x - 0.5) * 16;
+    targetY = (y - 0.5) * 12;
+  });
+
+  stage.addEventListener("pointerleave", () => {
+    targetX = 0;
+    targetY = 0;
+  });
+
+  if (!rafId) rafId = requestAnimationFrame(animate);
+}
+
+function initAmbientMotion() {
+  if (!motionAllowed()) return;
+  if (isCompactViewport()) return;
+  const selectors = [
+    ".nav-shell",
+    ".hero-panel",
+    ".promo-band",
+    ".catalog-group",
+    ".why-grid .card",
+    ".reviews-layout .card",
+    ".contact-box",
+    ".footer-grid > div",
+  ];
+  $$(selectors.join(",")).forEach((el, idx) => {
+    el.classList.add("motion-sheen");
+    el.style.setProperty("--sheen-delay", `${(idx % 9) * 0.7}s`);
+  });
+}
+
+function initTiltSurfaces() {
+  if (!motionAllowed() || !hasFinePointer()) return;
+  const selectors = [
+    ".nav-shell",
+    ".hero-panel",
+    ".promo-band",
+    ".feature-copy",
+    ".why-grid .card",
+    ".reviews-layout .card",
+    ".contact-box",
+    ".footer-grid > div",
+  ];
+  $$(selectors.join(",")).forEach((el) => {
+    el.classList.add("tilt-surface");
+    let raf = 0;
+    let pointerX = 0;
+    let pointerY = 0;
+
+    const update = () => {
+      const max = 3.8;
+      const rotateY = (pointerX - 0.5) * max * 2;
+      const rotateX = -(pointerY - 0.5) * max * 2;
+      el.style.setProperty("--tilt-x", `${rotateX.toFixed(2)}deg`);
+      el.style.setProperty("--tilt-y", `${rotateY.toFixed(2)}deg`);
+      raf = 0;
+    };
+
+    el.addEventListener("pointermove", (e) => {
+      const rect = el.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      pointerX = (e.clientX - rect.left) / rect.width;
+      pointerY = (e.clientY - rect.top) / rect.height;
+      if (!raf) raf = requestAnimationFrame(update);
+    });
+
+    el.addEventListener("pointerleave", () => {
+      el.style.setProperty("--tilt-x", "0deg");
+      el.style.setProperty("--tilt-y", "0deg");
+    });
+  });
+}
+
+function initMagneticButtons() {
+  if (!motionAllowed() || !hasFinePointer()) return;
+  $$(".btn").forEach((btn) => {
+    if (btn.dataset.magneticBound === "1") return;
+    const maxShift = 5.5;
+    btn.addEventListener("pointermove", (e) => {
+      const rect = btn.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      btn.style.setProperty("--mag-x", `${(x * maxShift * 2).toFixed(2)}px`);
+      btn.style.setProperty("--mag-y", `${(y * maxShift * 2).toFixed(2)}px`);
+    });
+    btn.addEventListener("pointerleave", () => {
+      btn.style.setProperty("--mag-x", "0px");
+      btn.style.setProperty("--mag-y", "0px");
+    });
+    btn.dataset.magneticBound = "1";
+  });
+}
+
+function initInteractiveProductCards() {
+  if (!motionAllowed() || !hasFinePointer()) return;
+  $$(".interactive-product").forEach((card) => {
+    if (card.dataset.interactiveBound === "1") return;
+    const image = card.querySelector(".product-photo img");
+    card.addEventListener("pointermove", (e) => {
+      const rect = card.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      const rx = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+      const ry = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+      card.style.setProperty("--card-tilt-x", `${(-ry * 3.1).toFixed(2)}deg`);
+      card.style.setProperty("--card-tilt-y", `${(rx * 3.4).toFixed(2)}deg`);
+      card.style.setProperty("--glare-x", `${(50 + rx * 18).toFixed(2)}%`);
+      card.style.setProperty("--glare-y", `${(50 + ry * 18).toFixed(2)}%`);
+      card.style.setProperty("--title-shift-x", `${(rx * 2.8).toFixed(2)}px`);
+      card.style.setProperty("--title-shift-y", `${(ry * 1.8).toFixed(2)}px`);
+      card.style.setProperty("--actions-shift-x", `${(-rx * 2.2).toFixed(2)}px`);
+      card.style.setProperty("--actions-shift-y", `${(-ry * 1.4).toFixed(2)}px`);
+      if (image) image.style.transformOrigin = `${(50 + rx * 10).toFixed(2)}% ${(50 + ry * 10).toFixed(2)}%`;
+    });
+    card.addEventListener("pointerleave", () => {
+      card.style.setProperty("--card-tilt-x", "0deg");
+      card.style.setProperty("--card-tilt-y", "0deg");
+      card.style.setProperty("--glare-x", "50%");
+      card.style.setProperty("--glare-y", "50%");
+      card.style.setProperty("--title-shift-x", "0px");
+      card.style.setProperty("--title-shift-y", "0px");
+      card.style.setProperty("--actions-shift-x", "0px");
+      card.style.setProperty("--actions-shift-y", "0px");
+      if (image) image.style.transformOrigin = "50% 50%";
+    });
+    card.dataset.interactiveBound = "1";
+  });
+}
+
+function initSectionDepthMotion() {
+  if (!motionAllowed()) return;
+  if (isCompactViewport()) return;
+  const sections = $$(".ebook-feature, .catalog-group.tools-highlight, .catalog-group.gear-highlight, .catalog-group.consumables-highlight, footer");
+  if (!sections.length) return;
+  const update = () => {
+    const viewportMid = window.innerHeight * 0.5;
+    sections.forEach((section) => {
+      const rect = section.getBoundingClientRect();
+      const sectionMid = rect.top + rect.height * 0.5;
+      const delta = viewportMid - sectionMid;
+      const shift = Math.max(-14, Math.min(14, delta * 0.03));
+      section.style.setProperty("--section-shift", `${shift.toFixed(2)}px`);
+    });
+  };
+  window.addEventListener("scroll", () => requestAnimationFrame(update), { passive: true });
+  window.addEventListener("resize", () => requestAnimationFrame(update), { passive: true });
+  update();
+}
+
+function initMorphBlobs() {
+  if (!motionAllowed()) return;
+  if (isCompactViewport()) return;
+  if ($(".morph-blob")) return;
+  const blobs = [
+    { top: "14%", left: "-110px", size: 280, hue: "rgba(23, 92, 51, 0.15)" },
+    { bottom: "20%", right: "-120px", size: 320, hue: "rgba(226, 191, 115, 0.13)" },
+  ];
+  blobs.forEach((cfg, idx) => {
+    const blob = document.createElement("span");
+    blob.className = "morph-blob";
+    blob.style.width = `${cfg.size}px`;
+    blob.style.height = `${cfg.size}px`;
+    blob.style.top = cfg.top || "auto";
+    blob.style.left = cfg.left || "auto";
+    blob.style.bottom = cfg.bottom || "auto";
+    blob.style.right = cfg.right || "auto";
+    blob.style.background = cfg.hue;
+    blob.style.animationDelay = `${idx * -4.8}s`;
+    document.body.appendChild(blob);
+  });
+}
+
+function initMetricCountUp() {
+  if (!motionAllowed()) return;
+  const metricNodes = $$(".stats-bar strong, .trust-item strong, .mini-value");
+  if (!metricNodes.length) return;
+
+  const parseMetric = (text = "") => {
+    const raw = String(text).trim().replace(/\s+/g, "");
+    const match = raw.match(/^(\d+(?:[.,]\d+)?)(k|K|%|h|\+)?$/);
+    if (!match) return null;
+    return {
+      value: Number(match[1].replace(",", ".")),
+      suffix: (match[2] || "").toLowerCase(),
+      raw,
+    };
+  };
+
+  const formatMetric = (value, suffix, target) => {
+    const rounded = target % 1 !== 0 && target < 10 ? value.toFixed(1) : Math.round(value).toString();
+    if (suffix === "k") return `${Math.round(value)}k`;
+    if (suffix === "%") return `${Math.round(value)}%`;
+    if (suffix === "h") return `${Math.round(value)}h`;
+    if (suffix === "+") return `${Math.round(value)}+`;
+    return rounded;
+  };
+
+  const animateMetric = (el, target, suffix) => {
+    const duration = 1200;
+    const start = performance.now();
+    const tick = (now) => {
+      const progress = Math.min(1, (now - start) / duration);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = target * eased;
+      el.textContent = formatMetric(current, suffix, target);
+      if (progress < 1) requestAnimationFrame(tick);
+      else el.textContent = formatMetric(target, suffix, target);
+    };
+    requestAnimationFrame(tick);
+  };
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const el = entry.target;
+        if (el.dataset.metricAnimated === "1") return;
+        const parsed = parseMetric(el.textContent || "");
+        if (!parsed) {
+          observer.unobserve(el);
+          return;
+        }
+        el.dataset.metricAnimated = "1";
+        animateMetric(el, parsed.value, parsed.suffix);
+        observer.unobserve(el);
+      });
+    },
+    { threshold: 0.65 }
+  );
+
+  metricNodes.forEach((node) => observer.observe(node));
+}
+
 function initProductCarousels() {
   $$(".product-carousel[data-carousel]").forEach((carousel) => {
     if (carousel.dataset.carouselBound === "1") return;
@@ -2630,6 +3041,7 @@ function initProductCarousels() {
     if (!track || !prevBtn || !nextBtn || !dotsWrap) return;
 
     let dotsCount = -1;
+    let snapTimer = null;
 
     const getPageCount = () => {
       const viewport = Math.max(track.clientWidth, 1);
@@ -2689,6 +3101,40 @@ function initProductCarousels() {
       syncButtons();
     };
 
+    const markSnapCard = () => {
+      const cards = Array.from(track.children);
+      if (!cards.length) return;
+      const step = Math.max(1, getStep());
+      const index = Math.max(0, Math.min(cards.length - 1, Math.round(track.scrollLeft / step)));
+      cards.forEach((card) => card.classList.remove("snap-active"));
+      const activeCard = cards[index];
+      if (!activeCard) return;
+      activeCard.classList.add("snap-active");
+      setTimeout(() => activeCard.classList.remove("snap-active"), 420);
+    };
+
+    let autoTimer = null;
+    const shouldAutoPlay = () => motionAllowed() && window.matchMedia("(min-width: 760px)").matches;
+    const stopAuto = () => {
+      if (!autoTimer) return;
+      clearInterval(autoTimer);
+      autoTimer = null;
+    };
+    const stepAuto = () => {
+      const maxScroll = Math.max(0, track.scrollWidth - track.clientWidth);
+      if (maxScroll <= 2) return;
+      if (track.scrollLeft >= maxScroll - 3) {
+        track.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+        track.scrollBy({ left: getStep(), behavior: "smooth" });
+      }
+    };
+    const startAuto = () => {
+      stopAuto();
+      if (!shouldAutoPlay()) return;
+      autoTimer = setInterval(stepAuto, 3600);
+    };
+
     prevBtn.addEventListener("click", () => {
       track.scrollBy({ left: -getStep(), behavior: "smooth" });
     });
@@ -2701,6 +3147,8 @@ function initProductCarousels() {
       "scroll",
       () => {
         window.requestAnimationFrame(update);
+        clearTimeout(snapTimer);
+        snapTimer = setTimeout(markSnapCard, 130);
       },
       { passive: true }
     );
@@ -2709,13 +3157,25 @@ function initProductCarousels() {
       "resize",
       () => {
         window.requestAnimationFrame(update);
+        startAuto();
       },
       { passive: true }
     );
 
-    carousel._refreshCarousel = update;
+    carousel.addEventListener("mouseenter", stopAuto);
+    carousel.addEventListener("mouseleave", startAuto);
+    carousel.addEventListener("focusin", stopAuto);
+    carousel.addEventListener("focusout", startAuto);
+    track.addEventListener("pointerdown", stopAuto, { passive: true });
+    track.addEventListener("pointerup", startAuto, { passive: true });
+
+    carousel._refreshCarousel = () => {
+      update();
+      startAuto();
+    };
     carousel.dataset.carouselBound = "1";
     update();
+    startAuto();
   });
 }
 
@@ -2734,9 +3194,11 @@ function initStickyCta() {
   const hero = $("#hero");
   let heroVisible = Boolean(hero);
   let contactVisible = false;
+  let lastY = window.scrollY || 0;
+  let scrollingDown = false;
 
   const sync = () => {
-    cta.classList.toggle("is-hidden", heroVisible || contactVisible);
+    cta.classList.toggle("is-hidden", heroVisible || contactVisible || !scrollingDown);
   };
 
   if (hero) {
@@ -2760,6 +3222,16 @@ function initStickyCta() {
     { threshold: 0.2 }
   );
   contactObserver.observe(contact);
+  window.addEventListener(
+    "scroll",
+    () => {
+      const y = window.scrollY || 0;
+      scrollingDown = y > lastY + 2;
+      lastY = y;
+      sync();
+    },
+    { passive: true }
+  );
   sync();
 }
 
@@ -2791,6 +3263,7 @@ function initScrollReveal() {
     ".ebook-card",
     ".ebook-offer-card",
     ".cta-card",
+    "footer",
   ];
   const nodes = $$(targets.join(","));
   if (!nodes.length) return;
@@ -2846,7 +3319,15 @@ function initFloatingAccents() {
   applyParallax();
 }
 
+function initLoadSequence() {
+  document.body.classList.add("app-boot");
+  requestAnimationFrame(() => {
+    document.body.classList.add("app-ready");
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+  initLoadSequence();
   toggleNav();
   initActiveNav();
   initLanguageToggle();
@@ -2863,6 +3344,15 @@ document.addEventListener("DOMContentLoaded", () => {
   initPromoCodeCopy();
   initProductCtaFeedback();
   setLanguage("de");
+  initScrollProgress();
+  initHeroParallax();
+  initAmbientMotion();
+  initTiltSurfaces();
+  initMagneticButtons();
+  initInteractiveProductCards();
+  initSectionDepthMotion();
+  initMorphBlobs();
+  initMetricCountUp();
   initProductCarousels();
   initCheckoutButtons();
   initScrollReveal();
