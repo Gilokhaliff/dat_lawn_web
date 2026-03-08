@@ -47,6 +47,9 @@ const translations = {
     quiz_empty: "No perfect match found yet. Try broader filters.",
     cta_external_shop: "External shop opens in a new tab",
     top_pick: "Top pick",
+    coming_soon: "Link coming soon",
+    read_more: "Read more",
+    read_less: "Read less",
     hero_card_text:
       "<strong>Weekly routes.</strong> Everything listed and pictured rides in my truck. No filler, just what survives real lawns.",
     stat1_label: "people reached",
@@ -348,6 +351,9 @@ const translations = {
     quiz_empty: "Noch kein perfekter Treffer. Versuche breitere Filter.",
     cta_external_shop: "Externer Shop öffnet in neuem Tab",
     top_pick: "Top-Pick",
+    coming_soon: "Link folgt bald",
+    read_more: "Mehr lesen",
+    read_less: "Weniger",
     hero_card_text:
       "<strong>Wöchentliche Touren.</strong> Die gelisteten und gezeigten Tools liegen in meinem Truck. Kein Schnickschnack, nur was echte Gärten überlebt.",
     stat1_label: "Menschen erreicht",
@@ -625,6 +631,7 @@ const products = {
         de: "Sichelmäher mit Streifen-Kit für schnelles, fehlertolerantes Mähen. Sichtbare Streifen ohne Schälgefahr auf unruhigen Flächen.",
       },
       tagKey: "tag_affiliate",
+      comingSoon: true,
       link: "#",
       image: "images/tools/rotary-striping.jpg",
       price: "$$",
@@ -2103,6 +2110,48 @@ function initCompare() {
   });
 }
 
+function initDescriptionToggles() {
+  let resizeTimer = null;
+  document.addEventListener("click", (e) => {
+    const toggle = e.target.closest(".desc-toggle[data-desc-target]");
+    if (!toggle) return;
+    if (toggle.classList.contains("hidden")) return;
+    const targetId = toggle.dataset.descTarget || "";
+    const description = targetId ? document.getElementById(targetId) : null;
+    if (!description) return;
+    const isExpanded = toggle.getAttribute("aria-expanded") === "true";
+    const dict = translations[currentLang] || translations.en;
+    const readMore = dict.read_more || "Read more";
+    const readLess = dict.read_less || "Read less";
+    description.classList.toggle("is-clamped", isExpanded);
+    toggle.setAttribute("aria-expanded", isExpanded ? "false" : "true");
+    toggle.textContent = isExpanded ? readMore : readLess;
+  });
+
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      updateDescriptionToggleVisibility();
+    }, 120);
+  });
+}
+
+function updateDescriptionToggleVisibility() {
+  const dict = translations[currentLang] || translations.en;
+  const readMore = dict.read_more || "Read more";
+  $$(".product-card").forEach((card) => {
+    const description = card.querySelector(".product-desc");
+    const toggle = card.querySelector(".desc-toggle[data-desc-target]");
+    if (!description || !toggle) return;
+    description.classList.add("is-clamped");
+    toggle.textContent = readMore;
+    toggle.setAttribute("aria-expanded", "false");
+    const hasOverflow = description.scrollHeight - description.clientHeight > 2;
+    toggle.classList.toggle("hidden", !hasOverflow);
+    if (!hasOverflow) description.classList.remove("is-clamped");
+  });
+}
+
 function renderProducts() {
   const mapping = [
     ["toolsGrid", products.tools],
@@ -2113,6 +2162,8 @@ function renderProducts() {
   const dict = translations[currentLang] || translations.en;
   const topPickIds = new Set(getTopPickIds(3));
   const topPickText = dict.top_pick || "Top pick";
+  const comingSoonText = dict.coming_soon || "Link coming soon";
+  const readMoreText = dict.read_more || "Read more";
   compareLookup = new Map();
   mapping.forEach(([id, items]) => {
     items.forEach((item, idx) => {
@@ -2137,7 +2188,12 @@ function renderProducts() {
         const initial = (name || "").trim().charAt(0) || "?";
         const safeInitial = escapeHtml(initial);
         const compareId = getProductId(id, idx);
+        const descriptionId = `desc-${id}-${idx}`;
         const isTopPick = topPickIds.has(compareId);
+        const badges = [];
+        if (isTopPick) badges.push(`<span class="top-pick-badge">${topPickText}</span>`);
+        if (item.comingSoon) badges.push(`<span class="soon-badge">${comingSoonText}</span>`);
+        const badgeRow = badges.length ? `<div class="product-meta">${badges.join("")}</div>` : "";
         const showPoaNote =
           id === "consumablesGrid" &&
           activeSeasonRecommendationKey &&
@@ -2169,8 +2225,9 @@ function renderProducts() {
         <div class="product-card">
           ${imageBlock}
           <strong>${name}</strong>
-          ${isTopPick ? `<span class="top-pick-badge">${topPickText}</span>` : ""}
-          <p class="muted">${note}${seasonalNoteExtra}</p>
+          ${badgeRow}
+          <p class="muted product-desc is-clamped" id="${descriptionId}">${note}${seasonalNoteExtra}</p>
+          <button type="button" class="desc-toggle hidden" data-desc-target="${descriptionId}" aria-expanded="false">${readMoreText}</button>
           ${action}
         </div>
       `;
@@ -2181,6 +2238,7 @@ function renderProducts() {
   attachImageFallbacks();
   renderComparePanel();
   refreshProductCarousels();
+  requestAnimationFrame(updateDescriptionToggleVisibility);
 }
 
 function renderTestimonials() {
@@ -2801,6 +2859,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initConsumablesFilters();
   initSeasonalNote();
   initCompare();
+  initDescriptionToggles();
   initPromoCodeCopy();
   initProductCtaFeedback();
   setLanguage("de");
