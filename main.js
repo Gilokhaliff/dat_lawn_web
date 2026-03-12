@@ -102,9 +102,10 @@ const translations = {
     group1_title: "Tools I use",
     group1_sub: "Mowers, trimmers, edging, soil probes.",
     group2_title: "Consumables",
-    group2_sub: "Fertilizers, weed control, surfactants.",
+    group2_sub: "Fertilizers, seeds, weed control, surfactants.",
     filter_all: "All",
     filter_fertilizer: "Fertilizer",
+    filter_seed: "Seeds",
     filter_soil: "Soil",
     filter_weed: "Weed control",
     filter_bundle: "Bundles",
@@ -408,9 +409,10 @@ const translations = {
     group1_title: "Werkzeug, das ich nutze",
     group1_sub: "Mäher, Trimmer, Kanten, Bodenproben.",
     group2_title: "Verbrauchsmaterial",
-    group2_sub: "Dünger, Unkrautkontrolle, Netzmittel.",
+    group2_sub: "Dünger, Saatgut, Unkrautkontrolle, Netzmittel.",
     filter_all: "Alle",
     filter_fertilizer: "Dünger",
+    filter_seed: "Saatgut",
     filter_soil: "Boden",
     filter_weed: "Unkraut",
     filter_bundle: "Bundles",
@@ -660,6 +662,17 @@ const products = {
       price: "$$",
     },
     {
+      name: { en: "Spiked aeration shoes", de: "Spikerschuhe (Nagelschuhe)" },
+      note: {
+        en: "Entry-level spikes for light surface aeration while walking the lawn. Useful for quick maintenance passes on smaller areas.",
+        de: "Einstiegs-Spikerschuhe zur leichten Oberflächenbelüftung beim Gehen über den Rasen. Gut für schnelle Pflegegänge auf kleineren Flächen.",
+      },
+      tagKey: "tag_affiliate",
+      link: "https://amzn.to/4s7Pmbr",
+      image: "images/tools/nagelschuhe.jpg",
+      price: "$",
+    },
+    {
       name: { en: "Hand spreader", de: "Handstreuer" },
       note: {
         en: "Quick for spot seeding and light granular passes without hauling a big spreader. Great for tight beds, patches, and slopes.",
@@ -760,6 +773,28 @@ const products = {
       tagKey: "tag_cool",
       link: "https://www.rasenwelt.de/products/arena-poa-supina-superior",
       image: "images/consumables/poa-supina.png",
+      price: "$$",
+    },
+    {
+      name: { en: "Shade lawn seed (low-maintenance)", de: "Schattenrasen (Pflegeleicht)" },
+      note: {
+        en: "For all lawn exposures, especially dry and shaded areas, while still performing in sunny zones. Low-maintenance seed mix for resilient turf.",
+        de: "Für alle Lagen, besonders trocken und in Schattenlage, aber auch in sonnigen Bereichen einsetzbar. Pflegeleichte Rasenmischung für belastbare Flächen.",
+      },
+      tagKey: "tag_cool",
+      link: "https://www.rasenwelt.de/products/schattenrasen-arena-sun-and-shade",
+      image: "images/consumables/ARENA-Sun-Shade.webp",
+      price: "$$",
+    },
+    {
+      name: { en: "Drought lawn seed", de: "Trockenrasen" },
+      note: {
+        en: "ARENA Heat & Drought lawn seed with robust cultivars from the Mediterranean climate zone. Built for high heat and drought tolerance where irrigation is limited.",
+        de: "ARENA Heat & Drought Trockenrasen: Besonders hitze- und trockenheitsverträgliche Rasenmischung mit robusten Rasensorten aus der mediterranen Klimazone. Durch zunehmende Trockenheit und Bewässerungsprobleme steigt die Nachfrage nach sehr hitze- und trockenheitstoleranten Mischungen auch in Deutschland deutlich.",
+      },
+      tagKey: "tag_now",
+      link: "https://www.rasenwelt.de/products/arena-heat-drought-trockenrasen",
+      image: "images/consumables/ARENA-Heat-Drought.webp",
       price: "$$",
     },
     {
@@ -1737,9 +1772,12 @@ function initActiveNav() {
 }
 
 function inferConsumableCategory(item = {}) {
-  const text = `${item?.name?.en || ""} ${item?.name?.de || ""} ${item?.note?.en || ""} ${item?.note?.de || ""}`.toLowerCase();
-  if (/bundle|paket|set/.test(text)) return "bundle";
+  const nameText = `${item?.name?.en || ""} ${item?.name?.de || ""}`.toLowerCase();
+  const noteText = `${item?.note?.en || ""} ${item?.note?.de || ""}`.toLowerCase();
+  const text = `${nameText} ${noteText}`;
+  if (/\bbundle\b|\bpaket\b|\bset\b|komplettset|sorglos-paket/.test(nameText)) return "bundle";
   if (/unkraut|weed|herbicide/.test(text)) return "weed";
+  if (/rasensamen|lawn seed|saatgut|poa|trockenrasen|schattenrasen|sun\s*and\s*shade|heat\s*&\s*drought/.test(nameText)) return "seed";
   if (/boden|soil|erde|ph|kalk|humus|fulva|amino|humin/.test(text)) return "soil";
   return "fertilizer";
 }

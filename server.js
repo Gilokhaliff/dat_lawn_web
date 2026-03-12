@@ -175,6 +175,7 @@ async function sendDownloadEmail(to, name = "there", idempotency = "") {
       <p style="margin:0 0 16px 0;">
         <a href="${link}" style="background:#175c33;color:#fff;padding:10px 14px;border-radius:8px;text-decoration:none;font-weight:700;">E-Book herunterladen (PDF)</a>
       </p>
+      <p style="margin:0 0 12px 0;color:#0b1a12;"><strong>Sicherheitshinweis:</strong> Dieser Download-Link ist aus Sicherheitsgründen nur 24 Stunden gültig. Bitte lade dein E-Book sofort herunter.</p>
       <p style="margin:0;color:#4c5d51;">Falls der Button nicht funktioniert, nutze diesen Link: <br><a href="${link}">${link}</a></p>
     </div>
   `;
@@ -399,6 +400,7 @@ async function handleTestDownloadEmail(req, res) {
         <p style="margin:0 0 16px 0;">
           <a href="${link}" style="background:#175c33;color:#fff;padding:10px 14px;border-radius:8px;text-decoration:none;font-weight:700;">E-Book herunterladen (PDF)</a>
         </p>
+        <p style="margin:0 0 12px 0;color:#0b1a12;"><strong>Sicherheitshinweis:</strong> Dieser Download-Link ist aus Sicherheitsgründen nur 24 Stunden gültig. Bitte lade dein E-Book sofort herunter.</p>
         <p style="margin:0;color:#4c5d51;">Falls der Button nicht funktioniert, nutze diesen Link: <br><a href="${link}">${link}</a></p>
       </div>
     `;
