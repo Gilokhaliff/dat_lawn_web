@@ -627,15 +627,14 @@ const products = {
       price: "$",
     },
     {
-      name: { en: "Rotary mower w/ striping kit", de: "Sichelmäher mit Streifen-Kit" },
+      name: { en: "Rotary mower", de: "Sichelmäher" },
       note: {
-        en: "Rotary deck with a striping kit for fast, forgiving mowing. Gives you visible stripes without risking scalps on bumpy lawns.",
-        de: "Sichelmäher mit Streifen-Kit für schnelles, fehlertolerantes Mähen. Sichtbare Streifen ohne Schälgefahr auf unruhigen Flächen.",
+        en: "Self-propelled rotary mower for fast, forgiving cuts and clean results on uneven lawns.",
+        de: "Selbstfahrender Sichelmäher für schnelles, fehlertolerantes Mähen und ein sauberes Schnittbild auch auf unruhigen Flächen.",
       },
       tagKey: "tag_affiliate",
-      comingSoon: true,
-      link: "#",
-      image: "images/tools/rotary-striping.jpg",
+      link: "https://egopowerplus.de/produkte/selbstfahrende-rasenmaeher/lm1914e-sp-47cm-selbstfahrender-rasenmaeher-set?_gl=1*8v7o6k*_up*MQ..*_ga*Nzc3Mzk1MTI2LjE3NzM3Njg4MTg.*_ga_ZM2PGNK028*czE3NzM3Njg4MTUkbzEkZzEkdDE3NzM3Njg4MTYkajU5JGwwJGg0MzAyNDU5MzA.*_ga_W7Y5X1C022*czE3NzM3Njg4MTYkbzEkZzEkdDE3NzM3Njg4MTYkajYwJGwwJGgw&gclid=Cj0KCQjw9-PNBhDfARIsABHN6-1AZ-5FMD4fSnXYFuTPzqaZePIEsIZFZ7EKV6dTgF8kgv65eyBuM-kaAjqjEALw_wcB&gbraid=0AAAAADducPFjCSPrdiTpiaqiN4UR2-gBu",
+      image: "images/tools/Sichelmaeher.png",
       price: "$$",
     },
     {
