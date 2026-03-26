@@ -46,9 +46,27 @@ function sendJson(res, status, payload) {
   res.end(JSON.stringify(payload));
 }
 
+function sanitizePurchaseRecord(record = {}) {
+  const customer = record && typeof record.customer === "object" && record.customer
+    ? record.customer
+    : {};
+  return {
+    ...record,
+    customer: {
+      name: typeof customer.name === "string" ? customer.name : "",
+      email: typeof customer.email === "string" ? customer.email : "",
+    },
+  };
+}
+
+function sanitizePurchaseList(list) {
+  if (!Array.isArray(list)) return [];
+  return list.map((record) => sanitizePurchaseRecord(record));
+}
+
 function createSignedDownloadLink(email = "") {
-  const expires = Date.now() + 1000 * 60 * 60 * 24; // 24h
-  const payload = `${expires}|${escapeHtml(email || "")}`;
+  const issuedAt = Date.now();
+  const payload = `${issuedAt}|${escapeHtml(email || "")}`;
   const sig = crypto.createHmac("sha256", downloadSecret).update(payload).digest("base64url");
   const token = Buffer.from(`${payload}|${sig}`).toString("base64url");
   return `${downloadBase}?token=${token}`;
@@ -121,7 +139,14 @@ async function readPurchases() {
       const data = await res.json();
       if (data && typeof data.result === "string") {
         const parsed = JSON.parse(data.result);
-        if (Array.isArray(parsed)) return parsed;
+        if (Array.isArray(parsed)) {
+          const sanitized = sanitizePurchaseList(parsed);
+          const changed = JSON.stringify(parsed) !== JSON.stringify(sanitized);
+          if (changed) {
+            await writePurchases(sanitized);
+          }
+          return sanitized;
+        }
       }
     } catch (err) {
       console.warn("KV purchases read failed, falling back:", err.message);
@@ -130,17 +155,24 @@ async function readPurchases() {
   try {
     const data = await readFile(purchasesFile, "utf-8");
     const parsed = JSON.parse(data);
-    if (Array.isArray(parsed)) return parsed;
+    if (Array.isArray(parsed)) {
+      const sanitized = sanitizePurchaseList(parsed);
+      const changed = JSON.stringify(parsed) !== JSON.stringify(sanitized);
+      if (changed) {
+        await writePurchases(sanitized);
+      }
+      return sanitized;
+    }
   } catch (err) {
     if (err.code !== "ENOENT") {
       console.warn("Purchases file read failed, falling back to memory:", err.message);
     }
   }
-  return memoryPurchases;
+  return sanitizePurchaseList(memoryPurchases);
 }
 
 async function writePurchases(list) {
-  const safe = Array.isArray(list) ? list.slice(-500) : [];
+  const safe = sanitizePurchaseList(Array.isArray(list) ? list.slice(-500) : []);
   if (kvUrl && kvToken) {
     try {
       const res = await fetch(`${kvUrl}/set/purchases`, {
@@ -175,7 +207,7 @@ async function sendDownloadEmail(to, name = "there", idempotency = "") {
       <p style="margin:0 0 16px 0;">
         <a href="${link}" style="background:#175c33;color:#fff;padding:10px 14px;border-radius:8px;text-decoration:none;font-weight:700;">E-Book herunterladen (PDF)</a>
       </p>
-      <p style="margin:0 0 12px 0;color:#0b1a12;"><strong>Sicherheitshinweis:</strong> Dieser Download-Link ist aus Sicherheitsgründen nur 24 Stunden gültig. Bitte lade dein E-Book sofort herunter.</p>
+      <p style="margin:0 0 12px 0;color:#0b1a12;"><strong>Hinweis:</strong> Du kannst diesen Download-Link jederzeit wieder verwenden. Bitte leite ihn nicht weiter.</p>
       <p style="margin:0;color:#4c5d51;">Falls der Button nicht funktioniert, nutze diesen Link: <br><a href="${link}">${link}</a></p>
     </div>
   `;
@@ -229,7 +261,6 @@ async function handleCheckout(req, res) {
       success_url: successUrl,
       cancel_url: cancelUrl,
       customer_creation: "always",
-      phone_number_collection: { enabled: true },
       metadata: { item: "ebook", priceId },
     });
     return sendJson(res, 200, { url: session.url });
@@ -349,7 +380,6 @@ async function handleWebhook(req, res) {
           customer: {
             name: session.customer_details?.name || "",
             email: session.customer_details?.email || "",
-            phone: session.customer_details?.phone || "",
           },
           amount_total: session.amount_total,
           currency: session.currency,
@@ -400,7 +430,7 @@ async function handleTestDownloadEmail(req, res) {
         <p style="margin:0 0 16px 0;">
           <a href="${link}" style="background:#175c33;color:#fff;padding:10px 14px;border-radius:8px;text-decoration:none;font-weight:700;">E-Book herunterladen (PDF)</a>
         </p>
-        <p style="margin:0 0 12px 0;color:#0b1a12;"><strong>Sicherheitshinweis:</strong> Dieser Download-Link ist aus Sicherheitsgründen nur 24 Stunden gültig. Bitte lade dein E-Book sofort herunter.</p>
+        <p style="margin:0 0 12px 0;color:#0b1a12;"><strong>Hinweis:</strong> Du kannst diesen Download-Link jederzeit wieder verwenden. Bitte leite ihn nicht weiter.</p>
         <p style="margin:0;color:#4c5d51;">Falls der Button nicht funktioniert, nutze diesen Link: <br><a href="${link}">${link}</a></p>
       </div>
     `;

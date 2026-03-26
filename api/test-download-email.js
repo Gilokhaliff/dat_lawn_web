@@ -7,8 +7,8 @@ const downloadBase = process.env.DOWNLOAD_BASE || "https://www.datlawnguy.de/api
 const adminToken = process.env.REVIEWS_ADMIN_TOKEN;
 
 function createSignedDownloadLink(email = "") {
-  const expires = Date.now() + 1000 * 60 * 60 * 24; // 24h
-  const payload = `${expires}|${toStringSafe(email)}`;
+  const issuedAt = Date.now();
+  const payload = `${issuedAt}|${toStringSafe(email)}`;
   const sig = crypto.createHmac("sha256", downloadSecret).update(payload).digest("base64url");
   const token = Buffer.from(`${payload}|${sig}`).toString("base64url");
   return `${downloadBase}?token=${token}`;
@@ -33,7 +33,7 @@ async function sendDownloadEmail(to, name = "", idempotencyKey = "") {
       <p style="margin:0 0 16px 0;">
         <a href="${link}" style="background:#175c33;color:#fff;padding:10px 14px;border-radius:8px;text-decoration:none;font-weight:700;">E-Book herunterladen (PDF)</a>
       </p>
-      <p style="margin:0 0 12px 0;color:#0b1a12;"><strong>Sicherheitshinweis:</strong> Dieser Download-Link ist aus Sicherheitsgründen nur 24 Stunden gültig. Bitte lade dein E-Book sofort herunter.</p>
+      <p style="margin:0 0 12px 0;color:#0b1a12;"><strong>Hinweis:</strong> Du kannst diesen Download-Link jederzeit wieder verwenden. Bitte leite ihn nicht weiter.</p>
       <p style="margin:0;color:#4c5d51;">Falls der Button nicht funktioniert, nutze diesen Link: <br><a href="${link}">${link}</a></p>
     </div>
   `;

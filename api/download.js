@@ -13,10 +13,9 @@ export default async function handler(req, res) {
 
   try {
     const decoded = Buffer.from(token, "base64url").toString("utf-8");
-    const [expires, email, signature] = decoded.split("|");
-    if (!expires || !signature) throw new Error("Malformed token");
-    if (Number(expires) < Date.now()) throw new Error("Expired token");
-    const payload = `${expires}|${email || ""}`;
+    const [tokenMarker, email, signature] = decoded.split("|");
+    if (!tokenMarker || !signature) throw new Error("Malformed token");
+    const payload = `${tokenMarker}|${email || ""}`;
     const expectedSig = crypto.createHmac("sha256", downloadSecret).update(payload).digest("base64url");
     if (!crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSig))) {
       throw new Error("Invalid signature");
@@ -28,6 +27,6 @@ export default async function handler(req, res) {
     return res.status(200).send(pdf);
   } catch (err) {
     console.error("Download error:", err.message);
-    return res.status(400).json({ error: "Invalid or expired link" });
+    return res.status(400).json({ error: "Invalid link" });
   }
 }
