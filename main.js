@@ -1631,6 +1631,8 @@ function initReviewForm() {
   }
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+    const submitBtn = $("button[type='submit']", form);
+    if (submitBtn) { submitBtn.classList.add("btn-loading"); submitBtn.disabled = true; }
     const nameInput = $("#reviewName");
     const commentInput = $("#reviewComment");
     const ratingInput = $("#reviewRating");
@@ -1638,6 +1640,9 @@ function initReviewForm() {
     const name = nameInput ? nameInput.value : "";
     const comment = commentInput ? commentInput.value : "";
     const rating = ratingInput ? ratingInput.value : 5;
+    const restoreBtn = () => {
+      if (submitBtn) { submitBtn.classList.remove("btn-loading"); submitBtn.disabled = false; }
+    };
     let imageUrls = [];
     if (photoInput && photoInput.files && photoInput.files[0]) {
       try {
@@ -1645,10 +1650,12 @@ function initReviewForm() {
       } catch (err) {
         setStatusMessage(status, err.message || "Photo upload failed.");
         showToast(err.message || "Photo upload failed.", "error");
+        restoreBtn();
         return;
       }
     }
     const added = await addReview(name, comment, rating, imageUrls);
+    restoreBtn();
     if (!added) {
       if (status) {
         setStatusMessage(status, "Could not post your review. Please try again.");
@@ -1709,6 +1716,10 @@ function toggleNav() {
   window.addEventListener("resize", () => {
     if (!window.matchMedia("(max-width: 900px)").matches) closeMenu();
   });
+
+  window.addEventListener("scroll", () => {
+    if (links.classList.contains("open")) closeMenu();
+  }, { passive: true });
 }
 
 function initActiveNav() {
@@ -2630,6 +2641,7 @@ function initForms() {
       const errMsg = (translations[currentLang] || translations.en).contact_error;
       const loadingText = currentLang === "de" ? "Wird gesendet" : "Sending";
       setStatusLoading(contactStatus, loadingText);
+      if (submitter) { submitter.classList.add("btn-loading"); submitter.disabled = true; }
       const payload = {
         name: data.get("name") || "",
         email: data.get("contact") || "",
@@ -2652,6 +2664,8 @@ function initForms() {
       } catch (err) {
         setStatusMessage(contactStatus, err.message || errMsg || "");
         showToast(err.message || errMsg || "Could not send message.", "error");
+      } finally {
+        if (submitter) { submitter.classList.remove("btn-loading"); submitter.disabled = false; }
       }
     });
   }
@@ -3363,6 +3377,33 @@ function initLoadSequence() {
   });
 }
 
+function initFilterChipsFade() {
+  $$(".catalog-filters").forEach((el) => {
+    const check = () => {
+      el.classList.toggle("has-overflow", el.scrollWidth > el.clientWidth + 4);
+    };
+    check();
+    el.addEventListener("scroll", check, { passive: true });
+    window.addEventListener("resize", check, { passive: true });
+  });
+}
+
+function initBackToTop() {
+  const btn = document.createElement("button");
+  btn.className = "back-to-top";
+  btn.setAttribute("aria-label", "Back to top");
+  btn.innerHTML = "↑";
+  document.body.appendChild(btn);
+
+  window.addEventListener("scroll", () => {
+    btn.classList.toggle("visible", window.scrollY > 600);
+  }, { passive: true });
+
+  btn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   initLoadSequence();
   toggleNav();
@@ -3402,4 +3443,6 @@ document.addEventListener("DOMContentLoaded", () => {
   initFaqToggle();
   initInputFeedback();
   initFileInputs();
+  initFilterChipsFade();
+  initBackToTop();
 });

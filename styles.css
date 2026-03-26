@@ -4184,3 +4184,204 @@ h3 { font-family: var(--font); font-weight: 700; letter-spacing: -0.012em; }
     padding-bottom: max(0.58rem, calc(0.58rem + env(safe-area-inset-bottom)));
   }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   MOBILE PROFESSIONAL POLISH
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Button Loading Spinner ──────────────────────────────── */
+@keyframes btn-spin {
+  to { transform: rotate(360deg); }
+}
+.btn.btn-loading {
+  pointer-events: none;
+  color: transparent !important;
+}
+.btn.btn-loading::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: btn-spin 0.65s linear infinite;
+}
+.btn.btn-ghost.btn-loading::after {
+  border-color: rgba(23, 92, 51, 0.25);
+  border-top-color: var(--primary);
+}
+
+/* ── Carousel Dots: größere Touch-Ziele ─────────────────── */
+@media (max-width: 900px) {
+  .carousel-dots {
+    gap: 0.55rem;
+    padding: 0.55rem 0 0.2rem;
+    min-height: 2.2rem;
+  }
+  .carousel-dot {
+    width: 0.56rem;
+    height: 0.56rem;
+    position: relative;
+  }
+  .carousel-dot::before {
+    content: "";
+    position: absolute;
+    inset: -0.55rem;
+  }
+  .carousel-dot.active {
+    width: 1.2rem;
+    transition: width 0.25s var(--ease-smooth);
+  }
+}
+
+/* ── Filter Chips: Fade-Indikator bei Overflow ───────────── */
+.catalog-filters::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 3rem;
+  background: linear-gradient(to right, transparent, rgba(253, 251, 246, 0.97));
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.catalog-filters.has-overflow::after {
+  opacity: 1;
+}
+
+/* ── Strip: auf Mobile sichtbar (kompakte Zeile) ─────────── */
+@media (max-width: 640px) {
+  .strip {
+    display: block !important;
+  }
+  .strip-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 0.4rem 0 0.2rem;
+  }
+  .strip-grid > div {
+    display: flex;
+    align-items: baseline;
+    gap: 0.45rem;
+    padding: 0.38rem 0;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+  }
+  .strip-grid > div:last-child {
+    border-bottom: none;
+  }
+  .strip-grid strong {
+    font-size: 0.82rem;
+    color: var(--primary-strong);
+    flex-shrink: 0;
+    font-weight: 700;
+  }
+  .strip-grid span {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+}
+
+/* ── Section Trennlinien ─────────────────────────────────── */
+@media (max-width: 640px) {
+  section + section {
+    border-top: 1px solid rgba(15, 23, 42, 0.07);
+  }
+  .ebook-feature + section,
+  .hero + .strip {
+    border-top: none;
+  }
+}
+
+/* ── Active Nav Link: Seitenleiste im mobilen Dropdown ───── */
+@media (max-width: 900px) {
+  .nav-primary a.active {
+    background: rgba(23, 92, 51, 0.1);
+    color: var(--primary-strong);
+    font-weight: 700;
+    padding-left: 1.2rem;
+    position: relative;
+  }
+  .nav-primary a.active::before {
+    content: "";
+    position: absolute;
+    left: 0.55rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 1.2rem;
+    background: var(--primary);
+    border-radius: 3px;
+  }
+}
+
+/* ── Landscape-Optimierung ───────────────────────────────── */
+@media (max-height: 520px) and (orientation: landscape) {
+  .hero-stage {
+    min-height: clamp(260px, 56vh, 340px);
+    border-radius: 14px;
+  }
+  .hero-copy {
+    gap: 0.18rem;
+    padding: 0.65rem 0.85rem 0;
+  }
+  .hero-copy h1 {
+    font-size: clamp(1.35rem, 4.2vh, 1.75rem);
+    line-height: 1.05;
+  }
+  .hero .lead {
+    font-size: 0.82rem;
+    line-height: 1.32;
+  }
+  .hero .cta-row { margin-top: 0.45rem; }
+  .hero-panel { padding: 0.35rem 0.45rem; }
+  .stats-bar strong { font-size: 0.78rem; }
+  .stats-bar span { font-size: 0.6rem; }
+  section { padding: 0.85rem 0; }
+  .nav-shell { margin-top: 0.35rem; }
+  .hero-pill { display: none; }
+}
+
+/* ── Back-to-Top Button ──────────────────────────────────── */
+.back-to-top {
+  position: fixed;
+  bottom: max(1.2rem, env(safe-area-inset-bottom, 1.2rem));
+  right: 1rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #f4faf6;
+  border: none;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  line-height: 1;
+  box-shadow: 0 8px 24px rgba(11, 26, 18, 0.3);
+  z-index: 28;
+  opacity: 0;
+  transform: translateY(14px) scale(0.85);
+  transition: opacity 0.25s ease, transform 0.25s var(--ease-smooth);
+  will-change: transform, opacity;
+}
+.back-to-top.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.back-to-top:active {
+  transform: scale(0.9);
+}
+@media (max-width: 900px) {
+  .back-to-top {
+    display: inline-flex;
+  }
+}
+body.has-mobile-cta .back-to-top {
+  bottom: max(4.2rem, calc(env(safe-area-inset-bottom, 0px) + 3.8rem));
+}
