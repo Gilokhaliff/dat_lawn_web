@@ -3930,7 +3930,7 @@ h3 { font-family: var(--font); font-weight: 700; letter-spacing: -0.012em; }
     text-transform: none;
   }
   .nav-social { margin-right: 0.1rem; }
-  .nav-toggle { min-height: 2rem; }
+  .nav-toggle { min-height: 2.75rem; padding: 0.5rem 0.8rem; }
   body.nav-open { overflow: hidden; }
 
   .hero-stage { min-height: 540px; }
@@ -4011,10 +4011,6 @@ h3 { font-family: var(--font); font-weight: 700; letter-spacing: -0.012em; }
   .hero .lead {
     font-size: 0.92rem;
     line-height: 1.4;
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
   }
   .hero-panel {
     width: calc(100% - 1rem);
@@ -4073,7 +4069,7 @@ h3 { font-family: var(--font); font-weight: 700; letter-spacing: -0.012em; }
   .product-actions .btn,
   .product-card > .view-link,
   .product-actions .view-link {
-    height: 2.35rem;
+    min-height: 2.75rem;
     font-size: 0.9rem;
   }
 
@@ -4125,10 +4121,16 @@ h3 { font-family: var(--font); font-weight: 700; letter-spacing: -0.012em; }
   .lang-btn {
     padding: 0.3rem 0.46rem;
     font-size: 0.7rem;
+    min-height: 2.75rem;
+    min-width: 2.2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
   .nav-toggle {
-    padding: 0.42rem 0.56rem;
+    padding: 0.5rem 0.7rem;
     font-size: 0.8rem;
+    min-height: 2.75rem;
   }
   .hero-copy h1 { font-size: clamp(1.6rem, 10.8vw, 2.2rem); }
   .catalog-group .grid-3 > *,
@@ -4137,5 +4139,48 @@ h3 { font-family: var(--font); font-weight: 700; letter-spacing: -0.012em; }
   #videoGrid > * {
     flex-basis: 82vw;
     max-width: 82vw;
+  }
+}
+
+/* ── Mobile UX Polish ─────────────────────────────────────── */
+
+/* Nav backdrop overlay when menu is open */
+@media (max-width: 900px) {
+  body.nav-open::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(9, 20, 14, 0.45);
+    z-index: 13;
+    pointer-events: auto;
+    animation: fadeIn var(--motion-fast) ease forwards;
+  }
+}
+
+/* Carousel nav touch targets */
+@media (max-width: 900px) {
+  .product-carousel .carousel-nav {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+}
+
+/* Filter chips touch targets */
+@media (max-width: 900px) {
+  .filter-chip {
+    min-height: 2.75rem;
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+/* iOS safe area insets */
+@supports (padding: env(safe-area-inset-top)) {
+  header {
+    padding-top: env(safe-area-inset-top);
+  }
+  .mobile-sticky-cta {
+    bottom: max(0.45rem, env(safe-area-inset-bottom));
+    padding-bottom: max(0.58rem, calc(0.58rem + env(safe-area-inset-bottom)));
   }
 }
