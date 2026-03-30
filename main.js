@@ -720,6 +720,17 @@ const products = {
   ],
   consumables: [
     {
+      name: { en: "Spring fertilizer", de: "Frühjahrsdünger" },
+      note: {
+        en: "Spring fertilizer for a strong start into the season. Promotes lush, green growth after winter.",
+        de: "Frühjahrsdünger für einen starken Saisonstart. Fördert saftiges, grünes Wachstum nach dem Winter.",
+      },
+      tagKey: "tag_now",
+      link: "https://www.rasenwelt.de/products/rasendunger-fruhjahr-arena-attack-8-kg",
+      image: "images/consumables/fruehjahrsduenger.webp",
+      price: "$$",
+    },
+    {
       name: { en: "Starter fertilizer 10-15-10", de: "Starterdünger 10-15-10" },
       note: {
         en: "Starter NPK 10-15-10 that pushes roots fast after seed. Pet-safe once dry; pairs with light, even watering.",
