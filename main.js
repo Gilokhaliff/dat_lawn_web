@@ -717,6 +717,17 @@ const products = {
       imageClass: "saw-compact",
       price: "$$",
     },
+    {
+      name: { en: "Airseekers Tron robotic mower", de: "Airseekers Tron Mähroboter" },
+      note: {
+        en: "FlowCut Mulching delivers ultra-fine clippings that nourish the soil. 300° AI Vision (VSLAM + nRTK) for precise positioning, auto-mapping, intelligent zoning, and obstacle avoidance. Rugged all-terrain chassis, swappable battery, and IPX6 waterproof protection.",
+        de: "FlowCut Mulching liefert ultrafeines Schnittgut, das den Boden natürlich nährt. 300° KI-Vision (VSLAM + nRTK) für präzise Positionierung, automatisches Mapping, intelligente Zoneneinteilung und Hinderniserkennung. Robustes Allterrain-Chassis, Wechselakku und IPX6-Wasserschutz.",
+      },
+      tagKey: "tag_affiliate",
+      link: "https://eu.airseekers-robotics.com/en-de/products/airseekers-tron-robotic-lawn-mower?utm_source=Instagram&utm_medium=7s+Influencer&utm_campaign=7s-Tron-April&utm_id=7s+x+Airseekers+Influencer&utm_term=7s-dat.lawnguy&utm_content=DE-Dat-Content1flowcut",
+      image: "images/tools/tron.webp",
+      price: "$$$",
+    },
   ],
   consumables: [
     {
