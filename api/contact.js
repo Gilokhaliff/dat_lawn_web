@@ -2,6 +2,10 @@ const resendKey = process.env.RESEND_API_KEY;
 const resendFrom = process.env.RESEND_FROM || "onboarding@resend.dev";
 const contactTo = process.env.CONTACT_TO || "datlawnguy0@gmail.com";
 
+function send(res, status, payload) {
+  res.status(status).json(payload);
+}
+
 function toStringSafe(val, max = 800) {
   try {
     return String(val || "").trim().slice(0, max);
@@ -10,22 +14,21 @@ function toStringSafe(val, max = 800) {
   }
 }
 
-export const handler = async (event) => {
-  if (event.httpMethod !== "POST") {
-    return { statusCode: 405, headers: { Allow: "POST" }, body: "Method Not Allowed" };
+export default async function handler(req, res) {
+  if (req.method !== "POST") {
+    res.setHeader("Allow", "POST");
+    return res.status(405).end("Method Not Allowed");
   }
 
-  if (!resendKey) {
-    return { statusCode: 500, body: JSON.stringify({ error: "Email not configured" }) };
-  }
+  if (!resendKey) return send(res, 500, { error: "Email not configured" });
 
-  const body = JSON.parse(event.body || "{}");
+  const body = req.body || {};
   const name = toStringSafe(body.name || "Guest", 120);
   const email = toStringSafe(body.email || body.contact || "", 200);
   const message = toStringSafe(body.message || "", 2000);
 
   if (!email || !email.includes("@") || !message) {
-    return { statusCode: 400, body: JSON.stringify({ error: "Name, email, and message required" }) };
+    return send(res, 400, { error: "Name, email, and message required" });
   }
 
   const html = `
@@ -55,10 +58,10 @@ export const handler = async (event) => {
     });
 
     if (!resEmail.ok) {
-      return { statusCode: 500, body: JSON.stringify({ error: "Email send failed" }) };
+      return send(res, 500, { error: "Email send failed" });
     }
-    return { statusCode: 200, body: JSON.stringify({ ok: true }) };
+    return send(res, 200, { ok: true });
   } catch (err) {
-    return { statusCode: 500, body: JSON.stringify({ error: "Email send failed" }) };
+    return send(res, 500, { error: "Email send failed" });
   }
-};
+}

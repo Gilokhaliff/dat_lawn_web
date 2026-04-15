@@ -2,6 +2,10 @@ const kvUrl = process.env.KV_REST_API_URL;
 const kvToken = process.env.KV_REST_API_TOKEN;
 const adminToken = process.env.REVIEWS_ADMIN_TOKEN;
 
+function send(res, status, payload) {
+  res.status(status).json(payload);
+}
+
 async function readReviews() {
   if (!kvUrl || !kvToken) return [];
   const res = await fetch(`${kvUrl}/get/reviews`, {
@@ -30,35 +34,33 @@ async function writeReviews(list) {
   if (!res.ok) throw new Error(`KV set failed: ${res.status}`);
 }
 
-export const handler = async (event) => {
-  const method = event.httpMethod;
-
-  if (method === "GET") {
+export default async function handler(req, res) {
+  if (req.method === "GET") {
     try {
       const reviews = await readReviews();
-      return { statusCode: 200, headers: { "Content-Type": "application/json" }, body: JSON.stringify({ reviews }) };
+      return send(res, 200, { reviews });
     } catch (err) {
-      return { statusCode: 500, body: JSON.stringify({ reviews: [] }) };
+      return send(res, 500, { reviews: [] });
     }
   }
 
-  if (method === "DELETE") {
-    if (!adminToken) return { statusCode: 500, body: JSON.stringify({ error: "Admin token not configured" }) };
-    const provided = event.headers["x-admin-token"] || event.queryStringParameters?.token || "";
+  if (req.method === "DELETE") {
+    if (!adminToken) return send(res, 500, { error: "Admin token not configured" });
+    const provided = req.headers["x-admin-token"] || req.query?.token || "";
     if (!provided || provided !== adminToken) {
-      return { statusCode: 401, body: JSON.stringify({ error: "Unauthorized" }) };
+      return send(res, 401, { error: "Unauthorized" });
     }
     try {
       await writeReviews([]);
-      return { statusCode: 200, body: JSON.stringify({ ok: true }) };
+      return send(res, 200, { ok: true });
     } catch (err) {
-      return { statusCode: 500, body: JSON.stringify({ error: "Unable to clear reviews" }) };
+      return send(res, 500, { error: "Unable to clear reviews" });
     }
   }
 
-  if (method === "POST") {
+  if (req.method === "POST") {
     try {
-      const body = JSON.parse(event.body || "{}");
+      const body = req.body || {};
       const cleanName = (body.name || "").toString().trim().slice(0, 80) || "Guest";
       const cleanText = (body.comment || body.text || "").toString().trim().slice(0, 800);
       const cleanRating = Math.max(0, Math.min(5, Math.round(Number(body.rating) || 0)));
@@ -69,7 +71,7 @@ export const handler = async (event) => {
         .slice(0, 4);
       const rawImage = (body.imageUrl || "").toString().trim();
       const cleanImage = /^https?:\/\//i.test(rawImage) ? rawImage.slice(0, 500) : "";
-      if (!cleanText) return { statusCode: 400, body: JSON.stringify({ error: "Comment required" }) };
+      if (!cleanText) return send(res, 400, { error: "Comment required" });
       const existing = await readReviews();
       const review = {
         name: cleanName,
@@ -80,11 +82,12 @@ export const handler = async (event) => {
       };
       const updated = [review, ...existing].slice(0, 200);
       await writeReviews(updated);
-      return { statusCode: 200, headers: { "Content-Type": "application/json" }, body: JSON.stringify({ review }) };
+      return send(res, 200, { review });
     } catch (err) {
-      return { statusCode: 500, body: JSON.stringify({ error: "Unable to save review" }) };
+      return send(res, 500, { error: "Unable to save review" });
     }
   }
 
-  return { statusCode: 405, headers: { Allow: "GET, POST, DELETE" }, body: "Method Not Allowed" };
-};
+  res.setHeader("Allow", "GET, POST");
+  return res.status(405).end("Method Not Allowed");
+}
