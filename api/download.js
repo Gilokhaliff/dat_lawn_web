@@ -1,14 +1,12 @@
-import fs from "fs/promises";
-import path from "path";
 import crypto from "crypto";
 
 const downloadSecret = process.env.DOWNLOAD_SECRET || "dev-secret-change-me";
-const filePath = path.join(process.cwd(), "ebooks", "eBook1-v2.pdf");
+const downloadUrl = process.env.EBOOK_DOWNLOAD_URL || "https://www.datlawnguy.de/ebooks/eBook1-v2.pdf";
 
-export default async function handler(req, res) {
-  const { token } = req.query || {};
+export const handler = async (event) => {
+  const token = event.queryStringParameters?.token;
   if (!token || typeof token !== "string") {
-    return res.status(400).json({ error: "Missing token" });
+    return { statusCode: 400, body: JSON.stringify({ error: "Missing token" }) };
   }
 
   try {
@@ -21,12 +19,13 @@ export default async function handler(req, res) {
       throw new Error("Invalid signature");
     }
 
-    const pdf = await fs.readFile(filePath);
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", 'attachment; filename="eBook1-v2.pdf"');
-    return res.status(200).send(pdf);
+    return {
+      statusCode: 302,
+      headers: { Location: downloadUrl },
+      body: "",
+    };
   } catch (err) {
     console.error("Download error:", err.message);
-    return res.status(400).json({ error: "Invalid link" });
+    return { statusCode: 400, body: JSON.stringify({ error: "Invalid link" }) };
   }
-}
+};

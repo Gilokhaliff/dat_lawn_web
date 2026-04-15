@@ -6,20 +6,20 @@ const downloadSecret = process.env.DOWNLOAD_SECRET || "dev-secret-change-me";
 const downloadBase = process.env.DOWNLOAD_BASE || "https://www.datlawnguy.de/api/download";
 const adminToken = process.env.REVIEWS_ADMIN_TOKEN;
 
-function createSignedDownloadLink(email = "") {
-  const issuedAt = Date.now();
-  const payload = `${issuedAt}|${toStringSafe(email)}`;
-  const sig = crypto.createHmac("sha256", downloadSecret).update(payload).digest("base64url");
-  const token = Buffer.from(`${payload}|${sig}`).toString("base64url");
-  return `${downloadBase}?token=${token}`;
-}
-
 function toStringSafe(val) {
   try {
     return String(val || "").slice(0, 120);
   } catch (e) {
     return "";
   }
+}
+
+function createSignedDownloadLink(email = "") {
+  const issuedAt = Date.now();
+  const payload = `${issuedAt}|${toStringSafe(email)}`;
+  const sig = crypto.createHmac("sha256", downloadSecret).update(payload).digest("base64url");
+  const token = Buffer.from(`${payload}|${sig}`).toString("base64url");
+  return `${downloadBase}?token=${token}`;
 }
 
 async function sendDownloadEmail(to, name = "", idempotencyKey = "") {
@@ -56,35 +56,34 @@ async function sendDownloadEmail(to, name = "", idempotencyKey = "") {
   });
 }
 
-export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    res.setHeader("Allow", "POST");
-    return res.status(405).end("Method Not Allowed");
+export const handler = async (event) => {
+  if (event.httpMethod !== "POST") {
+    return { statusCode: 405, headers: { Allow: "POST" }, body: "Method Not Allowed" };
   }
 
   if (!adminToken) {
-    return res.status(500).json({ error: "Admin token not configured" });
+    return { statusCode: 500, body: JSON.stringify({ error: "Admin token not configured" }) };
   }
-  const provided = req.headers["x-admin-token"] || "";
+  const provided = event.headers["x-admin-token"] || "";
   if (!provided || provided !== adminToken) {
-    return res.status(401).json({ error: "Unauthorized" });
+    return { statusCode: 401, body: JSON.stringify({ error: "Unauthorized" }) };
   }
 
   if (!resendKey) {
-    return res.status(500).json({ error: "Resend not configured" });
+    return { statusCode: 500, body: JSON.stringify({ error: "Resend not configured" }) };
   }
 
-  const body = req.body || {};
+  const body = JSON.parse(event.body || "{}");
   const email = toStringSafe(body.email);
   const name = toStringSafe(body.name);
   if (!email || !email.includes("@")) {
-    return res.status(400).json({ error: "Valid email required" });
+    return { statusCode: 400, body: JSON.stringify({ error: "Valid email required" }) };
   }
 
   try {
     await sendDownloadEmail(email, name, `test-${Date.now()}`);
-    return res.status(200).json({ ok: true });
+    return { statusCode: 200, body: JSON.stringify({ ok: true }) };
   } catch (err) {
-    return res.status(500).json({ error: "Email send failed" });
+    return { statusCode: 500, body: JSON.stringify({ error: "Email send failed" }) };
   }
-}
+};
