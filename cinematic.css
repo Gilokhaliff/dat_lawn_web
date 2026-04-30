@@ -1,0 +1,599 @@
+/* =========================================
+   CINEMATIC LAYER — dat lawn guy
+   Film grain · scene parallax · Ken Burns
+   depth layers · light leaks · clip reveals
+   ========================================= */
+
+/* ── Film grain (animated SVG noise, fixed overlay) ── */
+.film-grain-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 900;
+  opacity: 0.032;
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.78' numOctaves='4' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='220' height='220' filter='url(%23g)'/></svg>");
+  background-size: 200px 200px;
+  animation: grainShift 0.1s steps(1) infinite;
+  will-change: background-position;
+}
+
+@keyframes grainShift {
+  0%   { background-position:   0px   0px; }
+  11%  { background-position: -18px   8px; }
+  22%  { background-position:  14px  22px; }
+  33%  { background-position: -24px  -12px; }
+  44%  { background-position:   8px  -18px; }
+  55%  { background-position: -10px   26px; }
+  66%  { background-position:  22px   4px; }
+  77%  { background-position: -16px  -22px; }
+  88%  { background-position:  10px   16px; }
+  100% { background-position:   0px   0px; }
+}
+
+/* ── Ken Burns keyframes ── */
+@keyframes kenBurns1 {
+  0%   { transform: scale(1.14) translate3d(0, 0, 0); }
+  40%  { transform: scale(1.20) translate3d(-2.2%, -1.4%, 0); }
+  100% { transform: scale(1.12) translate3d(1.8%, 1.2%, 0); }
+}
+
+@keyframes kenBurns2 {
+  0%   { transform: scale(1.12) translate3d(1.6%, 0, 0); }
+  45%  { transform: scale(1.19) translate3d(-1.2%, 1.6%, 0); }
+  100% { transform: scale(1.13) translate3d(0.6%, -1.2%, 0); }
+}
+
+@keyframes kenBurnsEbook {
+  0%   { transform: scale(1.00) translate3d(0, 0, 0); }
+  50%  { transform: scale(1.055) translate3d(-1.4%, -0.9%, 0); }
+  100% { transform: scale(1.02) translate3d(0.9%, 0.7%, 0); }
+}
+
+/* ── Light leak pulse ── */
+@keyframes lightLeakDrift {
+  0%   { opacity: 0.42; transform: translateX(0) scaleX(1); }
+  50%  { opacity: 0.78; transform: translateX(7%)  scaleX(1.12); }
+  100% { opacity: 0.38; transform: translateX(-5%) scaleX(0.94); }
+}
+
+/* ── Cinematic text reveal (clip-path sweep) ── */
+@keyframes clipRevealUp {
+  0%   { clip-path: inset(0 0 100% 0); opacity: 0; transform: translateY(18px); }
+  100% { clip-path: inset(0 0   0% 0); opacity: 1; transform: translateY(0); }
+}
+
+/* ── Scene break wrapper ── */
+.scene-break {
+  position: relative;
+  height: clamp(320px, 50vw, 660px);
+  overflow: hidden;
+  display: grid;
+  align-items: center;
+  isolation: isolate;
+  /* Flush to edges — no section padding */
+  margin: 0;
+  padding: 0;
+}
+
+/* Parallax wrapper (JS moves this) */
+.scene-parallax-wrap {
+  position: absolute;
+  inset: -18% 0;
+  will-change: transform;
+}
+
+/* The actual background photo + Ken Burns */
+.scene-depth-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  will-change: transform;
+}
+
+.scene-break--1 .scene-depth-bg {
+  background-image:
+    linear-gradient(to bottom, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0.50) 100%),
+    url('images/droneview_1.png');
+  animation: kenBurns1 22s cubic-bezier(0.4, 0, 0.6, 1) infinite alternate;
+}
+
+.scene-break--2 .scene-depth-bg {
+  background-image:
+    linear-gradient(to bottom, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0.50) 100%),
+    url('images/droneview_2.png');
+  animation: kenBurns2 24s cubic-bezier(0.4, 0, 0.6, 1) infinite alternate;
+}
+
+/* Cinematic vignette — darkens edges for depth-of-field feel */
+.scene-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 50%, transparent 28%, rgba(0,0,0,0.70) 100%),
+    linear-gradient(
+      to bottom,
+      rgba(0,0,0,0.42)  0%,
+      rgba(0,0,0,0.06) 38%,
+      rgba(0,0,0,0.06) 62%,
+      rgba(0,0,0,0.52) 100%
+    );
+}
+
+/* Light leak — golden horizontal streak */
+.scene-break::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  left: -15%;
+  width: 60%;
+  height: 180px;
+  background: radial-gradient(ellipse at center, rgba(201,162,77,0.22), transparent 68%);
+  z-index: 3;
+  pointer-events: none;
+  filter: blur(28px);
+  animation: lightLeakDrift 14s ease-in-out infinite alternate;
+}
+
+/* Bottom fade — blends scene into next section */
+.scene-break::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 130px;
+  background: linear-gradient(to bottom, transparent, #ffffff);
+  z-index: 4;
+  pointer-events: none;
+}
+
+/* Top fade — blends previous section into scene */
+.scene-top-fade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 110px;
+  background: linear-gradient(to top, transparent, #ffffff);
+  z-index: 4;
+  pointer-events: none;
+}
+
+/* ── Scene content (text overlay) ── */
+.scene-content {
+  position: relative;
+  z-index: 5;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  padding: clamp(2rem, 5vw, 4.5rem) clamp(1.5rem, 5vw, 4rem);
+}
+
+.scene-eyebrow {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(226, 191, 115, 0.95);
+  margin: 0;
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity   0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.10s,
+    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.10s;
+}
+
+.scene-headline {
+  font-family: "Inter Tight", "Inter", system-ui, sans-serif;
+  font-size: clamp(1.9rem, 4.8vw, 4rem);
+  font-weight: 800;
+  letter-spacing: -0.024em;
+  line-height: 1.04;
+  color: #fefcf7;
+  margin: 0;
+  max-width: 19ch;
+  text-shadow: 0 14px 44px rgba(0,0,0,0.58);
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity   0.90s cubic-bezier(0.22, 1, 0.36, 1) 0.20s,
+    transform 0.90s cubic-bezier(0.22, 1, 0.36, 1) 0.20s;
+}
+
+.scene-sub {
+  color: rgba(240, 248, 244, 0.84);
+  font-size: clamp(0.95rem, 1.7vw, 1.18rem);
+  font-weight: 500;
+  max-width: 44ch;
+  margin: 0;
+  text-shadow: 0 5px 20px rgba(0,0,0,0.48);
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity   0.80s cubic-bezier(0.22, 1, 0.36, 1) 0.36s,
+    transform 0.80s cubic-bezier(0.22, 1, 0.36, 1) 0.36s;
+}
+
+/* Triggered by JS IntersectionObserver */
+.scene-break.scene-visible .scene-eyebrow,
+.scene-break.scene-visible .scene-headline,
+.scene-break.scene-visible .scene-sub {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Ken Burns on ebook cover image ── */
+.ken-burns-host {
+  overflow: hidden;
+  border-radius: 14px;
+  display: block;
+  position: relative;
+}
+
+.ken-burns-host img {
+  display: block;
+  width: 100%;
+  height: auto;
+  animation: kenBurnsEbook 18s cubic-bezier(0.4, 0, 0.6, 1) infinite alternate;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+/* ── Cinematic horizontal divider ── */
+.scene-divider {
+  display: block;
+  height: 1px;
+  border: none;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(201,162,77,0.28) 22%,
+    rgba(23,92,51,0.36)   50%,
+    rgba(201,162,77,0.28) 78%,
+    transparent 100%
+  );
+  margin: 0;
+}
+
+/* ── Section clip-path reveal (JS adds .cinematic-in-view) ── */
+.cinematic-clip-reveal {
+  opacity: 0;
+  clip-path: inset(0 0 100% 0 round 2px);
+  transition:
+    opacity    0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    clip-path  0.80s cubic-bezier(0.16, 1, 0.3,  1);
+}
+
+.cinematic-clip-reveal.cinematic-in-view {
+  opacity: 1;
+  clip-path: inset(0 0 0% 0 round 2px);
+}
+
+/* ── Parallax image host (generic, JS controlled) ── */
+.parallax-host {
+  overflow: hidden;
+  position: relative;
+}
+
+.parallax-img {
+  will-change: transform;
+  display: block;
+}
+
+/* ── Depth shimmer on hero media (enhanced) ── */
+.hero-media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 68% 8%, rgba(201,162,77,0.16), transparent 38%),
+    radial-gradient(ellipse at 12% 92%, rgba(23,92,51,0.18), transparent 32%);
+  z-index: 1;
+  pointer-events: none;
+  animation: depthGlowPulse 10s ease-in-out infinite alternate;
+}
+
+@keyframes depthGlowPulse {
+  0%   { opacity: 0.6; }
+  50%  { opacity: 1.0; }
+  100% { opacity: 0.7; }
+}
+
+/* ── Foreground grass silhouette in hero ── */
+.hero-fg-grass {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 28%;
+  z-index: 2;
+  pointer-events: none;
+  background-image: url('images/hero/hero-premium-grass.svg');
+  background-size: cover;
+  background-position: bottom center;
+  background-repeat: no-repeat;
+  opacity: 0.72;
+  transform: translateY(var(--hero-scroll-y, 0px)) scale(1.04);
+  transition: none;
+  will-change: transform;
+  filter: brightness(0.55) saturate(1.2);
+}
+
+/* ── Motion polish: smoother card hover depth ── */
+.product-card {
+  transition:
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ── Reduced motion overrides ── */
+@media (prefers-reduced-motion: reduce) {
+  .film-grain-overlay,
+  .scene-break::before,
+  .hero-media::after { display: none !important; }
+
+  .scene-depth-bg,
+  .ken-burns-host img { animation: none !important; }
+
+  .scene-eyebrow,
+  .scene-headline,
+  .scene-sub {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .cinematic-clip-reveal {
+    opacity: 1 !important;
+    clip-path: none !important;
+    transition: none !important;
+  }
+
+  .hero-fg-grass { transform: none !important; }
+}
+
+/* ── Mobile adjustments ── */
+@media (max-width: 768px) {
+  .scene-break { height: clamp(220px, 58vw, 360px); }
+  .scene-headline { font-size: clamp(1.55rem, 6.5vw, 2.2rem); max-width: 22ch; }
+  .scene-sub { display: none; }
+  .scene-break::before { opacity: 0.45; filter: blur(20px); }
+  .film-grain-overlay { opacity: 0.018; }
+  .hero-fg-grass { height: 22%; }
+}
+
+@media (max-width: 480px) {
+  .scene-break { height: clamp(190px, 65vw, 290px); }
+  .scene-break::before { display: none; }
+}
+
+
+/* ═══════════════════════════════════════════════════════
+   PHASE 2 — SITE-WIDE CINEMATIC LAYER
+   Hero blur · Section reveals · Contact Ken Burns
+   Catalog gold glow · FAQ stagger · Review stagger
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Hero h1: blur + letter-spacing collapse on page boot ── */
+body.app-boot .hero-copy h1 {
+  filter: blur(7px);
+  letter-spacing: 0.05em;
+}
+
+body.app-ready .hero-copy h1 {
+  filter: blur(0);
+  transition:
+    transform      0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.20s,
+    opacity        0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.20s,
+    filter         1.00s cubic-bezier(0.16, 1, 0.30, 1) 0.20s,
+    letter-spacing 0.90s cubic-bezier(0.16, 1, 0.30, 1) 0.20s;
+}
+
+body.app-boot .hero-copy .lead {
+  filter: blur(4px);
+}
+
+body.app-ready .hero-copy .lead {
+  filter: blur(0);
+  transition:
+    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.30s,
+    opacity   0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.30s,
+    filter    0.85s cubic-bezier(0.16, 1, 0.30, 1) 0.32s;
+}
+
+/* ── Hero: cinematic bottom dissolve into strip ── */
+.hero::after {
+  content: '';
+  display: block;
+  height: 3rem;
+  background: linear-gradient(to bottom, transparent, rgba(251,252,253,0.85));
+  pointer-events: none;
+}
+
+/* ── Section heading reveals (JS adds these classes + .cine-visible) ── */
+.cine-head-pill {
+  opacity: 0;
+  transform: translateY(10px) scale(0.95);
+  transition:
+    opacity   0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.05s,
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.05s;
+}
+
+.cine-head-title {
+  opacity: 0;
+  clip-path: inset(0 0 100% 0 round 2px);
+  transition:
+    opacity   0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.14s,
+    clip-path 0.78s cubic-bezier(0.16, 1, 0.30, 1) 0.14s;
+}
+
+.cine-head-sub {
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity   0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.26s,
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.26s;
+}
+
+.section-head.cine-visible .cine-head-pill {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.section-head.cine-visible .cine-head-title {
+  opacity: 1;
+  clip-path: inset(0 0 0% 0 round 2px);
+}
+.section-head.cine-visible .cine-head-sub {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Why/Highlights cards: scroll-triggered reveal, not page-load fadeUp ── */
+.why-grid > .card.why-visual,
+.why-grid > .card.why-copy {
+  animation: none;
+  opacity: 0;
+  transform: translateY(24px) scale(0.97);
+  transition:
+    opacity   0.80s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.80s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.80s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.why-grid > .card.why-visual { transition-delay: 0.04s; }
+.why-grid > .card.why-copy   { transition-delay: 0.18s; }
+
+.why-grid.cine-visible > .card.why-visual,
+.why-grid.cine-visible > .card.why-copy {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* ── Contact box Ken Burns (reuses existing kenBurns keyframes) ── */
+#contact .grid.grid-2 > .contact-box-1::before {
+  animation: kenBurns2 28s cubic-bezier(0.40, 0, 0.60, 1) infinite alternate;
+}
+#contact .grid.grid-2 > .contact-box-2::before {
+  animation: kenBurns1 30s cubic-bezier(0.40, 0, 0.60, 1) infinite alternate;
+}
+
+/* ── Catalog groups: deeper parallax via --cine-extra-shift ── */
+/* Stacks on top of main.js --section-shift (±14px) for total ~±34px */
+.catalog-group.tools-highlight::before {
+  transform: translateY(calc(var(--section-shift, 0px) + var(--cine-extra-shift, 0px))) scale(1.06);
+}
+.catalog-group.consumables-highlight::before {
+  transform: translateY(calc(var(--section-shift, 0px) + var(--cine-extra-shift, 0px))) scale(1.06);
+}
+.catalog-group.gear-highlight::before {
+  transform: translateY(calc(var(--section-shift, 0px) + var(--cine-extra-shift, 0px))) scale(1.06);
+}
+
+/* ── Ebook section: deeper background parallax ── */
+.ebook-feature {
+  background-position: center calc(50% + var(--section-shift, 0px) + var(--cine-extra-shift, 0px));
+}
+
+/* ── Decorative gold top-border on dark catalog/contact sections ── */
+.catalog-group.tools-highlight,
+.catalog-group.consumables-highlight,
+.catalog-group.gear-highlight {
+  border-top: 1px solid rgba(201, 162, 77, 0.20);
+}
+
+/* ── Product card: stronger hover lift + gold glow on dark cards ── */
+.product-card:hover,
+.product-card:focus-within {
+  box-shadow:
+    0 28px 60px rgba(15, 23, 42, 0.16),
+    0 0 0 1px rgba(23, 92, 51, 0.12);
+  transition:
+    transform    0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow   0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.30s ease;
+}
+
+.catalog-group.tools-highlight .product-card:hover,
+.catalog-group.tools-highlight .product-card:focus-within,
+.catalog-group.gear-highlight .product-card:hover,
+.catalog-group.gear-highlight .product-card:focus-within,
+.catalog-group.consumables-highlight .product-card:hover,
+.catalog-group.consumables-highlight .product-card:focus-within {
+  box-shadow:
+    0 28px 56px rgba(0, 0, 0, 0.38),
+    0 0 32px rgba(201, 162, 77, 0.20);
+}
+
+/* ── Product photo: enhanced hover zoom + saturation ── */
+.product-card:hover .product-photo img,
+.product-card:focus-within .product-photo img {
+  transform: scale(1.09);
+  filter: saturate(1.10) contrast(1.03) brightness(1.02);
+}
+
+/* ── FAQ items: stagger slide-in from left ── */
+.faq-item.cine-enter {
+  opacity: 0;
+  transform: translateX(-16px);
+  transition:
+    opacity   0.52s cubic-bezier(0.22, 1, 0.36, 1) var(--stagger-delay, 0ms),
+    transform 0.52s cubic-bezier(0.22, 1, 0.36, 1) var(--stagger-delay, 0ms);
+}
+.faq-item.cine-enter.cine-in {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ── Review cards: stagger fade-up ── */
+.review-card.cine-enter {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity   0.48s cubic-bezier(0.22, 1, 0.36, 1) var(--stagger-delay, 0ms),
+    transform 0.48s cubic-bezier(0.22, 1, 0.36, 1) var(--stagger-delay, 0ms);
+}
+.review-card.cine-enter.cine-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Reduced motion: disable Phase 2 ── */
+@media (prefers-reduced-motion: reduce) {
+  body.app-boot .hero-copy h1,
+  body.app-boot .hero-copy .lead { filter: none !important; letter-spacing: inherit !important; }
+
+  body.app-ready .hero-copy h1,
+  body.app-ready .hero-copy .lead { transition: none !important; }
+
+  .cine-head-pill,
+  .cine-head-title,
+  .cine-head-sub {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+    transition: none !important;
+  }
+
+  .why-grid > .card.why-visual,
+  .why-grid > .card.why-copy {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+
+  #contact .grid.grid-2 > .contact-box-1::before,
+  #contact .grid.grid-2 > .contact-box-2::before { animation: none !important; }
+
+  .faq-item.cine-enter,
+  .review-card.cine-enter {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

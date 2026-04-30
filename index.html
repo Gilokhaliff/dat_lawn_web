@@ -10,9 +10,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Inter+Tight:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="cinematic.css">
   <script src="main.js" defer></script>
+  <script src="cinematic.js" defer></script>
 </head>
 <body>
+  <div class="film-grain-overlay" aria-hidden="true"></div>
   <header>
     <div class="nav-shell">
       <div class="nav-top">
@@ -59,7 +62,9 @@
     <section class="hero" id="hero">
       <div class="container">
         <div class="hero-stage">
-          <div class="hero-media" aria-hidden="true"></div>
+          <div class="hero-media" aria-hidden="true">
+            <div class="hero-fg-grass" aria-hidden="true"></div>
+          </div>
           <div class="hero-copy">
             <div class="pill hero-pill" data-i18n="hero_tagline">Working greenkeeper • Documented picks</div>
             <h1 data-i18n="hero_heading">Precision lawn gear, tested and recorded.</h1>
@@ -94,10 +99,26 @@
       </div>
     </section>
 
+    <!-- Cinematic Scene 1: droneview aerial -->
+    <div class="scene-break scene-break--1" aria-hidden="true">
+      <div class="scene-top-fade"></div>
+      <div class="scene-parallax-wrap">
+        <div class="scene-depth-bg"></div>
+      </div>
+      <div class="scene-vignette"></div>
+      <div class="scene-content">
+        <p class="scene-eyebrow">Aus der Vogelperspektive</p>
+        <h2 class="scene-headline">Jeder Rasen hat eine Geschichte.</h2>
+        <p class="scene-sub">Ich zeige dir genau, was bei mir funktioniert hat.</p>
+      </div>
+    </div>
+
     <section id="feature-ebook" class="ebook-feature">
       <div class="container feature-grid">
         <div class="feature-media">
-          <img src="images/ebooks/fruehling.png" alt="Ebook cover Frühling Rasenpflege">
+          <div class="ken-burns-host">
+            <img src="images/ebooks/fruehling.png" alt="Ebook cover Frühling Rasenpflege">
+          </div>
         </div>
         <div class="feature-copy">
           <div class="pill accent" data-i18n="ebook_pill">Eigenes Ebook</div>
@@ -242,6 +263,20 @@
         </div>
       </div>
     </section>
+
+    <!-- Cinematic Scene 2: second droneview -->
+    <div class="scene-break scene-break--2" aria-hidden="true">
+      <div class="scene-top-fade"></div>
+      <div class="scene-parallax-wrap">
+        <div class="scene-depth-bg"></div>
+      </div>
+      <div class="scene-vignette"></div>
+      <div class="scene-content">
+        <p class="scene-eyebrow">Die Community spricht</p>
+        <h2 class="scene-headline">40.000 Rasenfans. Echte Resultate.</h2>
+        <p class="scene-sub">Kein Marketing-Bullshit. Nur was wirklich funktioniert.</p>
+      </div>
+    </div>
 
     <section id="reviews">
       <div class="container section-head">
