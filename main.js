@@ -797,6 +797,17 @@ const products = {
       price: "$$",
     },
     {
+      name: { en: "100% Pure Festuca lawn seed", de: "100% Pure Festuca" },
+      note: {
+        en: "Premium 100% Festuca rubra seed mix for especially fine, dense ornamental turf. 0/0 certified, treated with EKOprop germination accelerator, and suitable for high-quality lawns with low-cut ambitions down to 4 mm.",
+        de: "Premium-Saatgut aus 100% Festuca rubra für besonders feine, dichte und edle Zierrasenflächen. 0/0-zertifiziert, mit EKOprop-Keimbeschleuniger behandelt und bei passender Pflege tiefschnittverträglich bis 4 mm.",
+      },
+      tagKey: "tag_cool",
+      link: "https://www.rasenwelt.de/products/rasensamen-arena-4elite-pure-fescue?variant=53155317842263",
+      image: "images/consumables/poa-supina.png",
+      price: "$$",
+    },
+    {
       name: { en: "Shade lawn seed (low-maintenance)", de: "Schattenrasen (Pflegeleicht)" },
       note: {
         en: "For all lawn exposures, especially dry and shaded areas, while still performing in sunny zones. Low-maintenance seed mix for resilient turf.",
