@@ -764,6 +764,18 @@ const products = {
       price: "$$",
     },
     {
+      name: { en: "Arena Hydromaster+", de: "Arena Hydromaster+" },
+      note: {
+        en: "Lawn fertilizer with 3D water-storage technology for hot, dry phases. Improves soil moisture retention, can reduce watering needs by up to 35%, and helps lower the risk of drought stress for up to 5 months.",
+        de: "Rasendünger mit 3D-Wasserspeichertechnologie für heiße und trockene Phasen. Verbessert die Feuchtehaltung im Boden, kann den Bewässerungsbedarf um bis zu 35% senken und reduziert das Risiko von Trockenschäden für bis zu 5 Monate.",
+      },
+      category: "fertilizer",
+      tagKey: "tag_now",
+      link: "https://www.rasenwelt.de/products/arena-hydromaster-rasendunger-mit-3d-wasserspeicher-20kg?_pos=8&_sid=2f5309182&_ss=r",
+      image: "images/consumables/Hydromaster.webp",
+      price: "$$",
+    },
+    {
       name: { en: "Fall fertilizer 10-0-21 (+6 MgO)", de: "Herbstdünger 10-0-21 (+6 MgO)" },
       note: {
         en: "High-K 10-0-21 with magnesium to harden turf before winter. Builds stress resistance and keeps color deeper into fall.",
@@ -804,7 +816,7 @@ const products = {
       },
       tagKey: "tag_cool",
       link: "https://www.rasenwelt.de/products/rasensamen-arena-4elite-pure-fescue?variant=53155317842263",
-      image: "images/consumables/poa-supina.png",
+      image: "images/consumables/100%25%20fescue.webp",
       price: "$$",
     },
     {
@@ -1815,6 +1827,7 @@ function initActiveNav() {
 }
 
 function inferConsumableCategory(item = {}) {
+  if (["fertilizer", "seed", "soil", "bundle", "weed"].includes(item.category)) return item.category;
   const nameText = `${item?.name?.en || ""} ${item?.name?.de || ""}`.toLowerCase();
   const noteText = `${item?.note?.en || ""} ${item?.note?.de || ""}`.toLowerCase();
   const text = `${nameText} ${noteText}`;
