@@ -1,103 +1,137 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" data-lang="de">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Impressum | DAT LAWN GUY</title>
-  <link rel="icon" type="image/png" href="datlogo.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Impressum von Dat Lawn Guy.">
+  <meta name="theme-color" content="#0b110d">
+  <title>Impressum — Dat Lawn Guy</title>
+  <link rel="icon" type="image/png" href="images/web/logo-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Inter+Tight:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-  <script src="main.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400..500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <script>
+    document.documentElement.classList.add("js");
+    if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("motion");
+    try { var l = localStorage.getItem("dlg_lang"); if (l === "en" || l === "de") document.documentElement.lang = l; } catch (e) {}
+  </script>
+  <link rel="stylesheet" href="site.css">
+  <script src="data.js" defer></script>
+  <script src="motion.js" defer></script>
+  <script src="app.js" defer></script>
 </head>
-<body>
-  <header>
-    <div class="container nav">
-      <a class="brand" href="/">
-        <div class="mark"><img src="datlogo.png" alt="DAT Lawn Guy logo" class="logo-img"></div>
-        <div class="brand-text">
-          <span>DAT LAWN GUY</span>
-          <small>Professional Green keeper</small>
-        </div>
+<body data-page="legal">
+  <div class="progress" aria-hidden="true"></div>
+  <a class="skip" href="#main" data-i18n="skip_link">Zum Inhalt springen</a>
+
+  <header class="nav" id="nav">
+    <div class="nav-inner">
+      <a class="nav-brand" href="index.html" aria-label="Dat Lawn Guy">
+        <img src="images/web/logo-192.png" alt="" width="28" height="28">
+        <span>Dat Lawn Guy</span>
       </a>
-      <nav>
-        <ul id="navLinks">
-          <li><a href="/">Home</a></li>
-        </ul>
+      <nav class="nav-links" aria-label="Hauptnavigation">
+        <a href="katalog.html" data-nav="catalog" data-i18n="nav_catalog">Katalog</a>
+        <a href="ebook.html" data-nav="ebook" data-i18n="nav_ebook">Ebook</a>
+        <a href="community.html" data-nav="community" data-i18n="nav_community">Community</a>
+        <a href="ueber-mich.html" data-nav="about" data-i18n="nav_about">Über mich</a>
+        <a href="faq.html" data-nav="faq" data-i18n="nav_faq">FAQ</a>
+        <a href="kontakt.html" data-nav="contact" data-i18n="nav_contact">Kontakt</a>
       </nav>
-      <div class="nav-actions">
-        <button class="nav-toggle" aria-label="Toggle navigation">Menu</button>
+      <div class="nav-end">
+        <div class="lang" id="langSwitch" role="group" aria-label="Sprache"><button class="lang-btn" type="button" data-lang="de">DE</button><span>/</span><button class="lang-btn" type="button" data-lang="en">EN</button></div>
+        <a class="btn btn--sm" href="kontakt.html" data-i18n="nav_cta">Empfehlung anfordern</a>
+        <button class="nav-burger" type="button" aria-expanded="false" aria-controls="menu" aria-label="Menü" data-i18n-aria="nav_menu"><span></span><span></span></button>
       </div>
     </div>
   </header>
 
-  <main>
-    <section>
-      <div class="container section-head">
-        <div>
-          <div class="pill">Impressum</div>
-          <h1>Impressum</h1>
-        </div>
+  <div class="menu" id="menu" aria-hidden="true">
+    <nav class="menu-list" aria-label="Menü">
+      <a href="index.html" data-nav="home"><span class="idx">00</span><span data-i18n="nav_home">Startseite</span></a>
+      <a href="katalog.html" data-nav="catalog"><span class="idx">01</span><span data-i18n="nav_catalog">Katalog</span></a>
+      <a href="ebook.html" data-nav="ebook"><span class="idx">02</span><span data-i18n="nav_ebook">Ebook</span></a>
+      <a href="community.html" data-nav="community"><span class="idx">03</span><span data-i18n="nav_community">Community</span></a>
+      <a href="ueber-mich.html" data-nav="about"><span class="idx">04</span><span data-i18n="nav_about">Über mich</span></a>
+      <a href="faq.html" data-nav="faq"><span class="idx">05</span><span data-i18n="nav_faq">FAQ</span></a>
+      <a href="kontakt.html" data-nav="contact"><span class="idx">06</span><span data-i18n="nav_contact">Kontakt</span></a>
+    </nav>
+    <div class="menu-foot">
+      <div class="lang" role="group" aria-label="Sprache"><button class="lang-btn" type="button" data-lang="de">DE</button><span>/</span><button class="lang-btn" type="button" data-lang="en">EN</button></div>
+      <div class="socials">
+        <a href="https://www.instagram.com/dat.lawnguy" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <a href="https://www.youtube.com/@dat.lawnguy" target="_blank" rel="noopener noreferrer">YouTube</a>
+        <a href="https://www.tiktok.com/@dat.lawnguy?_r=1&_t=ZG-94UjfMTixiT" target="_blank" rel="noopener noreferrer">TikTok</a>
       </div>
-      <div class="container">
-        <div class="card glass">
-          <p><strong>Angaben gemäß § 5 DDG</strong></p>
-          <p><strong>Anbieter:</strong><br>Gilchrist Moundi Tembi</p>
-          <p><strong>Anschrift:</strong><br>c/o Impressumservice Dein-Impressum<br>Stettiner Straße 41<br>35410 Hungen<br>Deutschland</p>
-          <p><strong>Kontakt:</strong><br>E-Mail: datlawnguy0@gmail.com</p>
-          <hr>
-          <p><strong>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV:</strong><br>Gilchrist Moundi Tembi<br>Anschrift wie oben</p>
-          <hr>
-          <p><strong>EU-Streitbeilegung:</strong><br>Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:<br>
-            <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener noreferrer">https://ec.europa.eu/consumers/odr</a>
-          </p>
-          <p>Ich bin nicht verpflichtet und nicht bereit, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
-        </div>
+    </div>
+  </div>
+
+  <main id="main">
+    <header class="page-head">
+      <div class="wrap--narrow">
+        <p class="label" data-i18n="legal_pill">Rechtliches</p>
+        <h1 class="t-xl" style="margin-top:28px" data-split>Impressum</h1>
+      </div>
+    </header>
+    <section class="section" style="padding-top:0">
+      <div class="wrap--narrow legal-body" data-reveal>
+        <p><strong>Angaben gemäß § 5 DDG</strong></p>
+        <p><strong>Anbieter:</strong><br>Gilchrist Moundi Tembi</p>
+        <p><strong>Anschrift:</strong><br>c/o Impressumservice Dein-Impressum<br>Stettiner Straße 41<br>35410 Hungen<br>Deutschland</p>
+        <p><strong>Kontakt:</strong><br>E-Mail: datlawnguy0@gmail.com</p>
+        <hr>
+        <p><strong>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV:</strong><br>Gilchrist Moundi Tembi<br>Anschrift wie oben</p>
+        <hr>
+        <p><strong>EU-Streitbeilegung:</strong><br>Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:<br>
+          <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener noreferrer">https://ec.europa.eu/consumers/odr</a>
+        </p>
+        <p>Ich bin nicht verpflichtet und nicht bereit, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+        <hr>
+        <p><strong data-i18n="credits_title">Bildnachweis</strong><br><span data-i18n="credits_body">Landschaftsfotos via Unsplash.</span></p>
       </div>
     </section>
   </main>
 
-  <footer>
-    <div class="container footer-grid">
-      <div>
-        <div class="brand">
-          <div class="mark"><img src="datlogo.png" alt="DAT Lawn Guy logo" class="logo-img"></div>
-          <div class="brand-text">
-            <span>DAT LAWN GUY</span>
-            <small data-i18n="footer_brand_sub">Pro-grade gear, tested weekly</small>
-          </div>
+  <footer class="footer" data-theme="dark">
+    <div class="wrap">
+      <div class="footer-top">
+        <div>
+          <p class="label label--dot">Dat Lawn Guy</p>
+          <p class="footer-note" style="margin-top:20px" data-i18n="footer_note">Affiliate-Links bringen Provision. Ich liste nur, was ich selbst nutze.</p>
+          <p class="footer-note small" style="margin-top:12px" data-i18n="footer_location">Sitz: Braunschweig, Niedersachsen, Deutschland.</p>
         </div>
-        <p class="muted" data-i18n="footer_note">Affiliate links may earn a commission. I only list what I use on real lawns.</p>
-        <p class="muted" data-i18n="footer_location">Based in Brunswick, Lower Saxony, Germany.</p>
-      </div>
-      <div>
-        <strong data-i18n="footer_shortcuts_title">Shortcuts</strong>
-        <div class="footer-links">
-          <a data-i18n="shortcut_catalog" href="/#catalog">Catalog</a>
-          <a data-i18n="shortcut_faq" href="/#faq">FAQ</a>
+        <div class="footer-col">
+          <strong data-i18n="footer_pages_title">Seiten</strong>
+          <a href="index.html" data-i18n="nav_home">Startseite</a>
+          <a href="katalog.html" data-i18n="nav_catalog">Katalog</a>
+          <a href="ebook.html" data-i18n="nav_ebook">Ebook</a>
+          <a href="community.html" data-i18n="nav_community">Community</a>
+          <a href="ueber-mich.html" data-i18n="nav_about">Über mich</a>
+          <a href="faq.html" data-i18n="nav_faq">FAQ</a>
+          <a href="kontakt.html" data-i18n="nav_contact">Kontakt</a>
         </div>
-      </div>
-      <div>
-        <strong data-i18n="footer_contact_title">Contact</strong>
-        <div class="footer-links">
+        <div class="footer-col">
+          <strong data-i18n="footer_contact_title">Kontakt</strong>
           <a href="mailto:datlawnguy0@gmail.com">datlawnguy0@gmail.com</a>
-          <a data-i18n="shortcut_form" href="/#contact">Form</a>
-          <span class="muted" data-i18n="footer_legal_note">For legal and privacy inquiries, email me.</span>
+          <a href="kontakt.html" data-i18n="shortcut_form">Formular</a>
+          <span data-i18n="footer_legal_note">Für rechtliche oder Datenschutz-Anfragen: schreib mir.</span>
         </div>
-      </div>
-      <div>
-        <strong data-i18n="footer_legal_title">Details</strong>
-        <div class="footer-links">
-          <span data-i18n="footer_legal_line1">Professional greenkeeper sharing field-tested picks.</span>
-          <span data-i18n="footer_legal_line2">Registered in Germany; no paid placements.</span>
-          <a href="/impressum.html">Impressum</a>
+        <div class="footer-col">
+          <strong data-i18n="footer_social_title">Social</strong>
+          <a href="https://www.instagram.com/dat.lawnguy" target="_blank" rel="noopener noreferrer">Instagram ↗</a>
+          <a href="https://www.youtube.com/@dat.lawnguy" target="_blank" rel="noopener noreferrer">YouTube ↗</a>
+          <a href="https://www.tiktok.com/@dat.lawnguy?_r=1&_t=ZG-94UjfMTixiT" target="_blank" rel="noopener noreferrer">TikTok ↗</a>
+        </div>
+        <div class="footer-col">
+          <strong data-i18n="footer_legal_title">Details</strong>
+          <a href="impressum.html">Impressum</a>
         </div>
       </div>
     </div>
-    <div class="container footer-bottom">
-      <span data-i18n="footer_copyright">© 2025 DAT LAWN GUY. All rights reserved.</span>
-      <span class="muted" data-i18n="footer_disclaimer">For the latest rates or policies, contact datlawnguy0@gmail.com.</span>
+    <p class="wordmark" aria-hidden="true">Dat Lawn <em>Guy</em></p>
+    <div class="wrap footer-bottom">
+      <span data-i18n="footer_copyright">© 2025 DAT LAWN GUY. Alle Rechte vorbehalten.</span>
+      <span data-i18n="footer_disclaimer">Für aktuelle Konditionen oder Richtlinien: datlawnguy0@gmail.com.</span>
     </div>
   </footer>
 </body>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="de" data-lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Antworten vor dem Kauf: Affiliate-Links, haustierfreundliche Dünger, Versand.">
+  <meta name="theme-color" content="#0b110d">
+  <title>FAQ — Dat Lawn Guy</title>
+  <link rel="icon" type="image/png" href="images/web/logo-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400..500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <script>
+    document.documentElement.classList.add("js");
+    if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("motion");
+    try { var l = localStorage.getItem("dlg_lang"); if (l === "en" || l === "de") document.documentElement.lang = l; } catch (e) {}
+  </script>
+  <link rel="stylesheet" href="site.css">
+  <script src="data.js" defer></script>
+  <script src="motion.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body data-page="faq" data-title="page_faq">
+  <div class="progress" aria-hidden="true"></div>
+  <a class="skip" href="#main" data-i18n="skip_link">Zum Inhalt springen</a>
+
+  <header class="nav" id="nav">
+    <div class="nav-inner">
+      <a class="nav-brand" href="index.html" aria-label="Dat Lawn Guy">
+        <img src="images/web/logo-192.png" alt="" width="28" height="28">
+        <span>Dat Lawn Guy</span>
+      </a>
+      <nav class="nav-links" aria-label="Hauptnavigation">
+        <a href="katalog.html" data-nav="catalog" data-i18n="nav_catalog">Katalog</a>
+        <a href="ebook.html" data-nav="ebook" data-i18n="nav_ebook">Ebook</a>
+        <a href="community.html" data-nav="community" data-i18n="nav_community">Community</a>
+        <a href="ueber-mich.html" data-nav="about" data-i18n="nav_about">Über mich</a>
+        <a href="faq.html" data-nav="faq" data-i18n="nav_faq">FAQ</a>
+        <a href="kontakt.html" data-nav="contact" data-i18n="nav_contact">Kontakt</a>
+      </nav>
+      <div class="nav-end">
+        <div class="lang" id="langSwitch" role="group" aria-label="Sprache"><button class="lang-btn" type="button" data-lang="de">DE</button><span>/</span><button class="lang-btn" type="button" data-lang="en">EN</button></div>
+        <a class="btn btn--sm" href="kontakt.html" data-i18n="nav_cta">Empfehlung anfordern</a>
+        <button class="nav-burger" type="button" aria-expanded="false" aria-controls="menu" aria-label="Menü" data-i18n-aria="nav_menu"><span></span><span></span></button>
+      </div>
+    </div>
+  </header>
+
+  <div class="menu" id="menu" aria-hidden="true">
+    <nav class="menu-list" aria-label="Menü">
+      <a href="index.html" data-nav="home"><span class="idx">00</span><span data-i18n="nav_home">Startseite</span></a>
+      <a href="katalog.html" data-nav="catalog"><span class="idx">01</span><span data-i18n="nav_catalog">Katalog</span></a>
+      <a href="ebook.html" data-nav="ebook"><span class="idx">02</span><span data-i18n="nav_ebook">Ebook</span></a>
+      <a href="community.html" data-nav="community"><span class="idx">03</span><span data-i18n="nav_community">Community</span></a>
+      <a href="ueber-mich.html" data-nav="about"><span class="idx">04</span><span data-i18n="nav_about">Über mich</span></a>
+      <a href="faq.html" data-nav="faq"><span class="idx">05</span><span data-i18n="nav_faq">FAQ</span></a>
+      <a href="kontakt.html" data-nav="contact"><span class="idx">06</span><span data-i18n="nav_contact">Kontakt</span></a>
+    </nav>
+    <div class="menu-foot">
+      <div class="lang" role="group" aria-label="Sprache"><button class="lang-btn" type="button" data-lang="de">DE</button><span>/</span><button class="lang-btn" type="button" data-lang="en">EN</button></div>
+      <div class="socials">
+        <a href="https://www.instagram.com/dat.lawnguy" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <a href="https://www.youtube.com/@dat.lawnguy" target="_blank" rel="noopener noreferrer">YouTube</a>
+        <a href="https://www.tiktok.com/@dat.lawnguy?_r=1&_t=ZG-94UjfMTixiT" target="_blank" rel="noopener noreferrer">TikTok</a>
+      </div>
+    </div>
+  </div>
+
+  <main id="main">
+    <header class="page-head">
+      <div class="wrap">
+        <p class="label"><span class="idx">05</span> <span data-i18n="faq_pill">FAQ</span></p>
+        <div class="page-head-grid">
+          <h1 class="t-xl" data-split data-i18n="faq_heading">Antworten vor dem Kauf</h1>
+        </div>
+      </div>
+    </header>
+
+    <section class="section" style="padding-top:clamp(24px,4vh,48px)">
+      <div class="wrap two-col">
+        <figure class="media media--tall media--reveal" data-parallax="0.06">
+          <img src="images/site/faq.jpg" alt="Gemähter Rasen im Abendlicht, schwarz-weiß" width="2000" height="1333">
+        </figure>
+        <div class="faq-list" id="faqList"></div>
+      </div>
+    </section>
+
+    <section class="section section--fill">
+      <div class="wrap cta-band">
+        <p class="label" data-i18n="contact_pill">Kontakt</p>
+        <h2 class="t-h2" data-split data-i18n="contact_heading">Braucht dein Rasen ein Kit?</h2>
+        <p class="t-lead" data-reveal data-i18n="contact_sub">Erzähl mir von Fläche und Budget. Antwort in 48 Stunden.</p>
+        <a class="btn btn--lg" href="kontakt.html" data-magnetic><span data-i18n="nav_cta">Empfehlung anfordern</span> <span class="arrow" aria-hidden="true"></span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" data-theme="dark">
+    <div class="wrap">
+      <div class="footer-top">
+        <div>
+          <p class="label label--dot">Dat Lawn Guy</p>
+          <p class="footer-note" style="margin-top:20px" data-i18n="footer_note">Affiliate-Links bringen Provision. Ich liste nur, was ich selbst nutze.</p>
+          <p class="footer-note small" style="margin-top:12px" data-i18n="footer_location">Sitz: Braunschweig, Niedersachsen, Deutschland.</p>
+        </div>
+        <div class="footer-col">
+          <strong data-i18n="footer_pages_title">Seiten</strong>
+          <a href="index.html" data-i18n="nav_home">Startseite</a>
+          <a href="katalog.html" data-i18n="nav_catalog">Katalog</a>
+          <a href="ebook.html" data-i18n="nav_ebook">Ebook</a>
+          <a href="community.html" data-i18n="nav_community">Community</a>
+          <a href="ueber-mich.html" data-i18n="nav_about">Über mich</a>
+          <a href="faq.html" data-i18n="nav_faq">FAQ</a>
+          <a href="kontakt.html" data-i18n="nav_contact">Kontakt</a>
+        </div>
+        <div class="footer-col">
+          <strong data-i18n="footer_contact_title">Kontakt</strong>
+          <a href="mailto:datlawnguy0@gmail.com">datlawnguy0@gmail.com</a>
+          <a href="kontakt.html" data-i18n="shortcut_form">Formular</a>
+          <span data-i18n="footer_legal_note">Für rechtliche oder Datenschutz-Anfragen: schreib mir.</span>
+        </div>
+        <div class="footer-col">
+          <strong data-i18n="footer_social_title">Social</strong>
+          <a href="https://www.instagram.com/dat.lawnguy" target="_blank" rel="noopener noreferrer">Instagram ↗</a>
+          <a href="https://www.youtube.com/@dat.lawnguy" target="_blank" rel="noopener noreferrer">YouTube ↗</a>
+          <a href="https://www.tiktok.com/@dat.lawnguy?_r=1&_t=ZG-94UjfMTixiT" target="_blank" rel="noopener noreferrer">TikTok ↗</a>
+        </div>
+        <div class="footer-col">
+          <strong data-i18n="footer_legal_title">Details</strong>
+          <a href="impressum.html">Impressum</a>
+        </div>
+      </div>
+    </div>
+    <p class="wordmark" aria-hidden="true">Dat Lawn <em>Guy</em></p>
+    <div class="wrap footer-bottom">
+      <span data-i18n="footer_copyright">© 2025 DAT LAWN GUY. Alle Rechte vorbehalten.</span>
+      <span data-i18n="footer_disclaimer">Für aktuelle Konditionen oder Richtlinien: datlawnguy0@gmail.com.</span>
+    </div>
+  </footer>
+</body>
+</html>

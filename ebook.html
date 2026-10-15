@@ -1,155 +1,183 @@
 <!DOCTYPE html>
-<html lang="en" data-lang="en">
+<html lang="de" data-lang="de">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Frühling Rasenpflege Ebook | DAT LAWN GUY</title>
-  <link rel="icon" type="image/png" href="datlogo.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Frühling Rasenpflege ohne Bullshit: ein 6-Wochen-Plan für dichten, grünen Rasen. PDF, Sofortdownload.">
+  <meta name="theme-color" content="#0b110d">
+  <title>Ebook — Dat Lawn Guy</title>
+  <link rel="icon" type="image/png" href="images/web/logo-192.png">
+  <link rel="preload" as="image" href="images/web/ebook-cover.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Inter+Tight:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-  <script src="main.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400..500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <script>
+    document.documentElement.classList.add("js");
+    if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("motion");
+    try { var l = localStorage.getItem("dlg_lang"); if (l === "en" || l === "de") document.documentElement.lang = l; } catch (e) {}
+  </script>
+  <link rel="stylesheet" href="site.css">
+  <script src="data.js" defer></script>
+  <script src="motion.js" defer></script>
+  <script src="app.js" defer></script>
 </head>
-<body class="ebook-page">
-  <header>
-    <div class="nav-shell">
-      <div class="nav-top">
-        <a class="brand" href="/">
-          <div class="mark"><img src="datlogo.png" alt="DAT Lawn Guy logo" class="logo-img"></div>
-          <div class="brand-text">
-            <span>DAT LAWN GUY</span>
-            <small data-i18n="brand_subtitle">Pro-grade gear, tested weekly</small>
-          </div>
-        </a>
-        <div class="nav-actions">
-          <div class="social-links nav-social" aria-label="Social links">
-            <a class="social-link" href="https://www.instagram.com/dat.lawnguy" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-              <img src="images/icons/instagram.png" alt="">
-            </a>
-            <a class="social-link" href="https://www.youtube.com/@dat.lawnguy" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
-              <img src="images/icons/youtube.png" alt="">
-            </a>
-            <a class="social-link" href="https://www.tiktok.com/@dat.lawnguy?_r=1&_t=ZG-94UjfMTixiT" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
-              <img src="images/icons/tiktok.png" alt="">
-            </a>
-          </div>
-          <a class="btn btn-gold nav-cta" data-i18n="nav_cta" href="/#contact">Get a recommendation</a>
-          <div class="lang-switch" id="langSwitch" aria-label="Language toggle" role="group">
-            <button class="lang-btn active" data-lang="de" type="button">DE</button>
-            <button class="lang-btn" data-lang="en" type="button">EN</button>
-          </div>
-          <button class="nav-toggle" aria-label="Toggle navigation">Menu</button>
-        </div>
-      </div>
-      <nav class="nav-primary">
-        <ul id="navLinks">
-          <li><a data-i18n="nav_home" href="/">Home</a></li>
-          <li><a href="/#ebooks">Ebook</a></li>
-        </ul>
+<body data-page="ebook" data-title="page_ebook">
+  <div class="progress" aria-hidden="true"></div>
+  <a class="skip" href="#main" data-i18n="skip_link">Zum Inhalt springen</a>
+
+  <header class="nav" id="nav">
+    <div class="nav-inner">
+      <a class="nav-brand" href="index.html" aria-label="Dat Lawn Guy">
+        <img src="images/web/logo-192.png" alt="" width="28" height="28">
+        <span>Dat Lawn Guy</span>
+      </a>
+      <nav class="nav-links" aria-label="Hauptnavigation">
+        <a href="katalog.html" data-nav="catalog" data-i18n="nav_catalog">Katalog</a>
+        <a href="ebook.html" data-nav="ebook" data-i18n="nav_ebook">Ebook</a>
+        <a href="community.html" data-nav="community" data-i18n="nav_community">Community</a>
+        <a href="ueber-mich.html" data-nav="about" data-i18n="nav_about">Über mich</a>
+        <a href="faq.html" data-nav="faq" data-i18n="nav_faq">FAQ</a>
+        <a href="kontakt.html" data-nav="contact" data-i18n="nav_contact">Kontakt</a>
       </nav>
+      <div class="nav-end">
+        <div class="lang" id="langSwitch" role="group" aria-label="Sprache"><button class="lang-btn" type="button" data-lang="de">DE</button><span>/</span><button class="lang-btn" type="button" data-lang="en">EN</button></div>
+        <a class="btn btn--sm" href="kontakt.html" data-i18n="nav_cta">Empfehlung anfordern</a>
+        <button class="nav-burger" type="button" aria-expanded="false" aria-controls="menu" aria-label="Menü" data-i18n-aria="nav_menu"><span></span><span></span></button>
+      </div>
     </div>
   </header>
 
-  <main>
-    <section class="ebook-hero">
-      <div class="container ebook-grid">
-        <div class="ebook-cover">
-          <img src="images/ebooks/fruehling.png" alt="Frühling Rasenpflege Ohne Bullshit ebook cover">
+  <div class="menu" id="menu" aria-hidden="true">
+    <nav class="menu-list" aria-label="Menü">
+      <a href="index.html" data-nav="home"><span class="idx">00</span><span data-i18n="nav_home">Startseite</span></a>
+      <a href="katalog.html" data-nav="catalog"><span class="idx">01</span><span data-i18n="nav_catalog">Katalog</span></a>
+      <a href="ebook.html" data-nav="ebook"><span class="idx">02</span><span data-i18n="nav_ebook">Ebook</span></a>
+      <a href="community.html" data-nav="community"><span class="idx">03</span><span data-i18n="nav_community">Community</span></a>
+      <a href="ueber-mich.html" data-nav="about"><span class="idx">04</span><span data-i18n="nav_about">Über mich</span></a>
+      <a href="faq.html" data-nav="faq"><span class="idx">05</span><span data-i18n="nav_faq">FAQ</span></a>
+      <a href="kontakt.html" data-nav="contact"><span class="idx">06</span><span data-i18n="nav_contact">Kontakt</span></a>
+    </nav>
+    <div class="menu-foot">
+      <div class="lang" role="group" aria-label="Sprache"><button class="lang-btn" type="button" data-lang="de">DE</button><span>/</span><button class="lang-btn" type="button" data-lang="en">EN</button></div>
+      <div class="socials">
+        <a href="https://www.instagram.com/dat.lawnguy" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <a href="https://www.youtube.com/@dat.lawnguy" target="_blank" rel="noopener noreferrer">YouTube</a>
+        <a href="https://www.tiktok.com/@dat.lawnguy?_r=1&_t=ZG-94UjfMTixiT" target="_blank" rel="noopener noreferrer">TikTok</a>
+      </div>
+    </div>
+  </div>
+
+  <main id="main">
+    <section class="ebook-hero dark" data-theme="dark">
+      <div class="wrap ebook-grid">
+        <div class="ebook-stage" data-tilt data-reveal>
+          <img class="ebook-cover" data-tilt-target src="images/web/ebook-cover.jpg" alt="Ebook Cover: Frühling Rasenpflege ohne Bullshit" width="697" height="1090" fetchpriority="high">
         </div>
-        <div class="ebook-intro">
-          <div class="pill" data-i18n="ebook_pill">Ebook</div>
-          <h1 data-i18n="ebook_title">Frühling Rasenpflege, ohne Bullshit</h1>
-          <p class="lead" data-i18n="ebook_lead">6 Wochen Plan für dichten, grünen Rasen. Klar, praxisnah, ohne Fachchinesisch.</p>
-          <ul class="list">
-            <li data-i18n="ebook_highlight1">Woche 1 bis 2: Analyse, pH-Check, erster Schnitt, Verdichtung lösen.</li>
-            <li data-i18n="ebook_highlight2">Woche 3 bis 4: Lüften/Aerifizieren, Nachsaat, Starterdünger, Feuchteregie.</li>
-            <li data-i18n="ebook_highlight3">Woche 5 bis 6: Mäh-Routine, tiefes Wässern, zweite Düngung, häufige Fehler vermeiden.</li>
-          </ul>
-          <div class="ebook-actions">
-            <a class="btn btn-ghost" href="/#ebooks" data-i18n="ebook_back">Back to catalog</a>
-            <button class="btn btn-primary checkout-btn" data-price="price_1Sj0Fq0YmDmRUccy6lMbBIpE" data-i18n="ebook_buy_button_price">Buy now €29.99</button>
+        <div class="ebook-copy">
+          <p class="label label--dot" data-reveal data-i18n="ebook_pill">Ebook</p>
+          <h1 class="t-xl" data-split data-i18n="ebook_title">Frühling Rasenpflege ohne Bullshit</h1>
+          <p class="t-lead" data-reveal style="--d:300ms" data-i18n="ebook_lead">Ein 6-Wochen-Plan für dichten, grünen Rasen.</p>
+          <div class="price" data-reveal style="--d:380ms"><strong data-i18n="ebook_offer_price">29,99 €</strong><span data-i18n="ebook_price_label">Einmalig · PDF</span></div>
+          <div class="actions" data-reveal style="--d:440ms">
+            <button class="btn btn--light btn--lg checkout-btn" type="button" data-price="price_1Sj0Fq0YmDmRUccy6lMbBIpE" data-magnetic><span data-i18n="ebook_buy_button">Jetzt kaufen</span> <span class="arrow" aria-hidden="true"></span></button>
+            <a class="link" href="katalog.html" data-i18n="ebook_back">Zurück zum Katalog</a>
           </div>
+          <p class="proof" data-reveal style="--d:500ms" data-i18n="ebook_cta_proof">Sicherer Checkout · Sofortdownload · inkl. Checklisten</p>
         </div>
       </div>
     </section>
 
-    <section class="ebook-content">
-      <div class="container">
-        <div class="card glass ebook-card">
-          <h2 data-i18n="ebook_contents_title">What you’ll get</h2>
-          <ol class="list">
-            <li><strong data-i18n="ebook_ch1_title">Intro:</strong> <span data-i18n="ebook_ch1_body">Why spring lawns fail and how a simple 6-week reset fixes it without jargon.</span></li>
-            <li><strong data-i18n="ebook_ch2_title">Weeks 1 to 2: Prep:</strong> <span data-i18n="ebook_ch2_body">Check pH, clear winter debris, first cut, and loosen compaction so everything later works.</span></li>
-            <li><strong data-i18n="ebook_ch3_title">Weeks 3 to 4: Seed & feed:</strong> <span data-i18n="ebook_ch3_body">Aerate, overseed with the right mix, add starter fertilizer, and keep even moisture.</span></li>
-            <li><strong data-i18n="ebook_ch4_title">Weeks 5 to 6: Routine:</strong> <span data-i18n="ebook_ch4_body">Dial in mowing height, deep watering, and a second feed to lock in density.</span></li>
-            <li><strong data-i18n="ebook_ch5_title">Quick fixes:</strong> <span data-i18n="ebook_ch5_body">Fast answers for short cuts, watering mistakes, and fertilizer mishaps.</span></li>
-          </ol>
+    <section class="section">
+      <div class="wrap two-col">
+        <div>
+          <p class="label"><span class="idx">01</span> <span data-i18n="ebook_highlights_title">Warum hilfreich</span></p>
         </div>
-
+        <ol class="rows">
+          <li class="row row--simple" data-reveal style="--d:0ms"><span class="idx">01</span><strong data-i18n="ebook_highlight1">Schritt-für-Schritt für 6 Wochen.</strong></li>
+          <li class="row row--simple" data-reveal style="--d:60ms"><span class="idx">02</span><strong data-i18n="ebook_highlight2">Einfache Tools + Mengen.</strong></li>
+          <li class="row row--simple" data-reveal style="--d:120ms"><span class="idx">03</span><strong data-i18n="ebook_highlight3">Direkter Download nach dem Kauf.</strong></li>
+        </ol>
       </div>
     </section>
 
-    <section class="ebook-offer">
-      <div class="container">
-        <div class="ebook-offer-card">
-          <div class="offer-left">
-            <div class="pill" data-i18n="ebook_offer_pill">Ready for thick green?</div>
-            <h2 data-i18n="ebook_offer_heading">Get the 6-week plan</h2>
-            <p class="muted" data-i18n="ebook_offer_sub">PDF, checklists, links, and bonus videos, instant download.</p>
-          </div>
-          <div class="offer-right">
-            <div class="offer-price">
-              <span class="price" data-i18n="ebook_offer_price">€29.99</span>
-            </div>
-            <button class="btn btn-primary checkout-btn" data-price="price_1Sj0Fq0YmDmRUccy6lMbBIpE" data-i18n="ebook_buy_button">Jetzt kaufen</button>
-            <p class="muted safety" data-i18n="ebook_offer_safety">Secure checkout · VAT incl. · Instant download</p>
-          </div>
+    <section class="section">
+      <div class="wrap two-col">
+        <div>
+          <p class="label"><span class="idx">02</span> <span data-i18n="ebook_contents_title">Was drin ist</span></p>
         </div>
+        <ol class="rows">
+          <li class="row" data-reveal style="--d:0ms"><span class="idx">01</span><strong data-i18n="ebook_ch1_title">Intro</strong><p data-i18n="ebook_ch1_body">Warum Frühjahrsrasen scheitern.</p></li>
+          <li class="row" data-reveal style="--d:60ms"><span class="idx">02</span><strong data-i18n="ebook_ch2_title">Woche 1 bis 2: Vorbereitung</strong><p data-i18n="ebook_ch2_body">pH prüfen, Winterreste runter.</p></li>
+          <li class="row" data-reveal style="--d:120ms"><span class="idx">03</span><strong data-i18n="ebook_ch3_title">Woche 3 bis 4: Saat & Startdünger</strong><p data-i18n="ebook_ch3_body">Lüften, richtig nachsäen.</p></li>
+          <li class="row" data-reveal style="--d:180ms"><span class="idx">04</span><strong data-i18n="ebook_ch4_title">Woche 5 bis 6: Routine</strong><p data-i18n="ebook_ch4_body">Schnitthöhe einstellen.</p></li>
+          <li class="row" data-reveal style="--d:240ms"><span class="idx">05</span><strong data-i18n="ebook_ch5_title">Soforthilfe</strong><p data-i18n="ebook_ch5_body">Kurz und knapp bei Fehlern.</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section section--fill">
+      <div class="wrap offer">
+        <p class="label label--dot" data-reveal data-i18n="ebook_offer_pill">Bereit für sattes Grün?</p>
+        <h2 class="t-h2" data-split data-i18n="ebook_offer_heading">Hol dir den 6-Wochen-Plan</h2>
+        <p class="t-lead" data-reveal data-i18n="ebook_offer_sub">E-Book (PDF), Checklisten, Links &amp; Bonusvideos, sofort verfügbar.</p>
+        <div class="price" data-reveal><strong data-i18n="ebook_offer_price">29,99 €</strong><span data-i18n="ebook_cta_sub">Direkter PDF-Download direkt nach dem Checkout.</span></div>
+        <div class="actions" style="margin-top:28px;justify-content:center" data-reveal>
+          <button class="btn btn--lg checkout-btn" type="button" data-price="price_1Sj0Fq0YmDmRUccy6lMbBIpE" data-magnetic><span data-i18n="ebook_buy_button_price">Jetzt kaufen 29,99 €</span></button>
+        </div>
+        <p class="proof muted" data-reveal data-i18n="ebook_offer_safety">Sicherer Checkout · inkl. MwSt. · Sofortdownload</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap cta-band">
+        <p class="label" data-i18n="ebook_contact_title">Brauchst du Hilfe?</p>
+        <h2 class="t-h2" data-split data-i18n="ebook_cta_title">Starte heute und hol dir den 6-Wochen-Plan sofort.</h2>
+        <p class="t-lead" data-reveal data-i18n="ebook_contact_desc">Fragen zu Timing, Werkzeug oder ob es passt? Schreib mir vor dem Kauf.</p>
+        <a class="btn btn--ghost" href="kontakt.html" data-magnetic><span data-i18n="ebook_contact">Fragen? Schreib mir</span> <span class="arrow" aria-hidden="true"></span></a>
       </div>
     </section>
   </main>
 
-  <footer>
-    <div class="container footer-grid">
-      <div>
-        <div class="brand">
-          <div class="mark"><img src="datlogo.png" alt="DAT Lawn Guy logo" class="logo-img"></div>
-          <div class="brand-text">
-            <span>DAT LAWN GUY</span>
-            <small data-i18n="footer_brand_sub">Pro-grade gear, tested weekly</small>
-          </div>
+  <footer class="footer" data-theme="dark">
+    <div class="wrap">
+      <div class="footer-top">
+        <div>
+          <p class="label label--dot">Dat Lawn Guy</p>
+          <p class="footer-note" style="margin-top:20px" data-i18n="footer_note">Affiliate-Links bringen Provision. Ich liste nur, was ich selbst nutze.</p>
+          <p class="footer-note small" style="margin-top:12px" data-i18n="footer_location">Sitz: Braunschweig, Niedersachsen, Deutschland.</p>
         </div>
-        <p class="muted" data-i18n="footer_note">Affiliate links may earn a commission. I only list what I use on real lawns.</p>
-        <p class="muted" data-i18n="footer_location">Based in Brunswick, Lower Saxony, Germany.</p>
-      </div>
-      <div>
-        <strong data-i18n="footer_shortcuts_title">Shortcuts</strong>
-        <div class="footer-links">
-          <a data-i18n="shortcut_catalog" href="/#catalog">Catalog</a>
-          <a data-i18n="shortcut_faq" href="/#faq">FAQ</a>
+        <div class="footer-col">
+          <strong data-i18n="footer_pages_title">Seiten</strong>
+          <a href="index.html" data-i18n="nav_home">Startseite</a>
+          <a href="katalog.html" data-i18n="nav_catalog">Katalog</a>
+          <a href="ebook.html" data-i18n="nav_ebook">Ebook</a>
+          <a href="community.html" data-i18n="nav_community">Community</a>
+          <a href="ueber-mich.html" data-i18n="nav_about">Über mich</a>
+          <a href="faq.html" data-i18n="nav_faq">FAQ</a>
+          <a href="kontakt.html" data-i18n="nav_contact">Kontakt</a>
         </div>
-      </div>
-      <div>
-        <strong data-i18n="footer_contact_title">Contact</strong>
-        <div class="footer-links">
+        <div class="footer-col">
+          <strong data-i18n="footer_contact_title">Kontakt</strong>
           <a href="mailto:datlawnguy0@gmail.com">datlawnguy0@gmail.com</a>
-          <a data-i18n="shortcut_form" href="/#contact">Form</a>
-          <span class="muted" data-i18n="footer_legal_note">For legal and privacy inquiries, email me.</span>
+          <a href="kontakt.html" data-i18n="shortcut_form">Formular</a>
+          <span data-i18n="footer_legal_note">Für rechtliche oder Datenschutz-Anfragen: schreib mir.</span>
         </div>
-      </div>
-      <div>
-        <strong data-i18n="footer_legal_title">Details</strong>
-        <div class="footer-links">
-          <span data-i18n="footer_legal_line1">Professional greenkeeper sharing field-tested picks.</span>
-          <span data-i18n="footer_legal_line2">Registered in Germany; no paid placements.</span>
-          <a href="/impressum.html">Impressum</a>
+        <div class="footer-col">
+          <strong data-i18n="footer_social_title">Social</strong>
+          <a href="https://www.instagram.com/dat.lawnguy" target="_blank" rel="noopener noreferrer">Instagram ↗</a>
+          <a href="https://www.youtube.com/@dat.lawnguy" target="_blank" rel="noopener noreferrer">YouTube ↗</a>
+          <a href="https://www.tiktok.com/@dat.lawnguy?_r=1&_t=ZG-94UjfMTixiT" target="_blank" rel="noopener noreferrer">TikTok ↗</a>
+        </div>
+        <div class="footer-col">
+          <strong data-i18n="footer_legal_title">Details</strong>
+          <a href="impressum.html">Impressum</a>
         </div>
       </div>
     </div>
-    <div class="container footer-bottom">
-      <span data-i18n="footer_copyright">© 2025 DAT LAWN GUY. All rights reserved.</span>
-      <span class="muted" data-i18n="footer_disclaimer">For the latest rates or policies, contact datlawnguy0@gmail.com.</span>
+    <p class="wordmark" aria-hidden="true">Dat Lawn <em>Guy</em></p>
+    <div class="wrap footer-bottom">
+      <span data-i18n="footer_copyright">© 2025 DAT LAWN GUY. Alle Rechte vorbehalten.</span>
+      <span data-i18n="footer_disclaimer">Für aktuelle Konditionen oder Richtlinien: datlawnguy0@gmail.com.</span>
     </div>
   </footer>
 </body>
