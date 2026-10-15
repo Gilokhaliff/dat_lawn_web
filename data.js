@@ -1047,7 +1047,7 @@ const products = {
       priceId: "price_1Sj0Fq0YmDmRUccy6lMbBIpE",
       price: "€29.99",
       image: "images/ebooks/fruehling.png",
-      viewLink: "ebook.html",
+      viewLink: "/ebook",
     },
   ],
   seasonal: [
