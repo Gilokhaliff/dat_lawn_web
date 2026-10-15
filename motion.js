@@ -1,8 +1,8 @@
 /* =========================================================
    DAT LAWN GUY — motion.js
-   Springs, reveals, scroll-linked motion, drag rails and the
-   living lawn in the home hero. Everything reads live values
-   each frame and every gesture can be interrupted.
+   Springs, reveals, scroll-linked motion and drag rails.
+   Everything reads live values each frame and every gesture
+   can be interrupted.
    ========================================================= */
 (function () {
   "use strict";
@@ -439,179 +439,6 @@
     stage.addEventListener("pointerleave", function () { rx.to(4); ry.to(-8); });
   }
 
-  /* ---------- Home hero: a lawn you can brush and mow ---------- */
-  function initGrass() {
-    var canvas = document.querySelector("[data-grass]");
-    if (!canvas || !canvas.getContext) return;
-    var hero = canvas.closest(".hero");
-    var ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    hero.classList.add("has-canvas");
-
-    var W = 0, H = 0, dpr = 1;
-    var blades = [];
-    var pointer = { x: -9999, y: -9999, vx: 0, speed: 0, lastX: 0, lastY: 0, lastT: 0 };
-    var running = false, visible = true, raf = 0;
-
-    function rand(a, b) { return a + Math.random() * (b - a); }
-
-    function build() {
-      W = canvas.clientWidth;
-      // phones get fewer pixels to push so the lawn stays smooth
-      dpr = Math.min(window.devicePixelRatio || 1, W < 700 ? 1.5 : 1.75);
-      H = canvas.clientHeight;
-      canvas.width = Math.round(W * dpr);
-      canvas.height = Math.round(H * dpr);
-      var count = Math.round(W * (W < 700 ? 1.5 : 2.1));
-      blades = [];
-      for (var i = 0; i < count; i++) {
-        var depth = Math.pow(Math.random(), 0.8);
-        var x = rand(-0.04, 1.04) * W;
-        var base = H * (0.6 + depth * 0.44);
-        var h = (H * 0.07 + Math.random() * H * 0.08) * (0.35 + depth * 1.1);
-        // mowing stripes radiate from the vanishing point
-        var stripe = Math.floor(((x - W / 2) / (0.22 + depth * 0.78) + W * 8) / 80) % 2;
-        var light = 8 + depth * 22 + stripe * 9 + Math.random() * 4;
-        blades.push({
-          x: x,
-          base: base,
-          h: h,
-          w: (0.9 + depth * 2.4) * rand(0.8, 1.3),
-          depth: depth,
-          phase: Math.random() * Math.PI * 2,
-          lean: rand(-0.24, 0.24),
-          bend: 0,
-          bendV: 0,
-          cut: 1,
-          color: "hsl(" + Math.round(rand(88, 114)) + "," + Math.round(30 + depth * 22) + "%," + light.toFixed(1) + "%)",
-        });
-      }
-      blades.sort(function (a, b) { return a.depth - b.depth; });
-    }
-
-    function draw(t) {
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.clearRect(0, 0, W, H);
-
-      // low light on the horizon
-      var glow = ctx.createRadialGradient(W * 0.5, H * 0.62, 0, W * 0.5, H * 0.62, Math.max(W, H) * 0.7);
-      glow.addColorStop(0, "rgba(120, 160, 90, 0.16)");
-      glow.addColorStop(1, "rgba(120, 160, 90, 0)");
-      ctx.fillStyle = glow;
-      ctx.fillRect(0, 0, W, H);
-
-      var gust = Math.sin(t * 0.00052) * 0.5 + Math.sin(t * 0.0013 + 1.3) * 0.3;
-      var interactive = pointer.x > -999;
-      for (var i = 0; i < blades.length; i++) {
-        var b = blades[i];
-        // a coherent wave rolls across the field, with a little individual flutter
-        var wave = Math.sin(t * 0.0012 - b.x * 0.0045) * 0.7 + Math.sin(t * 0.0021 + b.phase) * 0.3;
-        var sway = wave * 0.09 * (0.4 + b.depth) + gust * 0.12 * (0.5 + b.depth);
-        var target = 0;
-        if (interactive) {
-          var dx = b.x - pointer.x;
-          var dy = b.base - b.h * b.cut * 0.5 - pointer.y;
-          var R = 120 * (0.5 + b.depth);
-          var d2 = dx * dx + dy * dy;
-          if (d2 < R * R) {
-            var f = 1 - Math.sqrt(d2) / R;
-            target = (dx >= 0 ? 1 : -1) * f * 0.9 + clamp(pointer.vx * 0.0006, -0.6, 0.6) * f;
-            // a fast pass mows the blades down to the pointer height
-            if (pointer.speed > 900 && Math.abs(dx) < 18 * (0.6 + b.depth) && pointer.y < b.base && pointer.y > b.base - b.h * b.cut) {
-              b.cut = clamp((b.base - pointer.y) / b.h, 0.22, 1);
-            }
-          }
-        }
-        // per-blade spring toward its target bend
-        b.bendV += (target - b.bend) * 0.09;
-        b.bendV *= 0.84;
-        b.bend += b.bendV;
-        if (b.cut < 1) b.cut = Math.min(1, b.cut + 0.0009);
-
-        var a = b.lean + sway + b.bend;
-        var len = b.h * b.cut;
-        var tipX = b.x + Math.sin(a) * len;
-        var tipY = b.base - Math.cos(a) * len;
-        var cx = b.x + Math.sin(a * 0.35) * len * 0.42;
-        var cy = b.base - Math.cos(a * 0.35) * len * 0.6;
-        ctx.beginPath();
-        ctx.moveTo(b.x - b.w / 2, b.base);
-        ctx.quadraticCurveTo(cx, cy, tipX, tipY);
-        ctx.quadraticCurveTo(cx, cy, b.x + b.w / 2, b.base);
-        ctx.fillStyle = b.color;
-        ctx.fill();
-      }
-
-      // mist that lets the far lawn dissolve into the night
-      var mist = ctx.createLinearGradient(0, H * 0.42, 0, H * 0.74);
-      mist.addColorStop(0, "rgba(11, 17, 13, 1)");
-      mist.addColorStop(1, "rgba(11, 17, 13, 0)");
-      ctx.fillStyle = mist;
-      ctx.fillRect(0, H * 0.42, W, H * 0.32);
-      ctx.fillStyle = "rgb(11, 17, 13)";
-      ctx.fillRect(0, 0, W, H * 0.42);
-
-      pointer.speed *= 0.9;
-      pointer.vx *= 0.9;
-    }
-
-    function loop(t) {
-      raf = 0;
-      if (!running) return;
-      draw(t);
-      raf = requestAnimationFrame(loop);
-    }
-    function start() {
-      if (running || !allowMotion()) return;
-      running = true;
-      raf = requestAnimationFrame(loop);
-    }
-    function stop() {
-      running = false;
-      if (raf) cancelAnimationFrame(raf);
-      raf = 0;
-    }
-
-    hero.addEventListener("pointermove", function (e) {
-      var r = canvas.getBoundingClientRect();
-      var x = e.clientX - r.left;
-      var y = e.clientY - r.top;
-      var now = performance.now();
-      var dt = Math.max(8, now - pointer.lastT) / 1000;
-      if (pointer.x > -999) {
-        var vx = (x - pointer.lastX) / dt;
-        var vy = (y - pointer.lastY) / dt;
-        pointer.vx = pointer.vx * 0.6 + vx * 0.4;
-        pointer.speed = pointer.speed * 0.5 + Math.sqrt(vx * vx + vy * vy) * 0.5;
-      }
-      pointer.x = x;
-      pointer.y = y;
-      pointer.lastX = x;
-      pointer.lastY = y;
-      pointer.lastT = now;
-    });
-    hero.addEventListener("pointerleave", function () { pointer.x = pointer.y = -9999; });
-
-    build();
-    draw(0);
-    var resizeTimer = 0;
-    window.addEventListener("resize", function () {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(function () { build(); if (!running) draw(performance.now()); }, 150);
-    });
-    if ("IntersectionObserver" in window) {
-      new IntersectionObserver(function (entries) {
-        visible = entries[0].isIntersecting;
-        if (visible && !document.hidden) start(); else stop();
-      }).observe(hero);
-    } else {
-      start();
-    }
-    document.addEventListener("visibilitychange", function () {
-      if (document.hidden) stop(); else if (visible) start();
-    });
-  }
-
   /* ---------- Public API ---------- */
   function init() {
     root.classList.toggle("motion", allowMotion());
@@ -624,13 +451,16 @@
 
     splitAll();
     initWords();
+    // the first screen is visible from the start: its reveals play on load, not on scroll
+    Array.prototype.forEach.call(document.querySelectorAll(".hero [data-reveal], .hero [data-split]"), function (el) {
+      el.classList.add("is-in");
+    });
     observeReveals();
     initCounters();
     initMagnetic();
     initPreview();
     initRails();
     initTilt();
-    initGrass();
     updateScrollLinked();
 
     window.addEventListener("scroll", requestFrame, { passive: true });
